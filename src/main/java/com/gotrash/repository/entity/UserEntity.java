@@ -3,6 +3,8 @@ package com.gotrash.repository.entity;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +19,7 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user", schema = "gotrash")
+@Table(name = "users", schema = "gotrash")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,8 +27,9 @@ import java.time.LocalDateTime;
 public class UserEntity {
 
   @Id
-  @Column(updatable = false, nullable = false)
-  private String id;
+  @Column(updatable = false, nullable = false, columnDefinition = "UUID")
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private String userId;
 
   @NotNull
   private String username;
