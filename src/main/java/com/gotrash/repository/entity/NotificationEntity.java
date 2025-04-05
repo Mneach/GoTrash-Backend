@@ -3,6 +3,8 @@ package com.gotrash.repository.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
@@ -18,7 +20,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "notification", schema = "gotrash")
+@Table(name = "notifications", schema = "gotrash")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,13 +28,14 @@ import java.time.LocalDateTime;
 public class NotificationEntity {
 
   @Id
-  @Column(updatable = false, nullable = false)
-  private String id;
+  @Column(updatable = false, nullable = false, columnDefinition = "UUID")
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private String notificationId;
 
   @NotNull
   @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id")
-  private String userId;
+  private UserEntity user;
 
   @NotNull
   private String title;

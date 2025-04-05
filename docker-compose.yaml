@@ -11,4 +11,4 @@ services:
       POSTGRES_PASSWORD: application
       POSTGRES_DB: gotrash
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - ./script/dump:/docker-entrypoint-initdb.d:ro
