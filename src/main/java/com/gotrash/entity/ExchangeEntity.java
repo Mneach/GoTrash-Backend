@@ -1,12 +1,13 @@
-package com.gotrash.repository.entity;
+package com.gotrash.entity;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,20 +17,25 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "reward_categories", schema = "gotrash")
+@Table(name = "exchanges", schema = "gotrash")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RewardCategoryEntity {
+public class ExchangeEntity {
+
   @Id
   @Column(updatable = false, nullable = false, columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String rewardCategoryId;
+  private String exchangeId;
 
-  @NotNull
-  private String name;
+  @OneToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "user_id", nullable = false)
+  private UserEntity user;
+
+  @OneToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "reward_id", nullable = false)
+  private RewardEntity reward;
 
   @CreationTimestamp
   @Column(updatable = false)

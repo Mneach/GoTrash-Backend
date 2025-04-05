@@ -1,14 +1,12 @@
-package com.gotrash.repository.entity;
+package com.gotrash.entity;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,27 +15,21 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Table(name = "user_groups", schema = "gotrash")
+@Entity
+@Table(name = "trash_categories", schema = "gotrash")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserGroupEntity {
-
+public class TrashCategoryEntity {
   @Id
   @Column(updatable = false, nullable = false, columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String userGroupId;
+  private String trashCategoryId;
 
-  @OneToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "user_id", nullable = false)
-  private UserEntity user;
-
-  @OneToMany(fetch = FetchType.EAGER)
-  @JoinColumn(name = "group_id", nullable = false)
-  private List<GroupEntity> groupEntities;
+  @NotNull
+  private String name;
 
   @CreationTimestamp
   @Column(updatable = false)

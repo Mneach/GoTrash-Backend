@@ -1,5 +1,6 @@
-package com.gotrash.repository.entity;
+package com.gotrash.entity;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,34 +15,39 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "trash_bins", schema = "gotrash")
+@Table(name = "users", schema = "gotrash")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TrashBinEntity {
+public class UserEntity {
+
   @Id
   @Column(updatable = false, nullable = false, columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String trashBinId;
+  private String userId;
 
   @NotNull
-  private Double latitude;
+  private String username;
 
   @NotNull
-  private Double longitude;
+  private String password;
 
   @NotNull
-  private String address;
+  private String email;
 
   @NotNull
-  private String imageName;
+  private String phoneNumber;
 
-  @NotNull
+  @Nullable
   private String imageUrl;
+
+  @NotNull
+  private BigInteger coin;
 
   @CreationTimestamp
   @Column(updatable = false)

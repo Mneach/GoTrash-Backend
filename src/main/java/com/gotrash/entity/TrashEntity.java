@@ -1,6 +1,7 @@
-package com.gotrash.repository.entity;
+package com.gotrash.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,25 +18,21 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@Table(name = "exchanges", schema = "gotrash")
+@Entity
+@Table(name = "trashes", schema = "gotrash")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ExchangeEntity {
-
+public class TrashEntity {
   @Id
   @Column(updatable = false, nullable = false, columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String exchangeId;
+  private String trashId;
 
   @OneToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "user_id", nullable = false)
-  private UserEntity user;
-
-  @OneToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "reward_id", nullable = false)
-  private RewardEntity reward;
+  @JoinColumn(name = "trash_category_id", nullable = false)
+  private TrashCategoryEntity trashCategory;
 
   @CreationTimestamp
   @Column(updatable = false)

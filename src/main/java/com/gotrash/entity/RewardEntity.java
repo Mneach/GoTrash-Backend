@@ -1,4 +1,4 @@
-package com.gotrash.repository.entity;
+package com.gotrash.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
