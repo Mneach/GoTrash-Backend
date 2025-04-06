@@ -15,6 +15,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "reward_categories", schema = "gotrash")
@@ -26,7 +27,7 @@ public class RewardCategoryEntity {
   @Id
   @Column(updatable = false, nullable = false, columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String rewardCategoryId;
+  private UUID rewardCategoryId;
 
   @NotNull
   private String name;

@@ -9,13 +9,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Table(name = "groups", schema = "gotrash")
 @Entity
@@ -26,11 +29,17 @@ public class GroupEntity {
   @Id
   @Column(updatable = false, nullable = false, columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String groupId;
+  private UUID groupId;
 
   @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "reward_id", nullable = false)
   private RewardEntity reward;
+
+  @NotNull
+  private String name;
+
+  @NotNull
+  private BigInteger coin;
 
   @CreationTimestamp
   @Column(updatable = false)

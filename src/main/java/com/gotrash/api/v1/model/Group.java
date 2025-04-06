@@ -1,6 +1,6 @@
 package com.gotrash.api.v1.model;
 
-import com.gotrash.entity.RewardCategoryEntity;
+import com.gotrash.entity.RewardEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -18,15 +18,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Reward {
-    private String rewardId;
-    private RewardCategory rewardCategory;
+public class Group {
+    private String groupId;
+    private RewardEntity reward;
     private String name;
     private BigInteger coin;
-    private Integer stock;
-    private String description;
-    private String imageName;
-    private String imageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
