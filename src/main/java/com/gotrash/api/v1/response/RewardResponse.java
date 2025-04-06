@@ -1,24 +1,19 @@
-package com.gotrash.api.v1.model;
+package com.gotrash.api.v1.response;
 
-import com.gotrash.entity.RewardCategoryEntity;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import com.gotrash.api.v1.model.RewardCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Reward {
+public class RewardResponse {
     private String rewardId;
     private RewardCategory rewardCategory;
     private String name;

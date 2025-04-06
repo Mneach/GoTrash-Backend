@@ -19,6 +19,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "rewards", schema = "gotrash")
@@ -31,7 +32,7 @@ public class RewardEntity {
   @Id
   @Column(updatable = false, nullable = false, columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String rewardId;
+  private UUID rewardId;
 
   @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "reward_category_id", nullable = false)

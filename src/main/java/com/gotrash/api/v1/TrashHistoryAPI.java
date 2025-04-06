@@ -46,8 +46,8 @@ public class TrashHistoryAPI {
 
     @PatchMapping("/trash-history")
     public ResponseEntity<TrashHistoryResponse> update(@RequestBody TrashHistoryRequest trashHistoryRequest) {
-        TrashHistory TrashHistory = TrashHistoryTransformer.transformRequestToModel(trashHistoryRequest);
-        TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(trashHistoryService.save(TrashHistory));
+        TrashHistory trashHistory = TrashHistoryTransformer.transformRequestToModel(trashHistoryRequest);
+        TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(trashHistoryService.update(trashHistory));
         return new ResponseEntity<>(trashHistoryResponse, HttpStatus.OK);
     }
 

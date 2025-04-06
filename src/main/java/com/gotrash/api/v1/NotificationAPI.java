@@ -47,7 +47,7 @@ public class NotificationAPI {
     @PatchMapping("/notification")
     public ResponseEntity<NotificationResponse> update(@RequestBody NotificationRequest notificationRequest) {
         Notification notification = NotificationTransformer.transformRequestToModel(notificationRequest);
-        NotificationResponse notificationResponse = NotificationTransformer.transformModelToResponse(notificationService.save(notification));
+        NotificationResponse notificationResponse = NotificationTransformer.transformModelToResponse(notificationService.update(notification));
         return new ResponseEntity<>(notificationResponse, HttpStatus.CREATED);
     }
 
