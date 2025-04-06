@@ -1,12 +1,14 @@
-package com.gotrash.repository.entity;
+package com.gotrash.entity;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,33 +17,27 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Entity
-@Table(name = "trash_bins", schema = "gotrash")
+@Table(name = "user_groups", schema = "gotrash")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TrashBinEntity {
+public class UserGroupEntity {
+
   @Id
   @Column(updatable = false, nullable = false, columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String trashBinId;
+  private String userGroupId;
 
-  @NotNull
-  private Double latitude;
+  @OneToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "user_id", nullable = false)
+  private UserEntity user;
 
-  @NotNull
-  private Double longitude;
-
-  @NotNull
-  private String address;
-
-  @NotNull
-  private String imageName;
-
-  @NotNull
-  private String imageUrl;
+  @OneToMany(fetch = FetchType.EAGER)
+  @JoinColumn(name = "group_id", nullable = false)
+  private List<GroupEntity> groupEntities;
 
   @CreationTimestamp
   @Column(updatable = false)

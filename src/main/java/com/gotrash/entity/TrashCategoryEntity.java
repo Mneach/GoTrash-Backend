@@ -1,4 +1,4 @@
-package com.gotrash.repository.entity;
+package com.gotrash.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,16 +17,16 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "reward_categories", schema = "gotrash")
+@Table(name = "trash_categories", schema = "gotrash")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RewardCategoryEntity {
+public class TrashCategoryEntity {
   @Id
   @Column(updatable = false, nullable = false, columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String rewardCategoryId;
+  private String trashCategoryId;
 
   @NotNull
   private String name;

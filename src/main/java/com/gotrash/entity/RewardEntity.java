@@ -1,4 +1,4 @@
-package com.gotrash.repository.entity;
+package com.gotrash.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,23 +17,43 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "trashes", schema = "gotrash")
+@Table(name = "rewards", schema = "gotrash")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TrashEntity {
+public class RewardEntity {
+
   @Id
   @Column(updatable = false, nullable = false, columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String trashId;
+  private String rewardId;
 
   @OneToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "trash_category_id", nullable = false)
-  private TrashCategoryEntity trashCategory;
+  @JoinColumn(name = "reward_category_id", nullable = false)
+  private RewardCategoryEntity rewardCategory;
+
+  @NotNull
+  private String name;
+
+  @NotNull
+  private BigInteger coin;
+
+  @NotNull
+  private Integer stock;
+
+  @NotNull
+  private String description;
+
+  @NotNull
+  private String imageName;
+
+  @NotNull
+  private String imageUrl;
 
   @CreationTimestamp
   @Column(updatable = false)

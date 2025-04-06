@@ -11,4 +11,4 @@ services:
       POSTGRES_PASSWORD: application
       POSTGRES_DB: gotrash
     volumes:
-      - ./script/dump:/docker-entrypoint-initdb.d:ro
+      - ./scripts/dump:/docker-entrypoint-initdb.d:ro

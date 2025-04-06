@@ -1,13 +1,13 @@
 server:
-    port: 8080
+  port: 8080
 
 spring:
   application:
-      name: gotrash-backend
+    name: gotrash-backend
   datasource:
-      url: jdbc:postgresql://localhost:5432/gotrash
-      username: application
-      password: application
+    url: jdbc:postgresql://localhost:5432/gotrash
+    username: application
+    password: application
   jpa:
     hibernate:
       ddl-auto: update
