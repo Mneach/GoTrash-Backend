@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +24,7 @@ public class UserService {
     }
 
     public User getUserByUserId(String userId) {
-        Optional<UserEntity> userEntityOptional = userRepository.findById(userId);
+        Optional<UserEntity> userEntityOptional = userRepository.findById(UUID.fromString(userId));
         if (userEntityOptional.isPresent()) {
             return UserTransformer.transformEntityToModel(userEntityOptional.get());
         }
@@ -33,7 +34,7 @@ public class UserService {
 
     @Transactional
     public User update(User user) {
-        if (userRepository.existsById(user.getUserId())) {
+        if (userRepository.existsById(UUID.fromString(user.getUserId()))) {
             UserEntity userEntity = UserTransformer.transformModelToEntity(user);
             return UserTransformer.transformEntityToModel(userRepository.save(userEntity));
         }
@@ -43,8 +44,9 @@ public class UserService {
 
     @Transactional
     public void delete(String userId) {
-        if (userRepository.existsById(userId)) {
-            userRepository.deleteById(userId);
+        if (userRepository.existsById(UUID.fromString(userId))) {
+            userRepository.deleteById(UUID.fromString(userId));
+            return;
         }
 
         throw new EntityNotFoundException("User Not Found");

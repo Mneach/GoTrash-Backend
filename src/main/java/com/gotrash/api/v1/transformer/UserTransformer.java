@@ -3,11 +3,13 @@ package com.gotrash.api.v1.transformer;
 import com.gotrash.api.v1.model.User;
 import com.gotrash.entity.UserEntity;
 
+import java.util.UUID;
+
 public class UserTransformer {
 
     public static UserEntity transformModelToEntity(User user) {
         return UserEntity.builder()
-                .userId(user.getUserId())
+                .userId(user.getUserId() != null ? UUID.fromString(user.getUserId()) : null)
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .email(user.getEmail())
@@ -22,7 +24,7 @@ public class UserTransformer {
 
     public static User transformEntityToModel(UserEntity userEntity) {
         return User.builder()
-                .userId(userEntity.getUserId())
+                .userId(userEntity.getUserId().toString())
                 .username(userEntity.getUsername())
                 .email(userEntity.getEmail())
                 .phoneNumber(userEntity.getPhoneNumber())
