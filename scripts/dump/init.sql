@@ -42,6 +42,8 @@ CREATE TABLE gotrash.trash_categories (
 CREATE TABLE gotrash.trashes (
     trash_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     trash_category_id UUID NOT NULL,
+    coin NUMERIC NOT NULL,
+    description VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_trash_category FOREIGN KEY (trash_category_id)

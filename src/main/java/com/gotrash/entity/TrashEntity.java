@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "trashes", schema = "gotrash")
@@ -28,11 +31,17 @@ public class TrashEntity {
   @Id
   @Column(updatable = false, nullable = false, columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String trashId;
+  private UUID trashId;
 
   @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "trash_category_id", nullable = false)
   private TrashCategoryEntity trashCategory;
+
+  @NotNull
+  private BigInteger coin;
+
+  @NotNull
+  private String description;
 
   @CreationTimestamp
   @Column(updatable = false)
