@@ -20,6 +20,4 @@ public class TrashRequest {
   private String trashCategoryId;
   private BigInteger coin;
   private String description;
-  private LocalDateTime createdAt;
-  private LocalDateTime updatedAt;
 }

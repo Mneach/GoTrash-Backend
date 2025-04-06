@@ -20,6 +20,7 @@ public class TrashHistoryTransformer {
 
     public static TrashHistory transformEntityToModel(TrashHistoryEntity trashHistoryEntity) {
         return TrashHistory.builder()
+                .trashHistoryId(trashHistoryEntity.getTrashHistoryId().toString())
                 .trash(TrashTransformer.transformEntityToModel(trashHistoryEntity.getTrash()))
                 .user(UserTransformer.transformEntityToModel(trashHistoryEntity.getUser()))
                 .createdAt(trashHistoryEntity.getCreatedAt())
@@ -37,6 +38,7 @@ public class TrashHistoryTransformer {
 
     public static TrashHistoryResponse transformModelToResponse(TrashHistory trashHistory) {
         return TrashHistoryResponse.builder()
+                .trashHistoryId(trashHistory.getTrashHistoryId())
                 .trash(trashHistory.getTrash())
                 .user(trashHistory.getUser())
                 .createdAt(trashHistory.getCreatedAt())

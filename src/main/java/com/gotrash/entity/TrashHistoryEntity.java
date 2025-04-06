@@ -23,11 +23,11 @@ public class TrashHistoryEntity {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID trashHistoryId;
 
-  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id", nullable = false)
   private UserEntity user;
 
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "trash_id", nullable = false)
   private TrashEntity trash;
 

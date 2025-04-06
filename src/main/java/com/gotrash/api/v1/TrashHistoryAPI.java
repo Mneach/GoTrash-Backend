@@ -20,14 +20,14 @@ public class TrashHistoryAPI {
     
     private final TrashHistoryService trashHistoryService;
 
-    @PostMapping("/trashHistory")
+    @PostMapping("/trash-history")
     public ResponseEntity<TrashHistoryResponse> save(@RequestBody TrashHistoryRequest trashHistoryRequest) {
         TrashHistory trashHistory = TrashHistoryTransformer.transformRequestToModel(trashHistoryRequest);
         TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(trashHistoryService.save(trashHistory));
         return new ResponseEntity<>(trashHistoryResponse, HttpStatus.CREATED);
     }
 
-    @GetMapping("/trashHistory/{trash_history_id}")
+    @GetMapping("/trash-history/{trash_history_id}")
     public ResponseEntity<TrashHistoryResponse> getTrashByTrashId(@PathVariable("trash_history_id") String trashHistoryId) {
         TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(
                 trashHistoryService.getTrashHistoryByTrashHistoryId(trashHistoryId)
@@ -35,7 +35,7 @@ public class TrashHistoryAPI {
         return new ResponseEntity<>(trashHistoryResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/trashHistory/user/{user_id}")
+    @GetMapping("/trash-history/user/{user_id}")
     public ResponseEntity<List<TrashHistoryResponse>> getTrashByUserId(@PathVariable("user_id") String userId) {
         List<TrashHistory> trashHistories = trashHistoryService.getTrashHistoryByUserId(userId);
         List<TrashHistoryResponse> trashHistoryResponses = trashHistories.stream()
@@ -44,14 +44,14 @@ public class TrashHistoryAPI {
         return new ResponseEntity<>(trashHistoryResponses, HttpStatus.OK);
     }
 
-    @PatchMapping("/trashHistory")
+    @PatchMapping("/trash-history")
     public ResponseEntity<TrashHistoryResponse> update(@RequestBody TrashHistoryRequest trashHistoryRequest) {
         TrashHistory TrashHistory = TrashHistoryTransformer.transformRequestToModel(trashHistoryRequest);
         TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(trashHistoryService.save(TrashHistory));
         return new ResponseEntity<>(trashHistoryResponse, HttpStatus.OK);
     }
 
-    @DeleteMapping("/trashHistory/{trash_history_id}")
+    @DeleteMapping("/trash-history/{trash_history_id}")
     public ResponseEntity<MessageResponse> delete(@PathVariable("trash_history_id") String trashHistoryId) {
         trashHistoryService.delete(trashHistoryId);
         String message = "Successfully delete trashHistory with id " + trashHistoryId;
