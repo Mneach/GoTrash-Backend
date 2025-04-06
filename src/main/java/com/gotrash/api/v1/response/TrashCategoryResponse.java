@@ -1,4 +1,4 @@
-package com.gotrash.api.v1.model;
+package com.gotrash.api.v1.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TrashCategory {
-    private String trashCategoryId;
-    private String name;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+public class TrashCategoryResponse {
+  private String trashCategoryId;
+  private String name;
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
 }
