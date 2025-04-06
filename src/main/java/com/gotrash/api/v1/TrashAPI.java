@@ -35,7 +35,7 @@ public class TrashAPI {
     @PatchMapping("/trash")
     public ResponseEntity<TrashResponse> update(@RequestBody TrashRequest trashRequest) {
         Trash Trash = TrashTransformer.transformRequestToModel(trashRequest);
-        TrashResponse trashResponse = TrashTransformer.transformModelToResponse(trashService.save(Trash));
+        TrashResponse trashResponse = TrashTransformer.transformModelToResponse(trashService.update(Trash));
         return new ResponseEntity<>(trashResponse, HttpStatus.OK);
     }
 

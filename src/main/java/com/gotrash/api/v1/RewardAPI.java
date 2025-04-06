@@ -34,8 +34,8 @@ public class RewardAPI {
 
     @PatchMapping("/reward")
     public ResponseEntity<RewardResponse> update(@RequestBody RewardRequest rewardRequest) {
-        Reward Reward = RewardTransformer.transformRequestToModel(rewardRequest);
-        RewardResponse rewardResponse = RewardTransformer.transformModelToResponse(rewardService.save(Reward));
+        Reward reward = RewardTransformer.transformRequestToModel(rewardRequest);
+        RewardResponse rewardResponse = RewardTransformer.transformModelToResponse(rewardService.update(reward));
         return new ResponseEntity<>(rewardResponse, HttpStatus.OK);
     }
 

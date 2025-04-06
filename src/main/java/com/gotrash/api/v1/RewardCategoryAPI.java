@@ -20,24 +20,24 @@ public class RewardCategoryAPI {
 
     @PostMapping("/reward-category")
     public ResponseEntity<RewardCategoryResponse> save(@RequestBody RewardCategoryRequest rewardCategoryRequest) {
-        RewardCategory trashCategory = RewardCategoryTransformer.transformRequestToModel(rewardCategoryRequest);
-        RewardCategoryResponse trashCategoryResponse = RewardCategoryTransformer.transformModelToResponse(rewardCategoryService.save(trashCategory));
-        return new ResponseEntity<>(trashCategoryResponse, HttpStatus.CREATED);
+        RewardCategory rewardCategory = RewardCategoryTransformer.transformRequestToModel(rewardCategoryRequest);
+        RewardCategoryResponse rewardCategoryResponse = RewardCategoryTransformer.transformModelToResponse(rewardCategoryService.save(rewardCategory));
+        return new ResponseEntity<>(rewardCategoryResponse, HttpStatus.CREATED);
     }
 
     @GetMapping("/reward-category/{reward_category_id}")
     public ResponseEntity<RewardCategoryResponse> getRewardCategoryByRewardCategoryId(@PathVariable("reward_category_id") String rewardCategoryId) {
-        RewardCategoryResponse trashCategoryResponse = RewardCategoryTransformer.transformModelToResponse(
+        RewardCategoryResponse rewardCategoryResponse = RewardCategoryTransformer.transformModelToResponse(
                 rewardCategoryService.getRewardCategoryByRewardCategoryId(rewardCategoryId)
         );
-        return new ResponseEntity<>(trashCategoryResponse, HttpStatus.OK);
+        return new ResponseEntity<>(rewardCategoryResponse, HttpStatus.OK);
     }
 
     @PatchMapping("/reward-category")
     public ResponseEntity<RewardCategoryResponse> update(@RequestBody RewardCategoryRequest rewardCategoryRequest) {
         RewardCategory RewardCategory = RewardCategoryTransformer.transformRequestToModel(rewardCategoryRequest);
-        RewardCategoryResponse trashCategoryResponse = RewardCategoryTransformer.transformModelToResponse(rewardCategoryService.save(RewardCategory));
-        return new ResponseEntity<>(trashCategoryResponse, HttpStatus.CREATED);
+        RewardCategoryResponse rewardCategoryResponse = RewardCategoryTransformer.transformModelToResponse(rewardCategoryService.update(RewardCategory));
+        return new ResponseEntity<>(rewardCategoryResponse, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/reward-category/{reward_category_id}")
