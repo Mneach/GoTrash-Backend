@@ -35,8 +35,8 @@ public class RewardCategoryAPI {
 
     @PatchMapping("/reward-category")
     public ResponseEntity<RewardCategoryResponse> update(@RequestBody RewardCategoryRequest rewardCategoryRequest) {
-        RewardCategory RewardCategory = RewardCategoryTransformer.transformRequestToModel(rewardCategoryRequest);
-        RewardCategoryResponse rewardCategoryResponse = RewardCategoryTransformer.transformModelToResponse(rewardCategoryService.update(RewardCategory));
+        RewardCategory rewardCategory = RewardCategoryTransformer.transformRequestToModel(rewardCategoryRequest);
+        RewardCategoryResponse rewardCategoryResponse = RewardCategoryTransformer.transformModelToResponse(rewardCategoryService.update(rewardCategory));
         return new ResponseEntity<>(rewardCategoryResponse, HttpStatus.CREATED);
     }
 

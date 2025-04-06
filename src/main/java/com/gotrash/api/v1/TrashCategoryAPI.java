@@ -34,8 +34,8 @@ public class TrashCategoryAPI {
 
     @PatchMapping("/trash-category")
     public ResponseEntity<TrashCategoryResponse> update(@RequestBody TrashCategoryRequest trashCategoryRequest) {
-        TrashCategory TrashCategory = TrashCategoryTransformer.transformRequestToModel(trashCategoryRequest);
-        TrashCategoryResponse trashCategoryResponse = TrashCategoryTransformer.transformModelToResponse(trashCategoryService.update(TrashCategory));
+        TrashCategory trashCategory = TrashCategoryTransformer.transformRequestToModel(trashCategoryRequest);
+        TrashCategoryResponse trashCategoryResponse = TrashCategoryTransformer.transformModelToResponse(trashCategoryService.update(trashCategory));
         return new ResponseEntity<>(trashCategoryResponse, HttpStatus.CREATED);
     }
 
