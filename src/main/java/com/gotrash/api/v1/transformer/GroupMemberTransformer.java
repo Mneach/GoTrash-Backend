@@ -1,4 +1,4 @@
 package com.gotrash.api.v1.transformer;
 
-public class UserGroupTransformer {
+public class GroupMemberTransformer {
 }

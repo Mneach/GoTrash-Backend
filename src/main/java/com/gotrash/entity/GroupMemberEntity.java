@@ -1,14 +1,16 @@
 package com.gotrash.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,26 +20,34 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
-@Table(name = "user_groups", schema = "gotrash")
+@Table(
+    name = "group_members",
+    schema = "gotrash",
+    uniqueConstraints = @UniqueConstraint(
+        columnNames = {"group_id", "user_id"}
+    )
+)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserGroupEntity {
+public class GroupMemberEntity {
 
   @Id
   @Column(updatable = false, nullable = false, columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String userGroupId;
+  private UUID groupMemberId;
 
-  @OneToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id", nullable = false)
   private UserEntity user;
 
-  @OneToMany(fetch = FetchType.EAGER)
+  @ManyToOne
   @JoinColumn(name = "group_id", nullable = false)
-  private List<GroupEntity> groupEntities;
+  @JsonIgnore
+  private GroupEntity group;
 
   @CreationTimestamp
   @Column(updatable = false)
