@@ -6,6 +6,7 @@ import com.gotrash.api.v1.model.Reward;
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.transformer.GroupTransformer;
 import com.gotrash.entity.GroupEntity;
+import com.gotrash.entity.GroupMemberEntity;
 import com.gotrash.repository.GroupRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -20,24 +21,52 @@ import java.util.UUID;
 public class GroupService {
 
   private final GroupRepository groupRepository;
+  private final GroupMemberService groupMemberService;
   private final RewardService rewardService;
   private final UserService userService;
 
   public Group save(Group group) {
     Reward reward = rewardService.getRewardByRewardId(group.getReward().getRewardId());
     User user = userService.getUserByUserId(group.getOwner().getUserId());
-
-    GroupMember groupMember = GroupMember.builder()
-        .user(user)
-        .build();
-    // TODO : Add group member
-
     group.setReward(reward);
     group.setOwner(user);
 
+    // Create group
     GroupEntity groupEntity = groupRepository.save(GroupTransformer.transformModelToEntity(group));
 
-    return GroupTransformer.transformEntityToModel(groupEntity);
+    // Create group member
+    GroupMember groupMember = GroupMember.builder()
+        .user(user)
+        .group(GroupTransformer.transformEntityToModel(groupEntity))
+        .build();
+
+    groupMember = groupMemberService.save(groupMember);
+
+    // Set reference group member
+    group = GroupTransformer.transformEntityToModel(groupEntity);
+    group.setGroupMembers(List.of(groupMember));
+
+    return group;
+  }
+
+  public void addMember(GroupMember groupMember) {
+    if (!userService.userExists(groupMember.getUser().getUserId())) {
+      throw new EntityNotFoundException("User With ID " + groupMember.getUser().getUserId() + " Not Found");
+    } else if (!groupExists(groupMember.getGroup().getGroupId())) {
+      throw new EntityNotFoundException("Group With ID " + groupMember.getGroup().getGroupId() + " Not Found");
+    }
+
+    groupMemberService.save(groupMember);
+  }
+
+  public void removeMember(GroupMember groupMember) {
+    if (!userService.userExists(groupMember.getUser().getUserId())) {
+      throw new EntityNotFoundException("User With ID " + groupMember.getUser().getUserId() + " Not Found");
+    } else if (!groupExists(groupMember.getGroup().getGroupId())) {
+      throw new EntityNotFoundException("Group With ID " + groupMember.getGroup().getGroupId() + " Not Found");
+    }
+
+    groupMemberService.delete(groupMember);
   }
 
   public Group getGroupByGroupId(String groupId) {
@@ -56,8 +85,6 @@ public class GroupService {
 
     return List.of();
   }
-
-
 
   public Group update(Group group) {
 
@@ -79,5 +106,9 @@ public class GroupService {
     }
 
     groupRepository.deleteById(UUID.fromString(groupId));
+  }
+
+  public boolean groupExists(String groupId) {
+    return groupRepository.existsById(UUID.fromString(groupId));
   }
 }

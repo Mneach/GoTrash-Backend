@@ -51,4 +51,8 @@ public class UserService {
 
         throw new EntityNotFoundException("User Not Found");
     }
+
+    public boolean userExists(String userId) {
+        return userRepository.existsById(UUID.fromString(userId));
+    }
 }
