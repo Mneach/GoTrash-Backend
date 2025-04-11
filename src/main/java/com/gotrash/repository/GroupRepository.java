@@ -6,16 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
 
-  @Query("SELECT g FROM GroupEntity g " +
-      "JOIN FETCH g.owner " +
-      "JOIN FETCH g.reward " +
-      "LEFT JOIN FETCH g.groupMembers " +
-      "WHERE g.groupId = :groupId")
-  Optional<GroupEntity> findByIdWithAllRelations(@Param("groupId") UUID groupId);
+  List<GroupEntity> findAllByOwner_UserId(UUID userId);
 }

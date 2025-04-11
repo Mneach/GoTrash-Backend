@@ -14,11 +14,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,9 +31,18 @@ public class GroupAPI {
   private final GroupService groupService;
 
   @GetMapping("/groups/{group_id}")
-  public ResponseEntity<GroupResponse> groupResponse(@PathVariable("group_id") String groupId) {
+  public ResponseEntity<GroupResponse> getGroupByUserId(@PathVariable("group_id") String groupId) {
     GroupResponse groupResponse = GroupTransformer.transformModelToResponse(groupService.getGroupByGroupId(groupId));
     return new ResponseEntity<>(groupResponse, HttpStatus.OK);
+  }
+
+  @GetMapping("/groups/users/{user_id}")
+  public ResponseEntity<List<GroupResponse>> getGroupsByUserId(@PathVariable("user_id") String userId) {
+    List<Group> groups = groupService.getGroupsByUserId(userId);
+    List<GroupResponse> groupResponses = groups.stream()
+        .map(GroupTransformer::transformModelToResponse)
+        .toList();
+    return new ResponseEntity<>(groupResponses, HttpStatus.OK);
   }
 
   @PostMapping("/groups")
@@ -50,6 +62,14 @@ public class GroupAPI {
     String message = "Succcessfully Add Member With Group ID " + groupMember.getGroup().getGroupId() + " And Member Id " + groupMember.getUser().getUserId();
     MessageResponse messageResponse = new MessageResponse(message);
     return new ResponseEntity<>(messageResponse, HttpStatus.CREATED);
+  }
+
+  @PatchMapping("/groups/{group_id}")
+  public ResponseEntity<GroupResponse> updateGroup(@RequestBody GroupRequest groupRequest) {
+    Group group = GroupTransformer.transformRequestToModel(groupRequest);
+    GroupResponse groupResponse = GroupTransformer.transformModelToResponse(groupService.update(group));
+
+    return new ResponseEntity<>(groupResponse, HttpStatus.OK);
   }
 
   @DeleteMapping("/groups/{group_id}/members/{member_id}")

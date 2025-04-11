@@ -5,12 +5,15 @@ import com.gotrash.api.v1.model.GroupMember;
 import com.gotrash.api.v1.model.Reward;
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.transformer.GroupTransformer;
+import com.gotrash.api.v1.transformer.RewardTransformer;
+import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.entity.GroupEntity;
 import com.gotrash.entity.GroupMemberEntity;
 import com.gotrash.repository.GroupRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +28,7 @@ public class GroupService {
   private final RewardService rewardService;
   private final UserService userService;
 
+  @Transactional
   public Group save(Group group) {
     Reward reward = rewardService.getRewardByRewardId(group.getReward().getRewardId());
     User user = userService.getUserByUserId(group.getOwner().getUserId());
@@ -49,6 +53,7 @@ public class GroupService {
     return group;
   }
 
+  @Transactional
   public void addMember(GroupMember groupMember) {
 
     Group group = getGroupByGroupId(groupMember.getGroup().getGroupId());
@@ -60,14 +65,22 @@ public class GroupService {
     groupMemberService.save(groupMember);
   }
 
+  @Transactional
   public void removeMember(GroupMember groupMember) {
-    Group group = getGroupByGroupId(groupMember.getGroup().getGroupId());
+    GroupEntity groupEntity = groupRepository.findById(UUID.fromString(groupMember.getGroup().getGroupId()))
+        .orElseThrow(() -> new EntityNotFoundException("Group not found"));
     User user = userService.getUserByUserId(groupMember.getUser().getUserId());
 
-    groupMember.setGroup(group);
-    groupMember.setUser(user);
+    GroupMemberEntity memberToRemove = groupEntity.getGroupMembers().stream()
+        .filter(member -> member.getUser().getUserId().equals(UUID.fromString(user.getUserId())))
+        .findFirst()
+        .orElseThrow(() -> new EntityNotFoundException("Group member not found"));
 
-    groupMemberService.delete(groupMember);
+    groupEntity.getGroupMembers().remove(memberToRemove);
+
+    groupMember.setGroupMemberId(memberToRemove.getGroupMemberId().toString());
+    groupMember.setGroup(null);
+    groupMemberService.delete(groupMember.getGroupMemberId());
   }
 
   public Group getGroupByGroupId(String groupId) {
@@ -81,26 +94,38 @@ public class GroupService {
   }
 
   public List<Group> getGroupsByUserId(String userId) {
+    List<GroupEntity> groupEntities = groupRepository.findAllByOwner_UserId(UUID.fromString(userId));
 
-    // TODO : add impl
-
-    return List.of();
+    return groupEntities.stream()
+        .map(GroupTransformer::transformEntityToModel)
+        .toList();
   }
 
+  @Transactional
   public Group update(Group group) {
 
-    if (!groupRepository.existsById(UUID.fromString(group.getGroupId()))) {
-      throw new EntityNotFoundException("Group with ID " + group.getGroupId() + " Not Found");
+    GroupEntity groupEntity = groupRepository.findById(UUID.fromString(group.getGroupId()))
+        .orElseThrow(() -> new EntityNotFoundException("Group With ID " + group.getGroupId() + " Not Found"));
+
+    if (group.getOwner() != null && group.getOwner().getUserId() != null) {
+      group.setOwner(userService.getUserByUserId(group.getOwner().getUserId()));
     }
 
-    Reward reward = rewardService.getRewardByRewardId(group.getReward().getRewardId());
-    group.setReward(reward);
+    if (group.getReward() != null && group.getReward().getRewardId() != null) {
+      group.setReward(rewardService.getRewardByRewardId(group.getReward().getRewardId()));
+    }
 
-    GroupEntity groupEntity = groupRepository.save(GroupTransformer.transformModelToEntity(group));
+    groupEntity.setName(group.getName());
+    groupEntity.setReward(RewardTransformer.transformModelToEntity(group.getReward()));
+    groupEntity.setOwner(UserTransformer.transformModelToEntity(group.getOwner()));
+    groupEntity.setCoin(group.getCoin());
 
-    return GroupTransformer.transformEntityToModel(groupEntity);
+    return GroupTransformer.transformEntityToModel(
+        groupRepository.save(groupEntity)
+    );
   }
 
+  @Transactional
   public void delete(String groupId) {
     if (!groupRepository.existsById(UUID.fromString(groupId))) {
       throw new EntityNotFoundException("Group with ID " + groupId + " Not Found");

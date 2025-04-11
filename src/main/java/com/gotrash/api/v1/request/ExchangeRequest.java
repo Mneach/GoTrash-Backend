@@ -1,4 +1,4 @@
-package com.gotrash.api.v1.model;
+package com.gotrash.api.v1.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Exchange {
+public class ExchangeRequest {
   private String exchangeId;
-  private User user;
-  private Reward reward;
+  private String userId;
+  private String rewardId;
   private String status;
   private String description;
   private LocalDateTime createdAt;

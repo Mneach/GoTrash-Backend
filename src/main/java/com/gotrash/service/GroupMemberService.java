@@ -46,19 +46,4 @@ public class GroupMemberService {
 
     groupMemberRepository.deleteById(UUID.fromString(groupMemberId));
   }
-
-  public void delete(GroupMember groupMember) {
-    Optional<GroupMemberEntity> groupMemberEntityOptional = groupMemberRepository.findByUser_UserIdAndGroup_GroupId(
-        UUID.fromString(groupMember.getUser().getUserId()),
-        UUID.fromString(groupMember.getGroup().getGroupId())
-    );
-
-    if (groupMemberEntityOptional.isEmpty()) {
-      throw new EntityNotFoundException("Group Member with user_id " + groupMember.getUser().getUserId() + " and group_id " + groupMember.getGroup().getGroupId() + " Not Found");
-    }
-
-
-
-    groupMemberRepository.deleteById(groupMemberEntityOptional.get().getGroupMemberId());
-  }
 }
