@@ -50,21 +50,22 @@ public class GroupService {
   }
 
   public void addMember(GroupMember groupMember) {
-    if (!userService.userExists(groupMember.getUser().getUserId())) {
-      throw new EntityNotFoundException("User With ID " + groupMember.getUser().getUserId() + " Not Found");
-    } else if (!groupExists(groupMember.getGroup().getGroupId())) {
-      throw new EntityNotFoundException("Group With ID " + groupMember.getGroup().getGroupId() + " Not Found");
-    }
+
+    Group group = getGroupByGroupId(groupMember.getGroup().getGroupId());
+    User user = userService.getUserByUserId(groupMember.getUser().getUserId());
+
+    groupMember.setGroup(group);
+    groupMember.setUser(user);
 
     groupMemberService.save(groupMember);
   }
 
   public void removeMember(GroupMember groupMember) {
-    if (!userService.userExists(groupMember.getUser().getUserId())) {
-      throw new EntityNotFoundException("User With ID " + groupMember.getUser().getUserId() + " Not Found");
-    } else if (!groupExists(groupMember.getGroup().getGroupId())) {
-      throw new EntityNotFoundException("Group With ID " + groupMember.getGroup().getGroupId() + " Not Found");
-    }
+    Group group = getGroupByGroupId(groupMember.getGroup().getGroupId());
+    User user = userService.getUserByUserId(groupMember.getUser().getUserId());
+
+    groupMember.setGroup(group);
+    groupMember.setUser(user);
 
     groupMemberService.delete(groupMember);
   }
@@ -79,7 +80,7 @@ public class GroupService {
     return GroupTransformer.transformEntityToModel(groupEntityOptional.get());
   }
 
-  public List<Group> getGroupsByUserId() {
+  public List<Group> getGroupsByUserId(String userId) {
 
     // TODO : add impl
 

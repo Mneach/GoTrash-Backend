@@ -1,13 +1,9 @@
-package com.gotrash.api.v1.request;
+package com.gotrash.api.v1.request.group;
 
-import com.gotrash.api.v1.model.Group;
-import com.gotrash.api.v1.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor

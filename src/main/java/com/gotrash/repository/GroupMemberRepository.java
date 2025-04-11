@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface GroupMemberRepository extends JpaRepository<GroupMemberEntity, UUID> {
-  Optional<GroupMemberEntity> findByUser_UserIdAndGroup_GropuId(UUID userId, UUID groupId);
+  Optional<GroupMemberEntity> findByUser_UserIdAndGroup_GroupId(UUID userId, UUID groupId);
 }

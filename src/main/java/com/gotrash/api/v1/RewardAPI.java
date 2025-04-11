@@ -43,6 +43,7 @@ public class RewardAPI {
     public ResponseEntity<MessageResponse> delete(@PathVariable("reward_id") String rewardId) {
         rewardService.delete(rewardId);
         String message = "Successfully delete reward with id " + rewardId;
-        return new ResponseEntity(message, HttpStatus.OK);
+        MessageResponse messageResponse = new MessageResponse(message);
+        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
     }
 }

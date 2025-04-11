@@ -19,11 +19,13 @@ public class GroupMemberService {
 
   public GroupMember save(GroupMember groupMember) {
     GroupMemberEntity groupMemberEntity = GroupMemberTransformer.transformModelToEntity(groupMember);
-    return GroupMemberTransformer.transformEntityToModel(groupMemberEntity);
+    return GroupMemberTransformer.transformEntityToModel(
+        groupMemberRepository.save(groupMemberEntity)
+    );
   }
 
   public GroupMember update(GroupMember groupMember) {
-    Optional<GroupMemberEntity> groupMemberEntityOptional = groupMemberRepository.findByUser_UserIdAndGroup_GropuId(
+    Optional<GroupMemberEntity> groupMemberEntityOptional = groupMemberRepository.findByUser_UserIdAndGroup_GroupId(
         UUID.fromString(groupMember.getUser().getUserId()),
         UUID.fromString(groupMember.getGroup().getGroupId())
     );
@@ -37,8 +39,16 @@ public class GroupMemberService {
     );
   }
 
+  public void delete(String groupMemberId) {
+    if (!groupMemberRepository.existsById(UUID.fromString(groupMemberId))) {
+      throw new EntityNotFoundException("Group Member With ID " + groupMemberId + " Not Found");
+    }
+
+    groupMemberRepository.deleteById(UUID.fromString(groupMemberId));
+  }
+
   public void delete(GroupMember groupMember) {
-    Optional<GroupMemberEntity> groupMemberEntityOptional = groupMemberRepository.findByUser_UserIdAndGroup_GropuId(
+    Optional<GroupMemberEntity> groupMemberEntityOptional = groupMemberRepository.findByUser_UserIdAndGroup_GroupId(
         UUID.fromString(groupMember.getUser().getUserId()),
         UUID.fromString(groupMember.getGroup().getGroupId())
     );
@@ -47,6 +57,8 @@ public class GroupMemberService {
       throw new EntityNotFoundException("Group Member with user_id " + groupMember.getUser().getUserId() + " and group_id " + groupMember.getGroup().getGroupId() + " Not Found");
     }
 
-    groupMemberRepository.delete(groupMemberEntityOptional.get());
+
+
+    groupMemberRepository.deleteById(groupMemberEntityOptional.get().getGroupMemberId());
   }
 }

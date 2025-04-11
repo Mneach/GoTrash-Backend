@@ -1,4 +1,4 @@
-package com.gotrash.api.v1.request;
+package com.gotrash.api.v1.request.group;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
