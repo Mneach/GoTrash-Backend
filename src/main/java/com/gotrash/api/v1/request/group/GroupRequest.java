@@ -1,14 +1,11 @@
-package com.gotrash.api.v1.request;
+package com.gotrash.api.v1.request.group;
 
-import com.gotrash.api.v1.model.Reward;
-import com.gotrash.entity.RewardEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -17,6 +14,7 @@ import java.time.LocalDateTime;
 public class GroupRequest {
     private String groupId;
     private String rewardId;
+    private String userId;
     private String name;
     private BigInteger coin;
 }

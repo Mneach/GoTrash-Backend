@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -20,7 +21,9 @@ import java.util.UUID;
 @Builder
 public class Group {
     private String groupId;
-    private RewardEntity reward;
+    private Reward reward;
+    private User owner;
+    private List<GroupMember> groupMembers;
     private String name;
     private BigInteger coin;
     private LocalDateTime createdAt;

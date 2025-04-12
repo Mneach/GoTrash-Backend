@@ -1,6 +1,6 @@
-package com.gotrash.api.v1.model;
+package com.gotrash.api.v1.request;
 
-
+import com.gotrash.api.v1.model.Group;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,10 +13,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserGroup {
+public class UserGroupRequest {
   private String userGroupId;
-  private User user;
-  private List<Group> groupEntities;
+  private String userId;
+  private List<Group> groupId;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

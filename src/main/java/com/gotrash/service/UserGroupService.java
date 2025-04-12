@@ -1,7 +1,0 @@
-package com.gotrash.service;
-
-import org.springframework.stereotype.Service;
-
-@Service
-public class UserGroupService {
-}
