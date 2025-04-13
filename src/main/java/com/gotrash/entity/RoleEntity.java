@@ -1,16 +1,14 @@
 package com.gotrash.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.annotation.Nullable;
+import com.gotrash.constant.RoleName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,39 +21,21 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users", schema = "gotrash")
+@Table(name = "roles", schema = "gotrash")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserEntity {
+public class RoleEntity {
 
   @Id
   @Column(updatable = false, nullable = false, columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.UUID)
-  private UUID userId;
+  private UUID roleId;
 
-  @NotNull
-  private String username;
-
-  @NotNull
-  private String password;
-
-  @NotNull
-  private String email;
-
-  @NotNull
-  private String phoneNumber;
-
-  @Nullable
-  private String imageUrl;
-
-  @NotNull
-  private BigInteger coin;
-
-  @OneToOne
-  @JoinColumn(name = "role_id", nullable = false)
-  private RoleEntity role;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false, unique = true)
+  private RoleName name;
 
   @CreationTimestamp
   @Column(updatable = false)
@@ -63,4 +43,5 @@ public class UserEntity {
 
   @UpdateTimestamp
   private LocalDateTime updatedAt;
+
 }

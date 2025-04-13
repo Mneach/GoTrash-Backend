@@ -5,4 +5,5 @@ import org.springframework.stereotype.Component;
 
 @Configuration
 public class AppConfig {
+
 }

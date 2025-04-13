@@ -1,6 +1,5 @@
 package com.gotrash.api.v1.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,16 +13,15 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User{
     private String userId;
     private String username;
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String email;
     private String phoneNumber;
     private String imageUrl;
     private BigInteger coin;
+    private Role role;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
