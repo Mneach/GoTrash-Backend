@@ -1,5 +1,6 @@
 package com.gotrash.service;
 
+import com.gotrash.api.v1.model.Role;
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.repository.UserRepository;
@@ -7,6 +8,8 @@ import com.gotrash.entity.UserEntity;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,11 +19,23 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final RoleService roleService;
 
     @Transactional
     public User save(User user) {
+        Role role = roleService.getRoleByRoleName(user.getRole().getName());
+        user.setRole(role);
         UserEntity userEntity = UserTransformer.transformModelToEntity(user);
         return UserTransformer.transformEntityToModel(userRepository.save(userEntity));
+    }
+
+    public User getUserByEmail(String email) {
+        Optional<UserEntity> userEntityOptional = userRepository.findByEmail(email);
+        if (userEntityOptional.isPresent()) {
+            return UserTransformer.transformEntityToModel(userEntityOptional.get());
+        }
+
+        throw new EntityNotFoundException("User Not Found");
     }
 
     public User getUserByUserId(String userId) {
@@ -30,6 +45,13 @@ public class UserService {
         }
 
         throw new EntityNotFoundException("User Not Found");
+    }
+
+    public User getMe() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
+
+        return getUserByUserId(userId);
     }
 
     @Transactional
