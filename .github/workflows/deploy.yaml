@@ -23,6 +23,8 @@ jobs:
         run : |
           echo $RELEASE_VERSION
           echo ${{ env.RELEASE_VERSION }}
+          echo ${{ env.JAR_DEPLOYMENT_FOLDER }}
+          echo ${{ env.SCRIPT_DEPLOYMENT_FOLDER }}
 
       - name: Build Jar
         run: |
@@ -32,7 +34,8 @@ jobs:
           cp "$JAR_FILE" "app/${RELEASE_VERSION}.jar"
           echo "JAR_NAME=${RELEASE_VERSION}.jar" >> $GITHUB_ENV
           echo "[INFO] Copied $JAR_FILE to app/${RELEASE_VERSION}.jar"
-          ls -lh app
+          cd app
+          ls
       
       - name: Upload JAR to VPS
         uses: appleboy/scp-action@v0.1.3
