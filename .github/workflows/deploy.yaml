@@ -23,17 +23,15 @@ jobs:
         run : |
           echo $RELEASE_VERSION
           echo ${{ env.RELEASE_VERSION }}
-          echo ${{ vars.JAR_DEPLOYMENT_FOLDER }}
-          echo ${{ vars.SCRIPT_DEPLOYMENT_FOLDER }}
 
       - name: Build Jar
         run: |
           ./gradlew clean build
           mkdir -p app
           JAR_FILE=$(ls build/libs/*.jar | head -n 1)
-          cp "$JAR_FILE" "app/${RELEASE_VERSION}.jar"
+          cp "$JAR_FILE" "${RELEASE_VERSION}.jar"
           echo "JAR_NAME=${RELEASE_VERSION}.jar" >> $GITHUB_ENV
-          echo "[INFO] Copied $JAR_FILE to app/${RELEASE_VERSION}.jar"
+          echo "[INFO] Copied $JAR_FILE to ${RELEASE_VERSION}.jar"
           cd app
           ls
       
@@ -43,7 +41,7 @@ jobs:
           host : ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
-          source: app/${{ env.JAR_NAME }}
+          source: ${{ env.JAR_NAME }}
           target: ${{ vars.JAR_DEPLOYMENT_FOLDER }}
           debug: true  # Enable debug logs
 
