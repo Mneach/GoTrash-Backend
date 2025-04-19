@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set Environment
-        run: echo "RELEASE_VERSION=v0.0.3" >> $GITHUB_ENV
+        run: echo "RELEASE_VERSION=v0.0.6" >> $GITHUB_ENV
 
       - name: Check Release Version
         run : |
@@ -26,14 +26,11 @@ jobs:
 
       - name: Build Jar
         run: |
-          ./gradlew clean build
-          mkdir -p app
+          ./gradlew clean bootJar
           JAR_FILE=$(ls build/libs/*.jar | head -n 1)
           cp "$JAR_FILE" "${RELEASE_VERSION}.jar"
           echo "JAR_NAME=${RELEASE_VERSION}.jar" >> $GITHUB_ENV
           echo "[INFO] Copied $JAR_FILE to ${RELEASE_VERSION}.jar"
-          cd app
-          ls
       
       - name: Upload JAR to VPS
         uses: appleboy/scp-action@v0.1.3
