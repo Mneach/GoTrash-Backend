@@ -31,23 +31,22 @@ jobs:
           cp build/libs/*.jar app/${{ env.JAR_NAME }}
       
       - name: Upload JAR to VPS
-        uses: appleboy/scp-action@v1.2.2
+        uses: appleboy/scp-action@v0.1.7
         with:
           host : ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
           source: app/${{ env.JAR_NAME }}
           target: ${{ env.JAR_DEPLOYMENT_FOLDER }}
-          script: |
-            whoami
-            ls -al
 
       - name: Trigger Deploy
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
           script: |
+            whoami
             cd ${{ env.SCRIPT_DEPLOYMENT_FOLDER }}
+            ls -la
             ./deploy.sh ${{ env.JAR_NAME }}
