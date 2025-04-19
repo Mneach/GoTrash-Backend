@@ -37,7 +37,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
           source: app/${{ env.JAR_NAME }}
-          target: ${{ env.DEPLOYMENT_FOLDER }}
+          target: ${{ env.JAR_DEPLOYMENT_FOLDER }}
 
       - name: Trigger Deploy
         uses: appleboy/ssh-action@v1.0.0
@@ -46,5 +46,5 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
           script: |
-            cd /home/ubuntu/gotrash
+            cd ${{ env.SCRIPT_DEPLOYMENT_FOLDER }}
             ./deploy.sh ${{ env.JAR_NAME }}
