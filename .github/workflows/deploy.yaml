@@ -27,9 +27,12 @@ jobs:
       - name: Build Jar
         run: |
           ./gradlew clean build
-          mkdir app
-          cp build/libs/*.jar app/${{ env.JAR_NAME }}
-          ls
+          mkdir -p app
+          JAR_FILE=$(ls build/libs/*.jar | head -n 1)
+          cp "$JAR_FILE" "app/${RELEASE_VERSION}.jar"
+          echo "JAR_NAME=${RELEASE_VERSION}.jar" >> $GITHUB_ENV
+          echo "[INFO] Copied $JAR_FILE to app/${RELEASE_VERSION}.jar"
+          ls -lh app
       
       - name: Upload JAR to VPS
         uses: appleboy/scp-action@v0.1.3
