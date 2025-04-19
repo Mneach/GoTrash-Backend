@@ -48,5 +48,6 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
           script: |
+            whoami
             cd ${{ vars.SCRIPT_DEPLOYMENT_FOLDER }}
             ./deploy.sh ${{ env.JAR_NAME }}
