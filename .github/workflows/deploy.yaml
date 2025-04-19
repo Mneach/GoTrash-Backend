@@ -29,6 +29,7 @@ jobs:
           ./gradlew clean build
           mkdir app
           cp build/libs/*.jar app/${{ env.JAR_NAME }}
+          ls
       
       - name: Upload JAR to VPS
         uses: appleboy/scp-action@v0.1.3
