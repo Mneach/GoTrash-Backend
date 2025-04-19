@@ -27,8 +27,8 @@ jobs:
       - name: Build Jar
         run: |
           ./gradlew clean build
-          mkdir package
-          cp build/libs/*.jar package/${{ env.JAR_NAME }}
+          mkdir app
+          cp build/libs/*.jar app/${{ env.JAR_NAME }}
       
       - name: Upload JAR to VPS
         uses: appleboy/scp-action@v0.1.4
@@ -36,7 +36,7 @@ jobs:
           host : ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
-          source: "package/${{ env.JAR_NAME }}"
+          source: app/${{ env.JAR_NAME }}
           target: ${{ env.DEPLOYMENT_FOLDER }}
 
       - name: Trigger Deploy
