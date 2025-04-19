@@ -23,8 +23,8 @@ jobs:
         run : |
           echo $RELEASE_VERSION
           echo ${{ env.RELEASE_VERSION }}
-          echo ${{ env.JAR_DEPLOYMENT_FOLDER }}
-          echo ${{ env.SCRIPT_DEPLOYMENT_FOLDER }}
+          echo ${{ vars.JAR_DEPLOYMENT_FOLDER }}
+          echo ${{ vars.SCRIPT_DEPLOYMENT_FOLDER }}
 
       - name: Build Jar
         run: |
@@ -44,7 +44,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
           source: app/${{ env.JAR_NAME }}
-          target: ${{ env.JAR_DEPLOYMENT_FOLDER }}
+          target: ${{ vars.JAR_DEPLOYMENT_FOLDER }}
           debug: true  # Enable debug logs
 
       - name: Trigger Deploy
@@ -55,6 +55,6 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
           script: |
             whoami
-            cd ${{ env.SCRIPT_DEPLOYMENT_FOLDER }}
+            cd ${{ vars.SCRIPT_DEPLOYMENT_FOLDER }}
             ls -la
             ./deploy.sh ${{ env.JAR_NAME }}
