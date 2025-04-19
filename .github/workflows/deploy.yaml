@@ -38,6 +38,9 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
           source: app/${{ env.JAR_NAME }}
           target: ${{ env.JAR_DEPLOYMENT_FOLDER }}
+          script: |
+            whoami
+            ls -al
 
       - name: Trigger Deploy
         uses: appleboy/ssh-action@v1.0.0
