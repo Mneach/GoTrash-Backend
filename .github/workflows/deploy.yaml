@@ -38,6 +38,7 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
           source: app/${{ env.JAR_NAME }}
           target: ${{ env.JAR_DEPLOYMENT_FOLDER }}
+          debug: true  # Enable debug logs
 
       - name: Trigger Deploy
         uses: appleboy/ssh-action@v1.2.2
