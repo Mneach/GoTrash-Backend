@@ -1,11 +1,14 @@
 package com.gotrash.api.v1;
 
 import com.gotrash.api.response.MessageResponse;
+import com.gotrash.api.v1.model.Exchange;
 import com.gotrash.api.v1.model.Group;
 import com.gotrash.api.v1.model.GroupMember;
 import com.gotrash.api.v1.request.group.GroupMemberRequest;
 import com.gotrash.api.v1.request.group.GroupRequest;
 import com.gotrash.api.v1.response.GroupResponse;
+import com.gotrash.api.v1.response.GroupResponse;
+import com.gotrash.api.v1.transformer.ExchangeTransformer;
 import com.gotrash.api.v1.transformer.GroupMemberTransformer;
 import com.gotrash.api.v1.transformer.GroupTransformer;
 import com.gotrash.service.GroupService;
@@ -38,6 +41,16 @@ public class GroupAPI {
   public ResponseEntity<GroupResponse> getGroupByUserId(@PathVariable("group_id") String groupId) {
     GroupResponse groupResponse = GroupTransformer.transformModelToResponse(groupService.getGroupByGroupId(groupId));
     return new ResponseEntity<>(groupResponse, HttpStatus.OK);
+  }
+
+  @GetMapping("/groups")
+  @Operation(summary = "API to get all group data")
+  public ResponseEntity<List<GroupResponse>> getExchanges() {
+    List<Group> groups = groupService.getGroups();
+    List<GroupResponse> groupResponses = groups.stream()
+        .map(GroupTransformer::transformModelToResponse)
+        .toList();
+    return new ResponseEntity<>(groupResponses, HttpStatus.OK);
   }
 
   @GetMapping("/groups/users/{user_id}")

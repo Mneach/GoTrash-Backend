@@ -2,9 +2,12 @@ package com.gotrash.api.v1;
 
 import com.gotrash.api.response.MessageResponse;
 import com.gotrash.api.v1.model.Role;
+import com.gotrash.api.v1.model.TrashHistory;
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.request.UserRequest;
+import com.gotrash.api.v1.response.TrashHistoryResponse;
 import com.gotrash.api.v1.response.UserResponse;
+import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
 import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.service.RoleService;
 import com.gotrash.service.UserService;
@@ -14,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,6 +33,16 @@ public class UserAPI {
         User user = userService.getUserByUserId(userId);
         UserResponse userResponse = UserTransformer.transformModelToResponse(user);
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/users")
+    @Operation(summary = "API to get all user data")
+    public ResponseEntity<List<UserResponse>> getExchanges() {
+        List<User> users = userService.getUsers();
+        List<UserResponse> userResponses = users.stream()
+            .map(UserTransformer::transformModelToResponse)
+            .toList();
+        return new ResponseEntity<>(userResponses, HttpStatus.OK);
     }
 
     @GetMapping("/users/me")

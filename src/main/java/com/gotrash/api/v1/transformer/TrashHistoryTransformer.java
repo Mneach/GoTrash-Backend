@@ -39,8 +39,8 @@ public class TrashHistoryTransformer {
     public static TrashHistoryResponse transformModelToResponse(TrashHistory trashHistory) {
         return TrashHistoryResponse.builder()
                 .trashHistoryId(trashHistory.getTrashHistoryId())
-                .trash(trashHistory.getTrash())
-                .user(trashHistory.getUser())
+                .trash(TrashTransformer.transformModelToResponse(trashHistory.getTrash()))
+                .user(UserTransformer.transformModelToResponse(trashHistory.getUser()))
                 .createdAt(trashHistory.getCreatedAt())
                 .updatedAt(trashHistory.getUpdatedAt())
                 .build();

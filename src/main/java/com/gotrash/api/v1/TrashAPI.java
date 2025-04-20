@@ -1,9 +1,12 @@
 package com.gotrash.api.v1;
 
 import com.gotrash.api.response.MessageResponse;
+import com.gotrash.api.v1.model.Role;
 import com.gotrash.api.v1.model.Trash;
 import com.gotrash.api.v1.request.TrashRequest;
+import com.gotrash.api.v1.response.RoleResponse;
 import com.gotrash.api.v1.response.TrashResponse;
+import com.gotrash.api.v1.transformer.RoleTransformer;
 import com.gotrash.api.v1.transformer.TrashTransformer;
 import com.gotrash.service.TrashService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,6 +31,16 @@ public class TrashAPI {
         Trash trash = TrashTransformer.transformRequestToModel(trashRequest);
         TrashResponse trashResponse = TrashTransformer.transformModelToResponse(trashService.save(trash));
         return new ResponseEntity<>(trashResponse, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/trashes")
+    @Operation(summary = "API to get all trash data")
+    public ResponseEntity<List<TrashResponse>> getExchanges() {
+        List<Trash> trashes = trashService.getTrashes();
+        List<TrashResponse> trashResponses = trashes.stream()
+            .map(TrashTransformer::transformModelToResponse)
+            .toList();
+        return new ResponseEntity<>(trashResponses, HttpStatus.OK);
     }
 
     @GetMapping("/trashes/{trash_id}")

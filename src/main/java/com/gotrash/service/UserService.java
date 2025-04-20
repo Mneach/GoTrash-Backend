@@ -1,8 +1,11 @@
 package com.gotrash.service;
 
+import com.gotrash.api.v1.model.Notification;
 import com.gotrash.api.v1.model.Role;
 import com.gotrash.api.v1.model.User;
+import com.gotrash.api.v1.transformer.NotificationTransformer;
 import com.gotrash.api.v1.transformer.UserTransformer;
+import com.gotrash.entity.NotificationEntity;
 import com.gotrash.repository.UserRepository;
 import com.gotrash.entity.UserEntity;
 import jakarta.persistence.EntityNotFoundException;
@@ -12,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,6 +31,14 @@ public class UserService {
         user.setRole(role);
         UserEntity userEntity = UserTransformer.transformModelToEntity(user);
         return UserTransformer.transformEntityToModel(userRepository.save(userEntity));
+    }
+
+    public List<User> getUsers() {
+        List<UserEntity> userEntities = userRepository.findAll();
+
+        return userEntities.stream()
+            .map(UserTransformer::transformEntityToModel)
+            .toList();
     }
 
     public User getUserByEmail(String email) {

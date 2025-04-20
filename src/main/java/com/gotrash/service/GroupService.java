@@ -1,12 +1,11 @@
 package com.gotrash.service;
 
-import com.gotrash.api.v1.model.Group;
-import com.gotrash.api.v1.model.GroupMember;
-import com.gotrash.api.v1.model.Reward;
-import com.gotrash.api.v1.model.User;
+import com.gotrash.api.v1.model.*;
+import com.gotrash.api.v1.transformer.ExchangeTransformer;
 import com.gotrash.api.v1.transformer.GroupTransformer;
 import com.gotrash.api.v1.transformer.RewardTransformer;
 import com.gotrash.api.v1.transformer.UserTransformer;
+import com.gotrash.entity.ExchangeEntity;
 import com.gotrash.entity.GroupEntity;
 import com.gotrash.entity.GroupMemberEntity;
 import com.gotrash.repository.GroupRepository;
@@ -81,6 +80,14 @@ public class GroupService {
     groupMember.setGroupMemberId(memberToRemove.getGroupMemberId().toString());
     groupMember.setGroup(null);
     groupMemberService.delete(groupMember.getGroupMemberId());
+  }
+
+  public List<Group> getGroups() {
+    List<GroupEntity> groupEntities = groupRepository.findAll();
+
+    return groupEntities.stream()
+        .map(GroupTransformer::transformEntityToModel)
+        .toList();
   }
 
   public Group getGroupByGroupId(String groupId) {

@@ -1,9 +1,12 @@
 package com.gotrash.api.v1;
 
 import com.gotrash.api.response.MessageResponse;
+import com.gotrash.api.v1.model.Notification;
 import com.gotrash.api.v1.model.Reward;
 import com.gotrash.api.v1.request.RewardRequest;
+import com.gotrash.api.v1.response.NotificationResponse;
 import com.gotrash.api.v1.response.RewardResponse;
+import com.gotrash.api.v1.transformer.NotificationTransformer;
 import com.gotrash.api.v1.transformer.RewardTransformer;
 import com.gotrash.service.RewardService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,6 +31,16 @@ public class RewardAPI {
         Reward reward = RewardTransformer.transformRequestToModel(rewardRequest);
         RewardResponse rewardResponse = RewardTransformer.transformModelToResponse(rewardService.save(reward));
         return new ResponseEntity<>(rewardResponse, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/rewards")
+    @Operation(summary = "API to get all reward data")
+    public ResponseEntity<List<RewardResponse>> getExchanges() {
+        List<Reward> rewards = rewardService.getRewards();
+        List<RewardResponse> rewardResponses = rewards.stream()
+            .map(RewardTransformer::transformModelToResponse)
+            .toList();
+        return new ResponseEntity<>(rewardResponses, HttpStatus.OK);
     }
 
     @GetMapping("/rewards/{reward_id}")

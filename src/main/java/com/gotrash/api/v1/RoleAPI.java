@@ -1,9 +1,12 @@
 package com.gotrash.api.v1;
 
 import com.gotrash.api.response.MessageResponse;
+import com.gotrash.api.v1.model.Reward;
 import com.gotrash.api.v1.model.Role;
 import com.gotrash.api.v1.request.RoleRequest;
+import com.gotrash.api.v1.response.RewardResponse;
 import com.gotrash.api.v1.response.RoleResponse;
+import com.gotrash.api.v1.transformer.RewardTransformer;
 import com.gotrash.api.v1.transformer.RoleTransformer;
 import com.gotrash.constant.RoleName;
 import com.gotrash.service.RoleService;
@@ -20,6 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,6 +58,16 @@ public class RoleAPI {
         roleService.getRoleByRoleName(roleName)
     );
     return new ResponseEntity<>(roleResponse, HttpStatus.OK);
+  }
+
+  @GetMapping("/roles")
+  @Operation(summary = "API to get all role data")
+  public ResponseEntity<List<RoleResponse>> getExchanges() {
+    List<Role> roles = roleService.getRoles();
+    List<RoleResponse> roleResponses = roles.stream()
+        .map(RoleTransformer::transformModelToResponse)
+        .toList();
+    return new ResponseEntity<>(roleResponses, HttpStatus.OK);
   }
 
   @PatchMapping("/roles")

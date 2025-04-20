@@ -9,6 +9,7 @@ import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.entity.ExchangeEntity;
 import com.gotrash.repository.ExchangeRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class ExchangeService {
   private final RewardService rewardService;
   private final UserService userService;
 
+  @Transactional
   public Exchange save(Exchange exchange) {
 
     Reward reward = rewardService.getRewardByRewardId(exchange.getReward().getRewardId());
@@ -34,6 +36,14 @@ public class ExchangeService {
 
     ExchangeEntity exchangeEntity = exchangeRepository.save(ExchangeTransformer.transformModelToEntity(exchange));
     return ExchangeTransformer.transformEntityToModel(exchangeEntity);
+  }
+
+  public List<Exchange> getExchanges() {
+    List<ExchangeEntity> exchangeEntities = exchangeRepository.findAll();
+
+    return exchangeEntities.stream()
+        .map(ExchangeTransformer::transformEntityToModel)
+        .toList();
   }
 
   public Exchange getExchangeById(String exchangeId) {
@@ -54,6 +64,7 @@ public class ExchangeService {
         .toList();
   }
 
+  @Transactional
   public Exchange update(Exchange exchange) {
     Optional<ExchangeEntity> exchangeEntityOptional = exchangeRepository.findById(UUID.fromString(exchange.getExchangeId()));
 
@@ -80,6 +91,7 @@ public class ExchangeService {
     return ExchangeTransformer.transformEntityToModel(exchangeEntity);
   }
 
+  @Transactional
   public void delete(String exchangeId) {
     if (!exchangeRepository.existsById(UUID.fromString(exchangeId))) {
       throw new EntityNotFoundException("Exchange With ID " + exchangeId + " Not Found");

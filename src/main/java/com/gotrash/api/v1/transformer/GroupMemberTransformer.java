@@ -49,7 +49,7 @@ public class GroupMemberTransformer {
   public static GroupMemberResponse transformModelToResponse(GroupMember groupMember) {
     return GroupMemberResponse.builder()
         .groupMemberId(groupMember.getGroupMemberId())
-        .user(groupMember.getUser())
+        .user(UserTransformer.transformModelToResponse(groupMember.getUser()))
         .build();
   }
 }

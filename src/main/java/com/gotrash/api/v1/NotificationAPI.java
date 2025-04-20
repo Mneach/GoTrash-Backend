@@ -1,9 +1,12 @@
 package com.gotrash.api.v1;
 
 import com.gotrash.api.response.MessageResponse;
+import com.gotrash.api.v1.model.Group;
 import com.gotrash.api.v1.model.Notification;
 import com.gotrash.api.v1.request.NotificationRequest;
+import com.gotrash.api.v1.response.GroupResponse;
 import com.gotrash.api.v1.response.NotificationResponse;
+import com.gotrash.api.v1.transformer.GroupTransformer;
 import com.gotrash.api.v1.transformer.NotificationTransformer;
 import com.gotrash.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +32,17 @@ public class NotificationAPI {
         NotificationResponse notificationResponse = NotificationTransformer.transformModelToResponse(notificationService.save(notification));
         return new ResponseEntity<>(notificationResponse, HttpStatus.CREATED);
     }
+
+    @GetMapping("/notifications")
+    @Operation(summary = "API to get all notification data")
+    public ResponseEntity<List<NotificationResponse>> getExchanges() {
+        List<Notification> notifications = notificationService.getNotifications();
+        List<NotificationResponse> notificationResponses = notifications.stream()
+            .map(NotificationTransformer::transformModelToResponse)
+            .toList();
+        return new ResponseEntity<>(notificationResponses, HttpStatus.OK);
+    }
+
 
     @GetMapping("/notifications/{notification_id}")
     @Operation(summary = "API to get notification by notification_id")

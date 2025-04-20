@@ -1,10 +1,13 @@
 package com.gotrash.api.v1;
 
 import com.gotrash.api.response.MessageResponse;
+import com.gotrash.api.v1.model.Trash;
 import com.gotrash.api.v1.model.TrashBin;
 import com.gotrash.api.v1.request.TrashBinRequest;
 import com.gotrash.api.v1.response.TrashBinResponse;
+import com.gotrash.api.v1.response.TrashResponse;
 import com.gotrash.api.v1.transformer.TrashBinTransformer;
+import com.gotrash.api.v1.transformer.TrashTransformer;
 import com.gotrash.service.TrashBinService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,6 +31,16 @@ public class TrashBinAPI {
         TrashBin trashBin = TrashBinTransformer.transformRequestToModel(trashBinRequest);
         TrashBinResponse trashBinResponse = TrashBinTransformer.transformModelToResponse(trashBinService.save(trashBin));
         return new ResponseEntity<>(trashBinResponse, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/trash-bins")
+    @Operation(summary = "API to get all trash bin data")
+    public ResponseEntity<List<TrashBinResponse>> getExchanges() {
+        List<TrashBin> trashBins = trashBinService.getTrashBins();
+        List<TrashBinResponse> trashBinResponses = trashBins.stream()
+            .map(TrashBinTransformer::transformModelToResponse)
+            .toList();
+        return new ResponseEntity<>(trashBinResponses, HttpStatus.OK);
     }
 
     @GetMapping("/trash-bins/{trash_bin_id}")
