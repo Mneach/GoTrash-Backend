@@ -12,3 +12,14 @@ services:
       POSTGRES_DB: gotrash
     volumes:
       - ./scripts/dump:/docker-entrypoint-initdb.d:ro
+    networks:
+      default:
+        ipv4_address: 192.168.201.10
+
+networks:
+  default:
+    name: gotrash_network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.201.0/26
