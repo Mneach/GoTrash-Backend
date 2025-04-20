@@ -25,8 +25,6 @@ The **backend** handles all the logic — from user management to trash bin trac
 - 📬 Swagger for API docs
 - 📡 Nginx Reverse Proxy
 - 🌀 GitHub Actions for CI/CD
-- 🧠 Still learning and improving
-
 ---
 
 ## 🚧 To Be Done (TBD)
