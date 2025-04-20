@@ -32,7 +32,7 @@ The **backend** handles all the logic — from user management to trash bin trac
 ## 🚧 To Be Done (TBD)
 - [ ] 🧑‍💻 **Gotrash Dashboard Endpoint** - Working on it
 - [ ] 📊 **Monitoring & Logging** – Datadog Monitor
-- [ ] 🧩 **System Design Diagram** - 
+- [ ] 🧩 **System Design Diagram** - I will do it later if i have a time :)
 
 ## 📁 Project Structure
 
