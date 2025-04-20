@@ -8,6 +8,8 @@ import com.gotrash.api.v1.response.UserResponse;
 import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.service.RoleService;
 import com.gotrash.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +18,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("v1")
+@Tag(name = "User", description = "API for User")
 public class UserAPI {
     private final UserService userService;
 
     @GetMapping("/users/{user_id}")
+    @Operation(summary = "API to get user by user_id")
     public ResponseEntity<UserResponse> getUserById(@PathVariable("user_id") String userId) {
         User user = userService.getUserByUserId(userId);
         UserResponse userResponse = UserTransformer.transformModelToResponse(user);
@@ -27,6 +31,7 @@ public class UserAPI {
     }
 
     @GetMapping("/users/me")
+    @Operation(summary = "API to get the current user")
     public ResponseEntity<UserResponse> getMe() {
         User user = userService.getMe();
         UserResponse userResponse = UserTransformer.transformModelToResponse(user);
@@ -34,6 +39,7 @@ public class UserAPI {
     }
 
     @PatchMapping("/users")
+    @Operation(summary = "API to update user")
     public ResponseEntity<UserResponse> update(@RequestBody UserRequest userRequest) {
         User user = UserTransformer.transformRequestToModel(userRequest);
         UserResponse userResponse = UserTransformer.transformModelToResponse(userService.update(user));
@@ -41,6 +47,7 @@ public class UserAPI {
     }
 
     @DeleteMapping("/users/{user_id}")
+    @Operation(summary = "API to delete user by user_id")
     public ResponseEntity<MessageResponse> delete(@PathVariable("user_id") String userId) {
         userService.delete(userId);
         String message = "Successfully delete user with id " + userId;

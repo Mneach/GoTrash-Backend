@@ -9,6 +9,8 @@ import com.gotrash.api.v1.response.GroupResponse;
 import com.gotrash.api.v1.transformer.GroupMemberTransformer;
 import com.gotrash.api.v1.transformer.GroupTransformer;
 import com.gotrash.service.GroupService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,17 +28,20 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("v1")
+@Tag(name = "Group", description = "API for group")
 public class GroupAPI {
 
   private final GroupService groupService;
 
   @GetMapping("/groups/{group_id}")
+  @Operation(summary = "API to get group by group_id")
   public ResponseEntity<GroupResponse> getGroupByUserId(@PathVariable("group_id") String groupId) {
     GroupResponse groupResponse = GroupTransformer.transformModelToResponse(groupService.getGroupByGroupId(groupId));
     return new ResponseEntity<>(groupResponse, HttpStatus.OK);
   }
 
   @GetMapping("/groups/users/{user_id}")
+  @Operation(summary = "API to get groups by user_id")
   public ResponseEntity<List<GroupResponse>> getGroupsByUserId(@PathVariable("user_id") String userId) {
     List<Group> groups = groupService.getGroupsByUserId(userId);
     List<GroupResponse> groupResponses = groups.stream()
@@ -46,6 +51,7 @@ public class GroupAPI {
   }
 
   @PostMapping("/groups")
+  @Operation(summary = "API to create a new group")
   public ResponseEntity<GroupResponse> groupResponse(@RequestBody GroupRequest groupRequest) {
     Group group = GroupTransformer.transformRequestToModel(groupRequest);
     GroupResponse groupResponse = GroupTransformer.transformModelToResponse(groupService.save(group));
@@ -53,6 +59,7 @@ public class GroupAPI {
   }
 
   @PostMapping("/groups/{group_id}/members")
+  @Operation(summary = "API to add member to group by group_id")
   public ResponseEntity<MessageResponse> addMember(
       @PathVariable("group_id") String groupId,
       @RequestBody GroupMemberRequest groupMemberRequest
@@ -65,6 +72,7 @@ public class GroupAPI {
   }
 
   @PatchMapping("/groups/{group_id}")
+  @Operation(summary = "API to update group by group_id")
   public ResponseEntity<GroupResponse> updateGroup(@RequestBody GroupRequest groupRequest) {
     Group group = GroupTransformer.transformRequestToModel(groupRequest);
     GroupResponse groupResponse = GroupTransformer.transformModelToResponse(groupService.update(group));
@@ -73,6 +81,7 @@ public class GroupAPI {
   }
 
   @DeleteMapping("/groups/{group_id}/members/{member_id}")
+  @Operation(summary = "API to remove member by group_id and member_id")
   public ResponseEntity<MessageResponse> removeMember(
       @PathVariable("group_id") String groupId,
       @PathVariable("member_id") String memberId
