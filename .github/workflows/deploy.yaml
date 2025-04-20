@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set Environment
-        run: echo "RELEASE_VERSION=v0.0.8" >> $GITHUB_ENV
+        run: echo "RELEASE_VERSION=v0.0.10" >> $GITHUB_ENV
 
       - name: Check Release Version
         run : |
@@ -48,7 +48,5 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
           script: |
-            whoami
             cd ${{ vars.SCRIPT_DEPLOYMENT_FOLDER }}
-            ./test.sh
             ./deploy.sh ${{ env.JAR_NAME }}
