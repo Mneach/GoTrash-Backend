@@ -43,7 +43,7 @@ public class TrashTransformer {
     public static TrashResponse transformModelToResponse(Trash trash) {
         return TrashResponse.builder()
                 .trashId(trash.getTrashId())
-                .trashCategory(trash.getTrashCategory())
+                .trashCategory(TrashCategoryTransformer.transformModelToResponse(trash.getTrashCategory()))
                 .coin(trash.getCoin())
                 .description(trash.getDescription())
                 .createdAt(trash.getCreatedAt())

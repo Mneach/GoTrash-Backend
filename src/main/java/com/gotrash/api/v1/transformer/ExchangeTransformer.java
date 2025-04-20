@@ -48,8 +48,8 @@ public class ExchangeTransformer {
   public static ExchangeResponse transformModelToResponse(Exchange exchange) {
     return ExchangeResponse.builder()
         .exchangeId(exchange.getExchangeId())
-        .user(exchange.getUser())
-        .reward(exchange.getReward())
+        .user(UserTransformer.transformModelToResponse(exchange.getUser()))
+        .reward(RewardTransformer.transformModelToResponse(exchange.getReward()))
         .description(exchange.getDescription())
         .status(exchange.getStatus())
         .createdAt(exchange.getCreatedAt())

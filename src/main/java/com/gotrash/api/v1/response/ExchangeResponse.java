@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 @Builder
 public class ExchangeResponse {
   private String exchangeId;
-  private User user;
-  private Reward reward;
+  private UserResponse user;
+  private RewardResponse reward;
   private String status;
   private String description;
   private LocalDateTime createdAt;

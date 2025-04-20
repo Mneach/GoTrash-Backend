@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class NotificationResponse {
     private String notificationId;
-    private User user;
+    private UserResponse user;
     private String title;
     private String description;
     private LocalDateTime createdAt;

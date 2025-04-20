@@ -43,7 +43,7 @@ public class NotificationTransformer {
     public static NotificationResponse transformModelToResponse(Notification notification) {
         return NotificationResponse.builder()
                 .notificationId(notification.getNotificationId())
-                .user(notification.getUser())
+                .user(UserTransformer.transformModelToResponse(notification.getUser()))
                 .title(notification.getTitle())
                 .createdAt(notification.getCreatedAt())
                 .updatedAt(notification.getUpdatedAt())

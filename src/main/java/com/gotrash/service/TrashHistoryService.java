@@ -1,14 +1,18 @@
 package com.gotrash.service;
 
+import com.gotrash.api.v1.model.Notification;
 import com.gotrash.api.v1.model.Trash;
 import com.gotrash.api.v1.model.TrashHistory;
 import com.gotrash.api.v1.model.User;
+import com.gotrash.api.v1.transformer.NotificationTransformer;
 import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
 import com.gotrash.api.v1.transformer.TrashTransformer;
+import com.gotrash.entity.NotificationEntity;
 import com.gotrash.entity.TrashEntity;
 import com.gotrash.entity.TrashHistoryEntity;
 import com.gotrash.repository.TrashHistoryRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +28,7 @@ public class TrashHistoryService {
     private final UserService userService;
     private final TrashService trashService;
 
+    @Transactional
     public TrashHistory save(TrashHistory trashHistory) {
         User user = userService.getUserByUserId(trashHistory.getUser().getUserId());
         Trash trash = trashService.getTrashByTrashId(trashHistory.getTrash().getTrashId());
@@ -35,6 +40,14 @@ public class TrashHistoryService {
         );
 
         return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity);
+    }
+
+    public List<TrashHistory> getTrashHistories() {
+        List<TrashHistoryEntity> trashHistoryEntities = trashHistoryRepository.findAll();
+
+        return trashHistoryEntities.stream()
+            .map(TrashHistoryTransformer::transformEntityToModel)
+            .toList();
     }
 
     public TrashHistory getTrashHistoryByTrashHistoryId(String trashHistoryId) {
@@ -58,6 +71,7 @@ public class TrashHistoryService {
                 .toList();
     }
 
+    @Transactional
     public TrashHistory update(TrashHistory trashHistory) {
 
         if (!trashHistoryRepository.existsById(UUID.fromString(trashHistory.getTrashHistoryId()))) {
@@ -76,6 +90,7 @@ public class TrashHistoryService {
         return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity);
     }
 
+    @Transactional
     public void delete(String trashHistoryId) {
         if (!trashHistoryRepository.existsById(UUID.fromString(trashHistoryId))) {
             throw new EntityNotFoundException("Trash History with ID " + trashHistoryId + " Not Found");

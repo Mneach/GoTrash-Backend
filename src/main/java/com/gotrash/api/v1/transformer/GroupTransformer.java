@@ -59,11 +59,15 @@ public class GroupTransformer {
 
     return GroupResponse.builder()
         .groupId(group.getGroupId())
-        .reward(group.getReward())
+        .reward(RewardTransformer.transformModelToResponse(group.getReward()))
         .name(group.getName())
         .coin(group.getCoin())
-        .owner(group.getOwner())
-        .groupMembers(group.getGroupMembers())
+        .owner(UserTransformer.transformModelToResponse(group.getOwner()))
+        .groupMembers(
+            group.getGroupMembers().stream()
+                .map(GroupMemberTransformer::transformModelToResponse)
+                .toList()
+        )
         .createdAt(group.getCreatedAt())
         .updatedAt(group.getUpdatedAt())
         .build();

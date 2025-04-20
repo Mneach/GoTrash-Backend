@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 public class RewardResponse {
     private String rewardId;
-    private RewardCategory rewardCategory;
+    private RewardCategoryResponse rewardCategory;
     private String name;
     private BigInteger coin;
     private Integer stock;

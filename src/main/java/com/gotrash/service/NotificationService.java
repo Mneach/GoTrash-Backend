@@ -1,13 +1,17 @@
 package com.gotrash.service;
 
+import com.gotrash.api.v1.model.Group;
 import com.gotrash.api.v1.model.Notification;
 import com.gotrash.api.v1.model.User;
+import com.gotrash.api.v1.transformer.GroupTransformer;
 import com.gotrash.api.v1.transformer.NotificationTransformer;
 import com.gotrash.api.v1.transformer.UserTransformer;
+import com.gotrash.entity.GroupEntity;
 import com.gotrash.entity.NotificationEntity;
 import com.gotrash.entity.UserEntity;
 import com.gotrash.repository.NotificationRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +26,20 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final UserService userService;
 
+    @Transactional
     public Notification save(Notification notification) {
         User user = userService.getUserByUserId(notification.getUser().getUserId());
         notification.setUser(user);
         NotificationEntity notificationEntity = NotificationTransformer.transformModelToEntity(notification);
         return NotificationTransformer.transformEntityToModel(notificationRepository.save(notificationEntity));
+    }
+
+    public List<Notification> getNotifications() {
+        List<NotificationEntity> notificationEntities = notificationRepository.findAll();
+
+        return notificationEntities.stream()
+            .map(NotificationTransformer::transformEntityToModel)
+            .toList();
     }
 
     public Notification getNotificationByNotificationId(String notificationId) {
@@ -48,6 +61,7 @@ public class NotificationService {
                 .toList();
     }
 
+    @Transactional
     public Notification update(Notification notification) {
         if (notificationRepository.existsById(UUID.fromString(notification.getNotificationId()))) {
             User user = userService.getUserByUserId(notification.getUser().getUserId());
@@ -59,6 +73,7 @@ public class NotificationService {
         throw new EntityNotFoundException("Notification Data With ID " + notification.getNotificationId() + " Not Found");
     }
 
+    @Transactional
     public void delete(String notificationId) {
         if (notificationRepository.existsById(UUID.fromString(notificationId))) {
             notificationRepository.deleteById(UUID.fromString(notificationId));

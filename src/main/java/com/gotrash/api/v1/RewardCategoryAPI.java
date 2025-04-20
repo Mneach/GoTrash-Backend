@@ -1,10 +1,13 @@
 package com.gotrash.api.v1;
 
 import com.gotrash.api.response.MessageResponse;
+import com.gotrash.api.v1.model.Reward;
 import com.gotrash.api.v1.model.RewardCategory;
 import com.gotrash.api.v1.request.RewardCategoryRequest;
 import com.gotrash.api.v1.response.RewardCategoryResponse;
+import com.gotrash.api.v1.response.RewardResponse;
 import com.gotrash.api.v1.transformer.RewardCategoryTransformer;
+import com.gotrash.api.v1.transformer.RewardTransformer;
 import com.gotrash.service.RewardCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +32,16 @@ public class RewardCategoryAPI {
         RewardCategory rewardCategory = RewardCategoryTransformer.transformRequestToModel(rewardCategoryRequest);
         RewardCategoryResponse rewardCategoryResponse = RewardCategoryTransformer.transformModelToResponse(rewardCategoryService.save(rewardCategory));
         return new ResponseEntity<>(rewardCategoryResponse, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/reward-categories")
+    @Operation(summary = "API to get all reward category data")
+    public ResponseEntity<List<RewardCategoryResponse>> getExchanges() {
+        List<RewardCategory> rewardCategories = rewardCategoryService.getRewardCategories();
+        List<RewardCategoryResponse> rewardCategoryResponses = rewardCategories.stream()
+            .map(RewardCategoryTransformer::transformModelToResponse)
+            .toList();
+        return new ResponseEntity<>(rewardCategoryResponses, HttpStatus.OK);
     }
 
     @GetMapping("/reward-categories/{reward_category_id}")

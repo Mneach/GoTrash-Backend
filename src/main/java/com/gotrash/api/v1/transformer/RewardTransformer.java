@@ -53,7 +53,7 @@ public class RewardTransformer {
     public static RewardResponse transformModelToResponse(Reward reward) {
         return RewardResponse.builder()
                 .rewardId(reward.getRewardId())
-                .rewardCategory(reward.getRewardCategory())
+                .rewardCategory(RewardCategoryTransformer.transformModelToResponse(reward.getRewardCategory()))
                 .name(reward.getName())
                 .coin(reward.getCoin())
                 .stock(reward.getStock())

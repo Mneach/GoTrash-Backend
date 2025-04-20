@@ -38,6 +38,16 @@ public class ExchangeAPI {
     return new ResponseEntity<>(exchangeResponse, HttpStatus.CREATED);
   }
 
+  @GetMapping("/exchanges")
+  @Operation(summary = "API to get all exchange data")
+  public ResponseEntity<List<ExchangeResponse>> getExchanges() {
+    List<Exchange> exchanges = exchangeService.getExchanges();
+    List<ExchangeResponse> exchangeResponses = exchanges.stream()
+        .map(ExchangeTransformer::transformModelToResponse)
+        .toList();
+    return new ResponseEntity<>(exchangeResponses, HttpStatus.OK);
+  }
+
   @GetMapping("/exchanges/{exchange_id}")
   @Operation(summary = "API to get exchange by exchange_id")
   public ResponseEntity<ExchangeResponse> getExchangeByExchangeId(@PathVariable("exchange_id") String exchangeId) {

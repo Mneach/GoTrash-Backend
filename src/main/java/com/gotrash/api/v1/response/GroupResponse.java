@@ -19,9 +19,9 @@ import java.util.List;
 @Builder
 public class GroupResponse {
     private String groupId;
-    private Reward reward;
-    private User owner;
-    private List<GroupMember> groupMembers;
+    private RewardResponse reward;
+    private UserResponse owner;
+    private List<GroupMemberResponse> groupMembers;
     private String name;
     private BigInteger coin;
     private LocalDateTime createdAt;

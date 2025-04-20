@@ -1,9 +1,12 @@
 package com.gotrash.api.v1;
 
 import com.gotrash.api.response.MessageResponse;
+import com.gotrash.api.v1.model.TrashCategory;
 import com.gotrash.api.v1.model.TrashHistory;
 import com.gotrash.api.v1.request.TrashHistoryRequest;
+import com.gotrash.api.v1.response.TrashCategoryResponse;
 import com.gotrash.api.v1.response.TrashHistoryResponse;
+import com.gotrash.api.v1.transformer.TrashCategoryTransformer;
 import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
 import com.gotrash.service.TrashHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +32,16 @@ public class TrashHistoryAPI {
         TrashHistory trashHistory = TrashHistoryTransformer.transformRequestToModel(trashHistoryRequest);
         TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(trashHistoryService.save(trashHistory));
         return new ResponseEntity<>(trashHistoryResponse, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/trash-histories")
+    @Operation(summary = "API to get all trash history data")
+    public ResponseEntity<List<TrashHistoryResponse>> getExchanges() {
+        List<TrashHistory> trashHistories = trashHistoryService.getTrashHistories();
+        List<TrashHistoryResponse> trashHistoryResponses = trashHistories.stream()
+            .map(TrashHistoryTransformer::transformModelToResponse)
+            .toList();
+        return new ResponseEntity<>(trashHistoryResponses, HttpStatus.OK);
     }
 
     @GetMapping("/trash-histories/{trash_history_id}")

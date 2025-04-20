@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 @Builder
 public class TrashHistoryResponse {
   private String trashHistoryId;
-  private User user;
-  private Trash trash;
+  private UserResponse user;
+  private TrashResponse trash;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }
