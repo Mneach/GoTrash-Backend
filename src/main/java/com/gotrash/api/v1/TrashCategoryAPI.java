@@ -6,6 +6,8 @@ import com.gotrash.api.v1.request.TrashCategoryRequest;
 import com.gotrash.api.v1.response.TrashCategoryResponse;
 import com.gotrash.api.v1.transformer.TrashCategoryTransformer;
 import com.gotrash.service.TrashCategoryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +16,20 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("v1")
+@Tag(name = "Trash Category", description = "API for Trash Category")
 public class TrashCategoryAPI {
     private final TrashCategoryService trashCategoryService;
 
-    @PostMapping("/trash-category")
+    @PostMapping("/trash-categories")
+    @Operation(summary = "API to create a new trash category")
     public ResponseEntity<TrashCategoryResponse> save(@RequestBody TrashCategoryRequest trashCategoryRequest) {
         TrashCategory trashCategory = TrashCategoryTransformer.transformRequestToModel(trashCategoryRequest);
         TrashCategoryResponse trashCategoryResponse = TrashCategoryTransformer.transformModelToResponse(trashCategoryService.save(trashCategory));
         return new ResponseEntity<>(trashCategoryResponse, HttpStatus.CREATED);
     }
 
-    @GetMapping("/trash-category/{trash_category_id}")
+    @GetMapping("/trash-categories/{trash_category_id}")
+    @Operation(summary = "API to get trash category by trash_category_id")
     public ResponseEntity<TrashCategoryResponse> getTrashCategoryByTrashCategoryId(@PathVariable("trash_category_id") String trashCategoryId) {
         TrashCategoryResponse trashCategoryResponse = TrashCategoryTransformer.transformModelToResponse(
                 trashCategoryService.getTrashCategoryByTrashCategoryId(trashCategoryId)
@@ -32,14 +37,16 @@ public class TrashCategoryAPI {
         return new ResponseEntity<>(trashCategoryResponse, HttpStatus.OK);
     }
 
-    @PatchMapping("/trash-category")
+    @PatchMapping("/trash-categories")
+    @Operation(summary = "API to update trash category")
     public ResponseEntity<TrashCategoryResponse> update(@RequestBody TrashCategoryRequest trashCategoryRequest) {
         TrashCategory trashCategory = TrashCategoryTransformer.transformRequestToModel(trashCategoryRequest);
         TrashCategoryResponse trashCategoryResponse = TrashCategoryTransformer.transformModelToResponse(trashCategoryService.update(trashCategory));
         return new ResponseEntity<>(trashCategoryResponse, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/trash-category/{trash_category_id}")
+    @DeleteMapping("/trash-categories/{trash_category_id}")
+    @Operation(summary = "API to delete trash category by trash_category_id")
     public ResponseEntity<MessageResponse> delete(@PathVariable("trash_category_id") String trashCategoryId) {
         trashCategoryService.delete(trashCategoryId);
         String message = "Successfully delete trash category with id " + trashCategoryId;

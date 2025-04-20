@@ -7,6 +7,8 @@ import com.gotrash.api.v1.response.RoleResponse;
 import com.gotrash.api.v1.transformer.RoleTransformer;
 import com.gotrash.constant.RoleName;
 import com.gotrash.service.RoleService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +24,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("v1")
+@Tag(name = "Role", description = "API for Role")
 public class RoleAPI {
   
   private final RoleService roleService;
   
   @PostMapping("/roles")
+  @Operation(summary = "API to create a new role")
   public ResponseEntity<RoleResponse> save(@RequestBody RoleRequest roleRequest) {
     Role role = RoleTransformer.transformRequestToModel(roleRequest);
     RoleResponse roleResponse = RoleTransformer.transformModelToResponse(roleService.save(role));
@@ -34,6 +38,7 @@ public class RoleAPI {
   }
 
   @GetMapping("/roles/{role_id}")
+  @Operation(summary = "API to get role by role_id")
   public ResponseEntity<RoleResponse> getRoleByRoleId(@PathVariable("role_id") String roleId) {
     RoleResponse roleResponse = RoleTransformer.transformModelToResponse(
         roleService.getRoleByRoleId(roleId)
@@ -42,6 +47,7 @@ public class RoleAPI {
   }
 
   @GetMapping("/roles/{role_name}")
+  @Operation(summary = "API to get role by role_name")
   public ResponseEntity<RoleResponse> getRoleByRoleName(@PathVariable("role_name") RoleName roleName) {
     RoleResponse roleResponse = RoleTransformer.transformModelToResponse(
         roleService.getRoleByRoleName(roleName)
@@ -50,6 +56,7 @@ public class RoleAPI {
   }
 
   @PatchMapping("/roles")
+  @Operation(summary = "API to update role")
   public ResponseEntity<RoleResponse> update(@RequestBody RoleRequest roleRequest) {
     Role role = RoleTransformer.transformRequestToModel(roleRequest);
     RoleResponse roleResponse = RoleTransformer.transformModelToResponse(roleService.update(role));
@@ -57,6 +64,7 @@ public class RoleAPI {
   }
 
   @DeleteMapping("/roles/{role_id}")
+  @Operation(summary = "API to delete role by role_id")
   public ResponseEntity<MessageResponse> delete(@PathVariable("role_id") String roleId) {
     roleService.delete(roleId);
     String message = "Successfully delete role with id " + roleId;

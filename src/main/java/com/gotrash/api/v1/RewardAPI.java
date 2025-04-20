@@ -6,6 +6,8 @@ import com.gotrash.api.v1.request.RewardRequest;
 import com.gotrash.api.v1.response.RewardResponse;
 import com.gotrash.api.v1.transformer.RewardTransformer;
 import com.gotrash.service.RewardService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +16,20 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("v1")
+@Tag(name = "Reward", description = "API for reward")
 public class RewardAPI {
     private final RewardService rewardService;
 
-    @PostMapping("/reward")
+    @PostMapping("/rewards")
+    @Operation(summary = "API to create a new reward")
     public ResponseEntity<RewardResponse> save(@RequestBody RewardRequest rewardRequest) {
         Reward reward = RewardTransformer.transformRequestToModel(rewardRequest);
         RewardResponse rewardResponse = RewardTransformer.transformModelToResponse(rewardService.save(reward));
         return new ResponseEntity<>(rewardResponse, HttpStatus.CREATED);
     }
 
-    @GetMapping("/reward/{reward_id}")
+    @GetMapping("/rewards/{reward_id}")
+    @Operation(summary = "API to get reward by reward_id")
     public ResponseEntity<RewardResponse> getRewardByRewardId(@PathVariable("reward_id") String rewardId) {
         RewardResponse rewardResponse = RewardTransformer.transformModelToResponse(
                 rewardService.getRewardByRewardId(rewardId)
@@ -32,14 +37,16 @@ public class RewardAPI {
         return new ResponseEntity<>(rewardResponse, HttpStatus.OK);
     }
 
-    @PatchMapping("/reward")
+    @PatchMapping("/rewards")
+    @Operation(summary = "API to update reward by reward_id")
     public ResponseEntity<RewardResponse> update(@RequestBody RewardRequest rewardRequest) {
         Reward reward = RewardTransformer.transformRequestToModel(rewardRequest);
         RewardResponse rewardResponse = RewardTransformer.transformModelToResponse(rewardService.update(reward));
         return new ResponseEntity<>(rewardResponse, HttpStatus.OK);
     }
 
-    @DeleteMapping("/reward/{reward_id}")
+    @DeleteMapping("/rewards/{reward_id}")
+    @Operation(summary = "API to delete reward by reward_id")
     public ResponseEntity<MessageResponse> delete(@PathVariable("reward_id") String rewardId) {
         rewardService.delete(rewardId);
         String message = "Successfully delete reward with id " + rewardId;
