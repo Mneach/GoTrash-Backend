@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NotificationRequest {
-    private String notificationId;
     private String userId;
     private String title;
     private String description;

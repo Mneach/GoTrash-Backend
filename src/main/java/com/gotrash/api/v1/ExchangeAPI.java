@@ -24,8 +24,8 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1")
-@Tag(name = "Exchange", description = "API for exchange")
+@RequestMapping("/api/v1")
+@Tag(name = "Exchange API", description = "API for exchange")
 public class ExchangeAPI {
 
   private final ExchangeService exchangeService;
@@ -49,14 +49,14 @@ public class ExchangeAPI {
   }
 
   @GetMapping("/exchanges/{exchange_id}")
-  @Operation(summary = "API to get exchange by exchange_id")
+  @Operation(summary = "API to get exchange by exchange id")
   public ResponseEntity<ExchangeResponse> getExchangeByExchangeId(@PathVariable("exchange_id") String exchangeId) {
     ExchangeResponse exchangeResponse = ExchangeTransformer.transformModelToResponse(exchangeService.getExchangeById(exchangeId));
     return new ResponseEntity<>(exchangeResponse, HttpStatus.OK);
   }
 
   @GetMapping("/exchanges/users/{user_id}")
-  @Operation(summary = "API to get exchanges by user_id")
+  @Operation(summary = "API to get exchanges by user id")
   public ResponseEntity<List<ExchangeResponse>> getExchangeByUserId(@PathVariable("user_id") String userId) {
 
     List<Exchange> exchanges = exchangeService.getExchangeByUserId(userId);
@@ -67,16 +67,17 @@ public class ExchangeAPI {
     return new ResponseEntity<>(exchangeResponses, HttpStatus.OK);
   }
 
-  @PatchMapping("/exchanges")
-  @Operation(summary = "API to update exchange by exchange_id")
-  public ResponseEntity<ExchangeResponse> updateExchange(@RequestBody ExchangeRequest exchangeRequest) {
-    Exchange exchange = exchangeService.update(ExchangeTransformer.transformRequestToModel(exchangeRequest));
+  @PatchMapping("/exchanges/{exchange_id}")
+  @Operation(summary = "API to update exchange by exchange id")
+  public ResponseEntity<ExchangeResponse> updateExchange(@PathVariable("exchange_id") String exchangeId,
+                                                         @RequestBody ExchangeRequest exchangeRequest) {
+    Exchange exchange = exchangeService.update(ExchangeTransformer.transformRequestToModel(exchangeId, exchangeRequest));
     ExchangeResponse exchangeResponse = ExchangeTransformer.transformModelToResponse(exchange);
     return new ResponseEntity<>(exchangeResponse, HttpStatus.OK);
   }
 
   @DeleteMapping("/exchanges/{exchange_id}")
-  @Operation(summary = "API to delete exchange by exchange_id")
+  @Operation(summary = "API to delete exchange by exchange id")
   public ResponseEntity<MessageResponse> deleteByExchangeId(@PathVariable("exchange_id") String exchangeId) {
     exchangeService.delete(exchangeId);
     String message = "Successfully Delete Exchange With ID " + exchangeId;

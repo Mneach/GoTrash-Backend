@@ -31,6 +31,10 @@ public class TrashHistoryEntity {
   @JoinColumn(name = "trash_id", nullable = false)
   private TrashEntity trash;
 
+  @OneToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "trash_bin_id", nullable = false)
+  private TrashBinEntity trashBin;
+
   @CreationTimestamp
   @Column(updatable = false)
   private LocalDateTime createdAt;

@@ -16,6 +16,5 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class TrashCategoryRequest {
-  private String trashCategoryId;
   private String name;
 }

@@ -1,0 +1,12 @@
+package com.gotrash.repository;
+
+import com.gotrash.entity.CitizenEntity;
+import com.gotrash.entity.WasteBankEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+import java.util.UUID;
+
+public interface CitizenRepository extends JpaRepository<CitizenEntity, UUID> {
+  Optional<CitizenEntity> findByUser_UserId(UUID userId);
+}

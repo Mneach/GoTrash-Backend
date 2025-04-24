@@ -20,8 +20,8 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1")
-@Tag(name = "Reward Category", description = "API for reward category")
+@RequestMapping("/api/v1")
+@Tag(name = "Reward Category API", description = "API for reward category")
 public class RewardCategoryAPI {
     
     private final RewardCategoryService rewardCategoryService;
@@ -36,7 +36,7 @@ public class RewardCategoryAPI {
 
     @GetMapping("/reward-categories")
     @Operation(summary = "API to get all reward category data")
-    public ResponseEntity<List<RewardCategoryResponse>> getExchanges() {
+    public ResponseEntity<List<RewardCategoryResponse>> getRewardCategories() {
         List<RewardCategory> rewardCategories = rewardCategoryService.getRewardCategories();
         List<RewardCategoryResponse> rewardCategoryResponses = rewardCategories.stream()
             .map(RewardCategoryTransformer::transformModelToResponse)
@@ -45,7 +45,7 @@ public class RewardCategoryAPI {
     }
 
     @GetMapping("/reward-categories/{reward_category_id}")
-    @Operation(summary = "API to get reward category by reward_category_id")
+    @Operation(summary = "API to get reward category by reward category id")
     public ResponseEntity<RewardCategoryResponse> getRewardCategoryByRewardCategoryId(@PathVariable("reward_category_id") String rewardCategoryId) {
         RewardCategoryResponse rewardCategoryResponse = RewardCategoryTransformer.transformModelToResponse(
                 rewardCategoryService.getRewardCategoryByRewardCategoryId(rewardCategoryId)
@@ -53,16 +53,17 @@ public class RewardCategoryAPI {
         return new ResponseEntity<>(rewardCategoryResponse, HttpStatus.OK);
     }
 
-    @PatchMapping("/reward-categories")
-    @Operation(summary = "API to update reward category by reward_category_id")
-    public ResponseEntity<RewardCategoryResponse> update(@RequestBody RewardCategoryRequest rewardCategoryRequest) {
-        RewardCategory rewardCategory = RewardCategoryTransformer.transformRequestToModel(rewardCategoryRequest);
+    @PatchMapping("/reward-categories/{reward_category_id}")
+    @Operation(summary = "API to update reward category by reward category id")
+    public ResponseEntity<RewardCategoryResponse> update(@PathVariable("reward_category_id") String rewardCategoryId,
+                                                         @RequestBody RewardCategoryRequest rewardCategoryRequest) {
+        RewardCategory rewardCategory = RewardCategoryTransformer.transformRequestToModel(rewardCategoryId, rewardCategoryRequest);
         RewardCategoryResponse rewardCategoryResponse = RewardCategoryTransformer.transformModelToResponse(rewardCategoryService.update(rewardCategory));
         return new ResponseEntity<>(rewardCategoryResponse, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/reward-categories/{reward_category_id}")
-    @Operation(summary = "API to delete reward category by reward_category_id")
+    @Operation(summary = "API to delete reward category by reward category id")
     public ResponseEntity<MessageResponse> delete(@PathVariable("reward_category_id") String rewardCategoryId) {
         rewardCategoryService.delete(rewardCategoryId);
         String message = "Successfully delete reward category with id " + rewardCategoryId;

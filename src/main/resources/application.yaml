@@ -34,9 +34,9 @@ management:
 springdoc:
   api-docs:
     enabled: true
-    path: /v1/api-docs
+    path: /api/v1/api-docs
   swagger-ui:
-    path: /v1/api-docs
-    config-url: /v1/api-docs/swagger-config
+    path: /api/v1/api-docs
+    config-url: /api/v1/api-docs/swagger-config
     disable-swagger-default-url: true
-    url: /v1/api-docs
+    url: /api/v1/api-docs

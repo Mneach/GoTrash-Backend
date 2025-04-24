@@ -16,7 +16,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class TrashBinRequest {
-  private String trashBinId;
+  private String name;
+  private String wasteBankId;
   private Double latitude;
   private Double longitude;
   private String address;

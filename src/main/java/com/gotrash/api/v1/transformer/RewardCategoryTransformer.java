@@ -9,9 +9,15 @@ import java.util.UUID;
 
 public class RewardCategoryTransformer {
 
+    public static RewardCategory transformRequestToModel(String rewardCategoryId, RewardCategoryRequest rewardCategoryRequest) {
+        return RewardCategory.builder()
+            .rewardCategoryId(rewardCategoryId)
+            .name(rewardCategoryRequest.getName())
+            .build();
+    }
+
     public static RewardCategory transformRequestToModel(RewardCategoryRequest rewardCategoryRequest) {
         return RewardCategory.builder()
-                .rewardCategoryId(rewardCategoryRequest.getRewardCategoryId())
                 .name(rewardCategoryRequest.getName())
                 .build();
     }

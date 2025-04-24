@@ -1,12 +1,11 @@
 package com.gotrash.api.v1.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gotrash.constant.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Data
@@ -15,13 +14,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class User{
     private String userId;
-    private String username;
-    private String password;
     private String email;
-    private String phoneNumber;
-    private String imageUrl;
-    private BigInteger coin;
-    private Role role;
+    private String password;
+    private UserRole role;
+    private Long version;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

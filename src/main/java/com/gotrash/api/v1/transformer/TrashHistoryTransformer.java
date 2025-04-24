@@ -1,6 +1,7 @@
 package com.gotrash.api.v1.transformer;
 
 import com.gotrash.api.v1.model.Trash;
+import com.gotrash.api.v1.model.TrashBin;
 import com.gotrash.api.v1.model.TrashHistory;
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.request.TrashHistoryRequest;
@@ -10,11 +11,21 @@ import com.gotrash.entity.TrashHistoryEntity;
 import java.util.UUID;
 
 public class TrashHistoryTransformer {
+
+    public static TrashHistory transformRequestToModel(String trashHistoryId, TrashHistoryRequest trashHistoryRequest) {
+        return TrashHistory.builder()
+            .trashHistoryId(trashHistoryId)
+            .trash(Trash.builder().trashId(trashHistoryRequest.getTrashId()).build())
+            .citizen(User.builder().userId(trashHistoryRequest.getCitizenId()).build())
+            .trashBin(TrashBin.builder().trashBinId(trashHistoryRequest.getTrashBinId()).build())
+            .build();
+    }
+
     public static TrashHistory transformRequestToModel(TrashHistoryRequest trashHistoryRequest) {
         return TrashHistory.builder()
-                .trashHistoryId(trashHistoryRequest.getTrashHistoryId())
                 .trash(Trash.builder().trashId(trashHistoryRequest.getTrashId()).build())
-                .user(User.builder().userId(trashHistoryRequest.getUserId()).build())
+                .citizen(User.builder().userId(trashHistoryRequest.getCitizenId()).build())
+                .trashBin(TrashBin.builder().trashBinId(trashHistoryRequest.getTrashBinId()).build())
                 .build();
     }
 
@@ -22,7 +33,8 @@ public class TrashHistoryTransformer {
         return TrashHistory.builder()
                 .trashHistoryId(trashHistoryEntity.getTrashHistoryId().toString())
                 .trash(TrashTransformer.transformEntityToModel(trashHistoryEntity.getTrash()))
-                .user(UserTransformer.transformEntityToModel(trashHistoryEntity.getUser()))
+                .citizen(UserTransformer.transformEntityToModel(trashHistoryEntity.getUser()))
+                .trashBin(TrashBinTransformer.transformEntityToModel(trashHistoryEntity.getTrashBin()))
                 .createdAt(trashHistoryEntity.getCreatedAt())
                 .updatedAt(trashHistoryEntity.getUpdatedAt())
                 .build();
@@ -32,7 +44,8 @@ public class TrashHistoryTransformer {
         return TrashHistoryEntity.builder()
                 .trashHistoryId(trashHistory.getTrashHistoryId() != null ? UUID.fromString(trashHistory.getTrashHistoryId()) : null)
                 .trash(TrashTransformer.transformModelToEntity(trashHistory.getTrash()))
-                .user(UserTransformer.transformModelToEntity(trashHistory.getUser()))
+                .user(UserTransformer.transformModelToEntity(trashHistory.getCitizen()))
+                .trashBin(TrashBinTransformer.transformModelToEntity(trashHistory.getTrashBin()))
                 .build();
     }
 
@@ -40,7 +53,8 @@ public class TrashHistoryTransformer {
         return TrashHistoryResponse.builder()
                 .trashHistoryId(trashHistory.getTrashHistoryId())
                 .trash(TrashTransformer.transformModelToResponse(trashHistory.getTrash()))
-                .user(UserTransformer.transformModelToResponse(trashHistory.getUser()))
+                .citizen(UserTransformer.transformModelToResponse(trashHistory.getCitizen()))
+                .trashBin(TrashBinTransformer.transformModelToResponse(trashHistory.getTrashBin()))
                 .createdAt(trashHistory.getCreatedAt())
                 .updatedAt(trashHistory.getUpdatedAt())
                 .build();

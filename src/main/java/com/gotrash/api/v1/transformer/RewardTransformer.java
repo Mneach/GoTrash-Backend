@@ -37,9 +37,21 @@ public class RewardTransformer {
                 .build();
     }
 
+    public static Reward transformRequestToModel(String rewardId, RewardRequest rewardRequest) {
+        return Reward.builder()
+            .rewardId(rewardId)
+            .rewardCategory(RewardCategory.builder().rewardCategoryId(rewardRequest.getRewardCategoryId()).build())
+            .name(rewardRequest.getName())
+            .coin(rewardRequest.getCoin())
+            .stock(rewardRequest.getStock())
+            .description(rewardRequest.getDescription())
+            .imageName(rewardRequest.getImageName())
+            .imageUrl(rewardRequest.getImageUrl())
+            .build();
+    }
+
     public static Reward transformRequestToModel(RewardRequest rewardRequest) {
         return Reward.builder()
-                .rewardId(rewardRequest.getRewardId())
                 .rewardCategory(RewardCategory.builder().rewardCategoryId(rewardRequest.getRewardCategoryId()).build())
                 .name(rewardRequest.getName())
                 .coin(rewardRequest.getCoin())

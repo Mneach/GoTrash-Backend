@@ -31,13 +31,21 @@ public class TrashTransformer {
                 .build();
     }
 
-    public static Trash transformRequestToModel(TrashRequest trashRequest) {
+    public static Trash transformRequestToModel(String trashId, TrashRequest trashRequest) {
         return Trash.builder()
-                .trashId(trashRequest.getTrashId())
+                .trashId(trashId)
                 .trashCategory(TrashCategory.builder().trashCategoryId(trashRequest.getTrashCategoryId()).build())
                 .coin(trashRequest.getCoin())
                 .description(trashRequest.getDescription())
                 .build();
+    }
+
+    public static Trash transformRequestToModel(TrashRequest trashRequest) {
+        return Trash.builder()
+            .trashCategory(TrashCategory.builder().trashCategoryId(trashRequest.getTrashCategoryId()).build())
+            .coin(trashRequest.getCoin())
+            .description(trashRequest.getDescription())
+            .build();
     }
 
     public static TrashResponse transformModelToResponse(Trash trash) {

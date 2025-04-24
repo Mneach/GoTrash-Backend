@@ -45,9 +45,18 @@ public class GroupTransformer {
         .build();
   }
 
+  public static Group transformRequestToModel(String groupId, GroupRequest groupRequest) {
+    return Group.builder()
+        .groupId(groupId)
+        .reward(Reward.builder().rewardId(groupRequest.getRewardId()).build())
+        .owner(User.builder().userId(groupRequest.getUserId()).build())
+        .name(groupRequest.getName())
+        .coin(groupRequest.getCoin())
+        .build();
+  }
+
   public static Group transformRequestToModel(GroupRequest groupRequest) {
     return Group.builder()
-        .groupId(groupRequest.getGroupId())
         .reward(Reward.builder().rewardId(groupRequest.getRewardId()).build())
         .owner(User.builder().userId(groupRequest.getUserId()).build())
         .name(groupRequest.getName())

@@ -1,7 +1,6 @@
 package com.gotrash.api.v1.request;
 
-import com.gotrash.api.v1.model.Role;
-import com.gotrash.constant.RoleName;
+import com.gotrash.constant.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,12 +13,7 @@ import java.math.BigInteger;
 @NoArgsConstructor
 @Builder
 public class UserRequest {
-  private String userId;
-  private String username;
-  private String password;
   private String email;
-  private String phoneNumber;
-  private String imageUrl;
-  private BigInteger coin;
-  private RoleName role;
+  private String password;
+  private UserRole role;
 }

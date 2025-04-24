@@ -1,14 +1,18 @@
 package com.gotrash.entity;
 
-import com.gotrash.constant.RoleName;
+import com.gotrash.api.v1.model.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,26 +20,27 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "roles", schema = "gotrash")
+@Table(name = "governments", schema = "gotrash")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RoleEntity {
-
+public class GovernmentEntity {
   @Id
-  @Column(updatable = false, nullable = false, columnDefinition = "UUID")
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private UUID roleId;
+  private UUID userId;
 
-  @Enumerated(EnumType.STRING)
-  @Column(nullable = false, unique = true)
-  private RoleName name;
+  @OneToOne(cascade = CascadeType.ALL)
+  @MapsId
+  @JoinColumn(name = "user_id")
+  private UserEntity user;
+
+  @Column(unique = true)
+  @NotNull
+  private String name;
 
   @CreationTimestamp
   @Column(updatable = false)
@@ -44,4 +49,6 @@ public class RoleEntity {
   @UpdateTimestamp
   private LocalDateTime updatedAt;
 
+  @Version
+  private Long version;
 }
