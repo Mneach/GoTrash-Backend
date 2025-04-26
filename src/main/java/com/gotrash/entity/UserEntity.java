@@ -1,15 +1,20 @@
 package com.gotrash.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gotrash.constant.UserRole;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,26 +41,15 @@ public class UserEntity {
   private UUID userId;
 
   @NotNull
-  private String username;
-
-  @NotNull
   private String password;
 
   @NotNull
+  @Column(unique = true)
   private String email;
 
   @NotNull
-  private String phoneNumber;
-
-  @Nullable
-  private String imageUrl;
-
-  @NotNull
-  private BigInteger coin;
-
-  @OneToOne
-  @JoinColumn(name = "role_id", nullable = false)
-  private RoleEntity role;
+  @Enumerated(EnumType.STRING)
+  private UserRole role;
 
   @CreationTimestamp
   @Column(updatable = false)
@@ -63,4 +57,7 @@ public class UserEntity {
 
   @UpdateTimestamp
   private LocalDateTime updatedAt;
+
+  @Version
+  private Long version;
 }

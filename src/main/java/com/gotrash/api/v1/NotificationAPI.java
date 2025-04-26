@@ -20,8 +20,8 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1")
-@Tag(name = "Notification", description = "API for notification")
+@RequestMapping("/api/v1")
+@Tag(name = "Notification API", description = "API for notification")
 public class NotificationAPI {
     private final NotificationService notificationService;
 
@@ -35,7 +35,7 @@ public class NotificationAPI {
 
     @GetMapping("/notifications")
     @Operation(summary = "API to get all notification data")
-    public ResponseEntity<List<NotificationResponse>> getExchanges() {
+    public ResponseEntity<List<NotificationResponse>> getNotifications() {
         List<Notification> notifications = notificationService.getNotifications();
         List<NotificationResponse> notificationResponses = notifications.stream()
             .map(NotificationTransformer::transformModelToResponse)
@@ -45,7 +45,7 @@ public class NotificationAPI {
 
 
     @GetMapping("/notifications/{notification_id}")
-    @Operation(summary = "API to get notification by notification_id")
+    @Operation(summary = "API to get notification by notification id")
     public ResponseEntity<NotificationResponse> getUserByNotificationId(@PathVariable("notification_id") String notificationId) {
         NotificationResponse notificationResponse = NotificationTransformer.transformModelToResponse(
                 notificationService.getNotificationByNotificationId(notificationId)
@@ -54,7 +54,7 @@ public class NotificationAPI {
     }
 
     @GetMapping("/notifications/user/{user_id}")
-    @Operation(summary = "API to get notifications by user_id")
+    @Operation(summary = "API to get notifications by user id")
     public ResponseEntity<List<NotificationResponse>> getUserByUserId(@PathVariable("user_id") String userId) {
         List<Notification> notifications = notificationService.getNotificationByUserId(userId);
         List<NotificationResponse> notificationResponse = notifications
@@ -64,16 +64,17 @@ public class NotificationAPI {
         return new ResponseEntity<>(notificationResponse, HttpStatus.OK);
     }
 
-    @PatchMapping("/notification")
-    @Operation(summary = "API to update notification by notification_id")
-    public ResponseEntity<NotificationResponse> update(@RequestBody NotificationRequest notificationRequest) {
-        Notification notification = NotificationTransformer.transformRequestToModel(notificationRequest);
+    @PatchMapping("/notifications/{notification_id}")
+    @Operation(summary = "API to update notification by notification id")
+    public ResponseEntity<NotificationResponse> update(@PathVariable("notification_id") String notificationId,
+                                                       @RequestBody NotificationRequest notificationRequest) {
+        Notification notification = NotificationTransformer.transformRequestToModel(notificationId, notificationRequest);
         NotificationResponse notificationResponse = NotificationTransformer.transformModelToResponse(notificationService.update(notification));
         return new ResponseEntity<>(notificationResponse, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/notifications/{notification_id}")
-    @Operation(summary = "API to delete notification by notification_id")
+    @Operation(summary = "API to delete notification by notification id")
     public ResponseEntity<MessageResponse> delete(@PathVariable("notification_id") String notificationId) {
         notificationService.delete(notificationId);
         String message = "Successfully delete notification with id " + notificationId;

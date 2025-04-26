@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class ExchangeRequest {
-  private String exchangeId;
   private String userId;
   private String rewardId;
   private String status;

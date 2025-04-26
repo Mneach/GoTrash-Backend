@@ -9,9 +9,15 @@ import java.util.UUID;
 
 public class TrashCategoryTransformer {
 
+    public static TrashCategory transformRequestToModel(String trashCategoryId, TrashCategoryRequest trashCategoryRequest) {
+        return TrashCategory.builder()
+            .trashCategoryId(trashCategoryId)
+            .name(trashCategoryRequest.getName())
+            .build();
+    }
+
     public static TrashCategory transformRequestToModel(TrashCategoryRequest trashCategoryRequest) {
         return TrashCategory.builder()
-                .trashCategoryId(trashCategoryRequest.getTrashCategoryId())
                 .name(trashCategoryRequest.getName())
                 .build();
     }

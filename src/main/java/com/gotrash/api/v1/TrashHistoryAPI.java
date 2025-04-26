@@ -20,8 +20,8 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1")
-@Tag(name = "Trash History", description = "API for Trash History")
+@RequestMapping("/api/v1")
+@Tag(name = "Trash History API", description = "API for Trash History")
 public class TrashHistoryAPI {
     
     private final TrashHistoryService trashHistoryService;
@@ -36,7 +36,7 @@ public class TrashHistoryAPI {
 
     @GetMapping("/trash-histories")
     @Operation(summary = "API to get all trash history data")
-    public ResponseEntity<List<TrashHistoryResponse>> getExchanges() {
+    public ResponseEntity<List<TrashHistoryResponse>> getTrashHistories() {
         List<TrashHistory> trashHistories = trashHistoryService.getTrashHistories();
         List<TrashHistoryResponse> trashHistoryResponses = trashHistories.stream()
             .map(TrashHistoryTransformer::transformModelToResponse)
@@ -45,7 +45,7 @@ public class TrashHistoryAPI {
     }
 
     @GetMapping("/trash-histories/{trash_history_id}")
-    @Operation(summary = "API to get trash history by trash_history_id")
+    @Operation(summary = "API to get trash history by trash history id")
     public ResponseEntity<TrashHistoryResponse> getTrashByTrashId(@PathVariable("trash_history_id") String trashHistoryId) {
         TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(
                 trashHistoryService.getTrashHistoryByTrashHistoryId(trashHistoryId)
@@ -53,26 +53,27 @@ public class TrashHistoryAPI {
         return new ResponseEntity<>(trashHistoryResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/trash-histories/user/{user_id}")
-    @Operation(summary = "API to get trash history by user_id")
-    public ResponseEntity<List<TrashHistoryResponse>> getTrashByUserId(@PathVariable("user_id") String userId) {
-        List<TrashHistory> trashHistories = trashHistoryService.getTrashHistoryByUserId(userId);
+    @GetMapping("/trash-histories/citizen/{citizen_id}")
+    @Operation(summary = "API to get trash history by citizen id")
+    public ResponseEntity<List<TrashHistoryResponse>> getTrashByUserId(@PathVariable("citizen_id") String citizenId) {
+        List<TrashHistory> trashHistories = trashHistoryService.getTrashHistoryByUserId(citizenId);
         List<TrashHistoryResponse> trashHistoryResponses = trashHistories.stream()
                 .map(TrashHistoryTransformer::transformModelToResponse)
                 .toList();
         return new ResponseEntity<>(trashHistoryResponses, HttpStatus.OK);
     }
 
-    @PatchMapping("/trash-histories")
+    @PatchMapping("/trash-histories/{trash_history_id}")
     @Operation(summary = "API to update trash history")
-    public ResponseEntity<TrashHistoryResponse> update(@RequestBody TrashHistoryRequest trashHistoryRequest) {
-        TrashHistory trashHistory = TrashHistoryTransformer.transformRequestToModel(trashHistoryRequest);
+    public ResponseEntity<TrashHistoryResponse> update(@PathVariable("trash_history_id") String trashHistoryId,
+                                                       @RequestBody TrashHistoryRequest trashHistoryRequest) {
+        TrashHistory trashHistory = TrashHistoryTransformer.transformRequestToModel(trashHistoryId, trashHistoryRequest);
         TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(trashHistoryService.update(trashHistory));
         return new ResponseEntity<>(trashHistoryResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/trash-histories/{trash_history_id}")
-    @Operation(summary = "API to delete trash history by trash_history_id")
+    @Operation(summary = "API to delete trash history by trash history id")
     public ResponseEntity<MessageResponse> delete(@PathVariable("trash_history_id") String trashHistoryId) {
         trashHistoryService.delete(trashHistoryId);
         String message = "Successfully delete trashHistory with id " + trashHistoryId;

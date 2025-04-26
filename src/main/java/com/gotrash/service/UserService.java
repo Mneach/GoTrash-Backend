@@ -1,11 +1,7 @@
 package com.gotrash.service;
 
-import com.gotrash.api.v1.model.Notification;
-import com.gotrash.api.v1.model.Role;
 import com.gotrash.api.v1.model.User;
-import com.gotrash.api.v1.transformer.NotificationTransformer;
 import com.gotrash.api.v1.transformer.UserTransformer;
-import com.gotrash.entity.NotificationEntity;
 import com.gotrash.repository.UserRepository;
 import com.gotrash.entity.UserEntity;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,22 +19,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final RoleService roleService;
 
     @Transactional
     public User save(User user) {
-        Role role = roleService.getRoleByRoleName(user.getRole().getName());
-        user.setRole(role);
         UserEntity userEntity = UserTransformer.transformModelToEntity(user);
-        return UserTransformer.transformEntityToModel(userRepository.save(userEntity));
-    }
-
-    public List<User> getUsers() {
-        List<UserEntity> userEntities = userRepository.findAll();
-
-        return userEntities.stream()
-            .map(UserTransformer::transformEntityToModel)
-            .toList();
+        userEntity = userRepository.save(userEntity);
+        return UserTransformer.transformEntityToModel(userEntity);
     }
 
     public User getUserByEmail(String email) {
@@ -59,34 +45,17 @@ public class UserService {
         throw new EntityNotFoundException("User Not Found");
     }
 
-    public User getMe() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userId = authentication.getName();
+    public boolean isEmailAlreadyExists(String email) {
+        Optional<UserEntity> userEntityOptional = userRepository.findByEmail(email);
 
-        return getUserByUserId(userId);
-    }
-
-    @Transactional
-    public User update(User user) {
-        if (userRepository.existsById(UUID.fromString(user.getUserId()))) {
-            UserEntity userEntity = UserTransformer.transformModelToEntity(user);
-            return UserTransformer.transformEntityToModel(userRepository.save(userEntity));
+        if (userEntityOptional.isPresent()) {
+            return true;
         }
 
-        throw new EntityNotFoundException("User Not Found");
+        return false;
     }
 
-    @Transactional
-    public void delete(String userId) {
-        if (userRepository.existsById(UUID.fromString(userId))) {
-            userRepository.deleteById(UUID.fromString(userId));
-            return;
-        }
-
-        throw new EntityNotFoundException("User Not Found");
-    }
-
-    public boolean userExists(String userId) {
-        return userRepository.existsById(UUID.fromString(userId));
+    public Long countTotalUser() {
+        return userRepository.count();
     }
 }

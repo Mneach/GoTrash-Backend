@@ -13,6 +13,5 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class RewardCategoryRequest {
-    private String rewardCategoryId;
     private String name;
 }

@@ -1,7 +1,7 @@
 package com.gotrash.api.v1.transformer;
 
 import com.gotrash.api.v1.model.Auth;
-import com.gotrash.api.v1.request.AuthRequest;
+import com.gotrash.api.v1.request.auth.AuthRequest;
 
 public class AuthTransformer {
 

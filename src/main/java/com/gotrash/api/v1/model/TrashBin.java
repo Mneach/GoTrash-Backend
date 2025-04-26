@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @Builder
 public class TrashBin {
     private String trashBinId;
+    private WasteBank wasteBank;
+    private String name;
     private Double latitude;
     private Double longitude;
     private String address;

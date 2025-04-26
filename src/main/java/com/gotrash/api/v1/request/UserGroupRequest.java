@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class UserGroupRequest {
-  private String userGroupId;
   private String userId;
   private List<Group> groupId;
   private LocalDateTime createdAt;

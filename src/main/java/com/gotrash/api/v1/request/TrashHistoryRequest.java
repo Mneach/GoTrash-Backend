@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class TrashHistoryRequest {
-  private String trashHistoryId;
   private String trashId;
-  private String userId;
+  private String citizenId;
+  private String trashBinId;
 }

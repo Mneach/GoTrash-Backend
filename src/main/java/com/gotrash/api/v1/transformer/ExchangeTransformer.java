@@ -11,9 +11,18 @@ import java.util.UUID;
 
 public class ExchangeTransformer {
 
+  public static Exchange transformRequestToModel(String exchangeId, ExchangeRequest exchangeRequest) {
+    return Exchange.builder()
+        .exchangeId(exchangeId)
+        .user(User.builder().userId(exchangeRequest.getUserId()).build())
+        .reward(Reward.builder().rewardId(exchangeRequest.getRewardId()).build())
+        .status(exchangeRequest.getStatus())
+        .description(exchangeRequest.getDescription())
+        .build();
+  }
+
   public static Exchange transformRequestToModel(ExchangeRequest exchangeRequest) {
     return Exchange.builder()
-        .exchangeId(exchangeRequest.getExchangeId())
         .user(User.builder().userId(exchangeRequest.getUserId()).build())
         .reward(Reward.builder().rewardId(exchangeRequest.getRewardId()).build())
         .status(exchangeRequest.getStatus())

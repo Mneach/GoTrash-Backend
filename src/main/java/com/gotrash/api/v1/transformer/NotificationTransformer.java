@@ -11,9 +11,17 @@ import java.util.UUID;
 
 public class NotificationTransformer {
 
+    public static Notification transformRequestToModel(String notificationId, NotificationRequest notificationRequest) {
+        return Notification.builder()
+            .notificationId(notificationId)
+            .user(User.builder().userId(notificationRequest.getUserId()).build())
+            .title(notificationRequest.getTitle())
+            .description(notificationRequest.getDescription())
+            .build();
+    }
+
     public static Notification transformRequestToModel(NotificationRequest notificationRequest) {
         return Notification.builder()
-                .notificationId(notificationRequest.getNotificationId())
                 .user(User.builder().userId(notificationRequest.getUserId()).build())
                 .title(notificationRequest.getTitle())
                 .description(notificationRequest.getDescription())

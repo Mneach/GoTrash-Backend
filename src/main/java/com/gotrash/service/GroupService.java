@@ -100,7 +100,7 @@ public class GroupService {
     return GroupTransformer.transformEntityToModel(groupEntityOptional.get());
   }
 
-  public List<Group> getGroupsByUserId(String userId) {
+  public List<Group> getGroupsFilterByUserId(String userId) {
     List<GroupEntity> groupEntities = groupRepository.findAllByOwner_UserId(UUID.fromString(userId));
 
     return groupEntities.stream()

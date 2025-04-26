@@ -12,7 +12,6 @@ import java.math.BigInteger;
 @NoArgsConstructor
 @Builder
 public class GroupRequest {
-    private String groupId;
     private String rewardId;
     private String userId;
     private String name;
