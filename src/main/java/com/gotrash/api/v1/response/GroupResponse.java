@@ -20,7 +20,7 @@ import java.util.List;
 public class GroupResponse {
     private String groupId;
     private RewardResponse reward;
-    private UserResponse owner;
+    private CitizenResponse owner;
     private List<GroupMemberResponse> groupMembers;
     private String name;
     private BigInteger coin;

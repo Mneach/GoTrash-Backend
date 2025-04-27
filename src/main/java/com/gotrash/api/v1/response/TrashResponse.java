@@ -18,6 +18,7 @@ public class TrashResponse {
   private String name;
   private TrashCategoryResponse trashCategory;
   private BigInteger coin;
+  private BigInteger rating;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

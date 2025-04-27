@@ -23,9 +23,9 @@ public class CitizenResponse {
   private UserRole role;
   private String name;
   private String phoneNumber;
-  private String imageName;
   private String imageUrl;
   private BigInteger coin;
+  private BigInteger rating;
   private Integer currentStreak;
   private Integer longestStreak;
   private LocalDate lastTrashDate;

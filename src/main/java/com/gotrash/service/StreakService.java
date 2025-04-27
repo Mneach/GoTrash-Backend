@@ -102,7 +102,7 @@ public class StreakService {
       String trashCategory = trashHistory.getTrash().getTrashCategory().getName();
       BigDecimal weight = trashHistory.getWeight();
       BigInteger baseCoin = trashHistory.getTrash().getCoin();
-      BigInteger totalCoin = CoinCalculatorUtil.calculate(weight, baseCoin);
+      BigInteger totalCoin = CoinCalculatorUtil.calculateCoin(weight, baseCoin);
 
       StreakTrashHistory streakTrashHistory = StreakTrashHistory.builder()
           .name(trashName)

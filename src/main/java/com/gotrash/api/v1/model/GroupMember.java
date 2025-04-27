@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class GroupMember {
   private String groupMemberId;
-  private User user;
+  private Citizen user;
   private Group group;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;

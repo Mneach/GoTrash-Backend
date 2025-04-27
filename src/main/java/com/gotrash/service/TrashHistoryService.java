@@ -43,10 +43,12 @@ public class TrashHistoryService {
                 TrashHistoryTransformer.transformModelToEntity(trashHistory)
         );
 
-        BigInteger totalCoin = CoinCalculatorUtil.calculate(trashHistory.getWeight(), trash.getCoin());
+        BigInteger totalCoin = CoinCalculatorUtil.calculateCoin(trashHistory.getWeight(), trash.getCoin());
+        BigInteger totalRating = CoinCalculatorUtil.calculateRating(trashHistory.getWeight(), trashHistory.getTrash().getRating());
 
         streakService.updateCitizenStreak(user);
         citizenService.addCoin(user.getUserId(), totalCoin);
+        citizenService.addRating(user.getUserId(), totalRating);
 
         return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity, totalCoin);
     }

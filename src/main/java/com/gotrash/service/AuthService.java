@@ -42,8 +42,10 @@ public class AuthService {
         .role(UserRole.GUEST)
         .build();
 
-    citizen.setPhoneNumber("Guest");
+    citizen.setImageUrl("https://www.twtf.org.uk/wp-content/uploads/2024/01/dummy-image.jpg");
+    citizen.setPhoneNumber("0851235421");
     citizen.setCoin(BigInteger.valueOf(0L));
+    citizen.setRating(BigInteger.valueOf(0L));
 
     citizen = citizenService.save(citizen);
     String jwtToken = jwtService.generateToken(citizen.getUser());
@@ -64,6 +66,8 @@ public class AuthService {
 
     citizen.setCurrentStreak(0);
     citizen.setLongestStreak(0);
+    citizen.setRating(BigInteger.valueOf(0));
+    citizen.setCoin(BigInteger.valueOf(0));
     citizen = citizenService.save(citizen);
     String jwtToken = jwtService.generateToken(citizen.getUser());
 

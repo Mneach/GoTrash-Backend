@@ -17,6 +17,7 @@ public class Trash {
     private TrashCategory trashCategory;
     private String name;
     private BigInteger coin;
+    private BigInteger rating;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

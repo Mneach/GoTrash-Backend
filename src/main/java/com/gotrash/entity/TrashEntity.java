@@ -44,6 +44,9 @@ public class TrashEntity {
   @NotNull
   private BigInteger coin;
 
+  @NotNull
+  private BigInteger rating;
+
   @CreationTimestamp
   @Column(updatable = false)
   private LocalDateTime createdAt;

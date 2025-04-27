@@ -23,14 +23,12 @@ public class Citizen {
   private UserRole role;
   private String name;
   private String phoneNumber;
-  private String imageName;
   private String imageUrl;
   private BigInteger coin;
+  private BigInteger rating;
   private Integer currentStreak;
   private Integer longestStreak;
   private LocalDate lastTrashDate;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
-  private List<TrashHistory> trashHistories;
-  private List<Group> groups;
 }

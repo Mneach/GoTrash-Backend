@@ -46,9 +46,6 @@ public class CitizenEntity {
   @NotNull
   private String phoneNumber;
 
-  @NotNull
-  private String imageName;
-
   @Nullable
   private Integer currentStreak;
 
@@ -63,6 +60,9 @@ public class CitizenEntity {
 
   @NotNull
   private BigInteger coin;
+
+  @NotNull
+  private BigInteger rating;
 
   @CreationTimestamp
   @Column(updatable = false)
