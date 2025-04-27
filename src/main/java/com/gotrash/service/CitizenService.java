@@ -5,7 +5,6 @@ import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.transformer.CitizenTransformer;
 import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.entity.CitizenEntity;
-import com.gotrash.entity.GovernmentEntity;
 import com.gotrash.entity.UserEntity;
 import com.gotrash.repository.CitizenRepository;
 import com.gotrash.repository.UserRepository;
@@ -16,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -106,4 +106,21 @@ public class CitizenService {
     citizenRepository.deleteById(UUID.fromString(citizenId));
   }
 
+  @Transactional
+  public void addCoin(String userId, BigInteger totalCoin) {
+    CitizenEntity citizenEntity = citizenRepository.findById(UUID.fromString(userId))
+        .orElseThrow(() -> new EntityNotFoundException("Citizen with ID " + userId + " not found"));
+    citizenEntity.setCoin(citizenEntity.getCoin().add(totalCoin));
+    citizenRepository.save(citizenEntity);
+  }
+
+  public boolean isPhoneNumberAlreadyExists(String phoneNumber) {
+    Optional<CitizenEntity> citizenEntityOptional = citizenRepository.findByPhoneNumber(phoneNumber);
+
+    if (citizenEntityOptional.isPresent()) {
+      return true;
+    }
+
+    return false;
+  }
 }

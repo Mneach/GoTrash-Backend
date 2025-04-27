@@ -9,4 +9,5 @@ import java.util.UUID;
 
 public interface CitizenRepository extends JpaRepository<CitizenEntity, UUID> {
   Optional<CitizenEntity> findByUser_UserId(UUID userId);
+  Optional<CitizenEntity> findByPhoneNumber(String phoneNumber);
 }

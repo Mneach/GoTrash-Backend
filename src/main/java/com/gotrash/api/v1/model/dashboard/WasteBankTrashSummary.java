@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -14,5 +15,5 @@ import java.util.UUID;
 public class WasteBankTrashSummary {
   private UUID wasteBankId;
   private String wasteBankName;
-  private Long totalTrash;
+  private BigDecimal totalWeight;
 }

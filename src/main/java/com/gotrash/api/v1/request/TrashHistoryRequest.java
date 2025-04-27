@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -19,4 +20,5 @@ public class TrashHistoryRequest {
   private String trashId;
   private String citizenId;
   private String trashBinId;
+  private BigDecimal weight;
 }

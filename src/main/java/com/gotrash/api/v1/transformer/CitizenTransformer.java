@@ -19,6 +19,9 @@ public class CitizenTransformer {
                 .imageName(citizen.getImageName())
                 .imageUrl(citizen.getImageUrl())
                 .coin(citizen.getCoin())
+                .currentStreak(citizen.getCurrentStreak())
+                .longestStreak(citizen.getLongestStreak())
+                .lastTrashDate(citizen.getLastTrashDate())
                 .createdAt(citizen.getCreatedAt())
                 .updatedAt(citizen.getUpdatedAt())
                 .build();
@@ -35,6 +38,9 @@ public class CitizenTransformer {
           .imageName(citizenEntity.getImageName())
           .imageUrl(citizenEntity.getImageUrl())
           .coin(citizenEntity.getCoin())
+          .currentStreak(citizenEntity.getCurrentStreak())
+          .longestStreak(citizenEntity.getLongestStreak())
+          .lastTrashDate(citizenEntity.getLastTrashDate())
           .createdAt(citizenEntity.getCreatedAt())
           .updatedAt(citizenEntity.getUpdatedAt())
           .build();
@@ -51,6 +57,9 @@ public class CitizenTransformer {
         .imageUrl(citizenRequest.getImageUrl())
         .coin(citizenRequest.getCoin())
         .role(citizenRequest.getRole())
+        .currentStreak(citizenRequest.getCurrentStreak())
+        .longestStreak(citizenRequest.getLongestStreak())
+        .lastTrashDate(citizenRequest.getLastTrashDate())
         .build();
   }
 
@@ -64,6 +73,9 @@ public class CitizenTransformer {
             .imageUrl(citizenRequest.getImageUrl())
             .coin(citizenRequest.getCoin())
             .role(citizenRequest.getRole())
+            .currentStreak(citizenRequest.getCurrentStreak())
+            .longestStreak(citizenRequest.getLongestStreak())
+            .lastTrashDate(citizenRequest.getLastTrashDate())
             .build();
     }
 
@@ -91,6 +103,9 @@ public class CitizenTransformer {
             .imageUrl(citizen.getImageUrl())
             .coin(citizen.getCoin())
             .role(citizen.getRole())
+            .currentStreak(citizen.getCurrentStreak())
+            .longestStreak(citizen.getLongestStreak())
+            .lastTrashDate(citizen.getLastTrashDate())
             .createdAt(citizen.getCreatedAt())
             .updatedAt(citizen.getUpdatedAt())
             .build();

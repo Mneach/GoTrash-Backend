@@ -20,6 +20,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -47,6 +48,15 @@ public class CitizenEntity {
 
   @NotNull
   private String imageName;
+
+  @Nullable
+  private Integer currentStreak;
+
+  @Nullable
+  private Integer longestStreak;
+
+  @Nullable
+  private LocalDate lastTrashDate;
 
   @Nullable
   private String imageUrl;

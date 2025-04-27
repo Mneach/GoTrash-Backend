@@ -58,6 +58,14 @@ public class AuthService {
   @Transactional
   public AuthResponse registerCitizen(Citizen citizen) {
 
+    if (userService.isEmailAlreadyExists(citizen.getEmail())) {
+      throw new IllegalArgumentException("Email is already in use.");
+    } else if (citizenService.isPhoneNumberAlreadyExists(citizen.getPhoneNumber())) {
+      throw new IllegalArgumentException("Phone Number is already in use.");
+    }
+
+    citizen.setCurrentStreak(0);
+    citizen.setLongestStreak(0);
     citizen = citizenService.save(citizen);
     String jwtToken = jwtService.generateToken(citizen.getUser());
 

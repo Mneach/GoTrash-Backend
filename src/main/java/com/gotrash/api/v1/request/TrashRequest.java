@@ -19,5 +19,5 @@ public class TrashRequest {
   private String trashCategoryId;
   private String trashBinId;
   private BigInteger coin;
-  private String description;
+  private String name;
 }

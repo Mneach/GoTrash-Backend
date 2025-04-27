@@ -4,10 +4,14 @@ package com.gotrash.api.v1;
 import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.response.MessageResponse;
 import com.gotrash.api.v1.model.Citizen;
+import com.gotrash.api.v1.model.streak.Streak;
 import com.gotrash.api.v1.request.CitizenRequest;
 import com.gotrash.api.v1.response.CitizenResponse;
+import com.gotrash.api.v1.response.streak.StreakResponse;
 import com.gotrash.api.v1.transformer.CitizenTransformer;
+import com.gotrash.api.v1.transformer.StreakTransformer;
 import com.gotrash.service.CitizenService;
+import com.gotrash.service.StreakService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +31,9 @@ import java.util.List;
 @RequestMapping("/api/v1")
 @Tag(name = "Citizen API", description = "API for Citizen")
 public class CitizenAPI {
+
   private final CitizenService citizenService;
+  private final StreakService streakService;
 
   @GetMapping("/citizens")
   @Operation(summary = "API to get all citizen data")
@@ -71,5 +77,13 @@ public class CitizenAPI {
     citizenService.delete(userId);
     String message = "Successfully delete citizen with id " + userId;
     return new ApiResponse<>(HttpStatus.OK.value(), message);
+  }
+
+  @GetMapping("/citizens/{user_id}/streak")
+  @Operation(summary = "API to get citizen streak by user id")
+  public ApiResponse<StreakResponse> getCitizenStreak(@PathVariable("user_id") String userId) {
+    Streak streak = streakService.getStreak(userId);
+    StreakResponse streakResponse = StreakTransformer.transformModelToResponse(streak);
+    return new ApiResponse<>(HttpStatus.OK.value(), streakResponse);
   }
 }
