@@ -1,5 +1,6 @@
 package com.gotrash.api.v1;
 
+import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.response.MessageResponse;
 import com.gotrash.api.v1.model.Trash;
 import com.gotrash.api.v1.request.TrashRequest;
@@ -24,45 +25,45 @@ public class TrashAPI {
 
     @PostMapping("/trashes")
     @Operation(summary = "API to create a new trash")
-    public ResponseEntity<TrashResponse> save(@RequestBody TrashRequest trashRequest) {
+    public ApiResponse<TrashResponse> save(@RequestBody TrashRequest trashRequest) {
         Trash trash = TrashTransformer.transformRequestToModel(trashRequest);
         TrashResponse trashResponse = TrashTransformer.transformModelToResponse(trashService.save(trash));
-        return new ResponseEntity<>(trashResponse, HttpStatus.CREATED);
+        return new ApiResponse<>(HttpStatus.CREATED.value(), trashResponse);
     }
 
     @GetMapping("/trashes")
     @Operation(summary = "API to get all trash data")
-    public ResponseEntity<List<TrashResponse>> getTrashes() {
+    public ApiResponse<List<TrashResponse>> getTrashes() {
         List<Trash> trashes = trashService.getTrashes();
         List<TrashResponse> trashResponses = trashes.stream()
             .map(TrashTransformer::transformModelToResponse)
             .toList();
-        return new ResponseEntity<>(trashResponses, HttpStatus.OK);
+        return new ApiResponse<>(HttpStatus.OK.value(), trashResponses);
     }
 
     @GetMapping("/trashes/{trash_id}")
     @Operation(summary = "API to get trash by trash id")
-    public ResponseEntity<TrashResponse> getTrashByTrashId(@PathVariable("trash_id") String trashId) {
+    public ApiResponse<TrashResponse> getTrashByTrashId(@PathVariable("trash_id") String trashId) {
         TrashResponse trashResponse = TrashTransformer.transformModelToResponse(
                 trashService.getTrashByTrashId(trashId)
         );
-        return new ResponseEntity<>(trashResponse, HttpStatus.OK);
+        return new ApiResponse<>(HttpStatus.OK.value(), trashResponse);
     }
 
     @PatchMapping("/trashes/{trash_id}")
     @Operation(summary = "API to update trash by trash id")
-    public ResponseEntity<TrashResponse> update(@PathVariable("trash_id") String trashId,
+    public ApiResponse<TrashResponse> update(@PathVariable("trash_id") String trashId,
                                                 @RequestBody TrashRequest trashRequest) {
         Trash trash = TrashTransformer.transformRequestToModel(trashId, trashRequest);
         TrashResponse trashResponse = TrashTransformer.transformModelToResponse(trashService.update(trash));
-        return new ResponseEntity<>(trashResponse, HttpStatus.OK);
+        return new ApiResponse<>(HttpStatus.OK.value(), trashResponse);
     }
 
     @DeleteMapping("/trashes/{trash_id}")
     @Operation(summary = "API to delete trash by trash id")
-    public ResponseEntity<MessageResponse> delete(@PathVariable("trash_id") String trashId) {
+    public ApiResponse<MessageResponse> delete(@PathVariable("trash_id") String trashId) {
         trashService.delete(trashId);
         String message = "Successfully delete trash with id " + trashId;
-        return new ResponseEntity(message, HttpStatus.OK);
+        return new ApiResponse<>(HttpStatus.OK.value(), message);
     }
 }

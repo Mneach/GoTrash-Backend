@@ -17,16 +17,14 @@ public class RestErrorDescription {
   private String timestamp;
   private int status;
   private String message;
-  private String path;
-  private Map<String, String[]> queryParameters;
+  private Object data;
 
   public RestErrorDescription(ResponseStatusException exception, WebRequest webRequest) {
     this(
         Instant.now().toString(),
         exception.getStatusCode().value(),
         exception.getReason(),
-        ((ServletWebRequest) webRequest).getRequest().getRequestURI(),
-        webRequest.getParameterMap()
+        null
     );
   }
 }

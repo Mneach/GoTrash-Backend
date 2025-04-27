@@ -1,6 +1,7 @@
 package com.gotrash.api.v1;
 
 
+import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.response.MessageResponse;
 import com.gotrash.api.v1.model.Citizen;
 import com.gotrash.api.v1.request.CitizenRequest;
@@ -11,7 +12,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,45 +31,45 @@ public class CitizenAPI {
 
   @GetMapping("/citizens")
   @Operation(summary = "API to get all citizen data")
-  public ResponseEntity<List<CitizenResponse>> getCitizens() {
+  public ApiResponse<List<CitizenResponse>> getCitizens() {
     List<Citizen> citizen = citizenService.getCitizens();
     List<CitizenResponse> citizenResponses = citizen.stream()
         .map(CitizenTransformer::transformModelToResponse)
         .toList();
-    return new ResponseEntity<>(citizenResponses, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), citizenResponses);
   }
 
   @GetMapping("/citizens/me")
   @Operation(summary = "API to get current citizen user")
-  public ResponseEntity<CitizenResponse> getMe() {
+  public ApiResponse<CitizenResponse> getMe() {
     CitizenResponse citizenResponse = CitizenTransformer.transformModelToResponse(
         citizenService.getMe()
     );
-    return new ResponseEntity<>(citizenResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), citizenResponse);
   }
 
   @GetMapping("/citizens/{user_id}")
   @Operation(summary = "API to get citizen by user id")
-  public ResponseEntity<CitizenResponse> getCitizenByUserId(@PathVariable("user_id") String userId) {
+  public ApiResponse<CitizenResponse> getCitizenByUserId(@PathVariable("user_id") String userId) {
     CitizenResponse citizenResponse = CitizenTransformer.transformModelToResponse(
         citizenService.getCitizenByUserId(userId)
     );
-    return new ResponseEntity<>(citizenResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), citizenResponse);
   }
 
   @PatchMapping("/citizens/{user_id}")
   @Operation(summary = "API to update citizen")
-  public ResponseEntity<CitizenResponse> update(@PathVariable("user_id") String userId, @RequestBody CitizenRequest citizenRequest) {
+  public ApiResponse<CitizenResponse> update(@PathVariable("user_id") String userId, @RequestBody CitizenRequest citizenRequest) {
     Citizen citizen = CitizenTransformer.transformRequestToModel(userId, citizenRequest);
     CitizenResponse citizenResponse = CitizenTransformer.transformModelToResponse(citizenService.update(citizen));
-    return new ResponseEntity<>(citizenResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), citizenResponse);
   }
 
   @DeleteMapping("/citizens/{user_id}")
   @Operation(summary = "API to delete citizen by user id")
-  public ResponseEntity<MessageResponse> delete(@PathVariable("user_id") String userId) {
+  public ApiResponse<MessageResponse> delete(@PathVariable("user_id") String userId) {
     citizenService.delete(userId);
     String message = "Successfully delete citizen with id " + userId;
-    return new ResponseEntity(message, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), message);
   }
 }

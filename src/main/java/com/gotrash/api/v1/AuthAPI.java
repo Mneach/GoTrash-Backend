@@ -1,16 +1,12 @@
 package com.gotrash.api.v1;
 
+import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.v1.model.Auth;
 import com.gotrash.api.v1.model.Citizen;
 import com.gotrash.api.v1.model.Company;
 import com.gotrash.api.v1.model.Government;
-import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.model.WasteBank;
-import com.gotrash.api.v1.request.CitizenRequest;
-import com.gotrash.api.v1.request.GovernmentRequest;
 import com.gotrash.api.v1.request.auth.AuthRequest;
-import com.gotrash.api.v1.request.UserRequest;
-import com.gotrash.api.v1.request.WasteBankRequest;
 import com.gotrash.api.v1.request.auth.RegisterCitizenRequest;
 import com.gotrash.api.v1.request.auth.RegisterCompanyRequest;
 import com.gotrash.api.v1.request.auth.RegisterGovernmentRequest;
@@ -20,14 +16,13 @@ import com.gotrash.api.v1.transformer.AuthTransformer;
 import com.gotrash.api.v1.transformer.CitizenTransformer;
 import com.gotrash.api.v1.transformer.CompanyTransformer;
 import com.gotrash.api.v1.transformer.GovernmentTransformer;
-import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.api.v1.transformer.WasteBankTransformer;
 import com.gotrash.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,54 +38,54 @@ public class AuthAPI {
 
   @PostMapping("auth/register/guest")
   @Operation(summary = "API for register a new guest")
-  public ResponseEntity<AuthResponse> registerGuest() {
+  public ApiResponse<AuthResponse> registerGuest() {
     AuthResponse authResponse = authService.registerGuest();
-    return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), authResponse);
   }
 
   @PostMapping("auth/register/citizen")
   @Operation(summary = "API for register a new citizen")
-  public ResponseEntity<AuthResponse> registerCitizen(@RequestBody RegisterCitizenRequest registerCitizenRequest) {
+  public ApiResponse<AuthResponse> registerCitizen(@RequestBody RegisterCitizenRequest registerCitizenRequest) {
     Citizen citizen = CitizenTransformer.transformRequestToModel(registerCitizenRequest);
     AuthResponse authResponse = authService.registerCitizen(citizen);
 
-    return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), authResponse);
   }
 
   @PostMapping("auth/register/waste-bank")
   @Operation(summary = "API for register a new waste bank")
-  public ResponseEntity<AuthResponse> registerWasteBank(@RequestBody RegisterWasteBankRequest registerWasteBankRequest) {
+  public ApiResponse<AuthResponse> registerWasteBank(@RequestBody RegisterWasteBankRequest registerWasteBankRequest) {
     WasteBank wasteBank = WasteBankTransformer.transformRequestToModel(registerWasteBankRequest);
     AuthResponse authResponse = authService.registerWasteBank(wasteBank);
 
-    return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), authResponse);
   }
 
   @PostMapping("auth/register/government")
   @Operation(summary = "API for register a new government")
-  public ResponseEntity<AuthResponse> registerGovernment(@RequestBody RegisterGovernmentRequest registerGovernmentRequest) {
+  public ApiResponse<AuthResponse> registerGovernment(@RequestBody RegisterGovernmentRequest registerGovernmentRequest) {
     Government government = GovernmentTransformer.transformRequestToModel(registerGovernmentRequest);
     AuthResponse authResponse = authService.registerGovernment(government);
 
-    return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), authResponse);
   }
 
   @PostMapping("auth/register/company")
   @Operation(summary = "API for register a new company")
-  public ResponseEntity<AuthResponse> registerCompany(@RequestBody RegisterCompanyRequest registerCompanyRequest) {
+  public ApiResponse<AuthResponse> registerCompany(@RequestBody RegisterCompanyRequest registerCompanyRequest) {
     Company company = CompanyTransformer.transformRequestToModel(registerCompanyRequest);
     AuthResponse authResponse = authService.registerCompany(company);
 
-    return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), authResponse);
   }
 
   @PostMapping("auth/login")
   @Operation(summary = "API for login to the application")
-  public ResponseEntity<AuthResponse> auth(@RequestBody AuthRequest authRequest) {
+  public ApiResponse<AuthResponse> auth(@RequestBody AuthRequest authRequest) {
     Auth auth = AuthTransformer.transformRequestToModel(authRequest);
     AuthResponse authResponse = authService.login(auth);
 
-    return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), authResponse);
   }
 
   @Operation(

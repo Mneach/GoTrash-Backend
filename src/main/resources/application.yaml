@@ -21,6 +21,9 @@ application:
       secret-key: ${JWT_SECRET_KEY}
       expiration: ${JWT_EXPIRATION}
 
+cors:
+  allowed-origins: ${FRONTEND_ORIGINS}
+
 management:
   endpoints:
     web:

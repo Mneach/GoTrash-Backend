@@ -2,6 +2,7 @@ package com.gotrash.config;
 
 import com.gotrash.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -26,6 +27,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfig {
+
+  @Value("#{'${cors.allowed-origins}'.split(',')}")
+  private List<String> corsAllowedOrigins;
 
   private static final String[] WHITE_LIST_URL = {
       "/api/v1/auth/**",
@@ -56,7 +60,7 @@ public class SecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(List.of("http://localhost:5173"));
+    config.setAllowedOrigins(corsAllowedOrigins);
     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     config.setAllowedHeaders(List.of("*"));
     config.setAllowCredentials(true);

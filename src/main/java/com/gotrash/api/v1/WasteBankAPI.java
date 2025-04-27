@@ -1,5 +1,6 @@
 package com.gotrash.api.v1;
 
+import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.response.MessageResponse;
 import com.gotrash.api.v1.model.WasteBank;
 import com.gotrash.api.v1.request.WasteBankRequest;
@@ -31,46 +32,46 @@ public class WasteBankAPI {
 
   @GetMapping("/waste-banks")
   @Operation(summary = "API to get all waste bank data")
-  public ResponseEntity<List<WasteBankResponse>> getWasteBanks() {
+  public ApiResponse<List<WasteBankResponse>> getWasteBanks() {
     List<WasteBank> wasteBanks = wasteBankService.getWasteBanks();
     List<WasteBankResponse> wasteBankResponses = wasteBanks.stream()
         .map(WasteBankTransformer::transformModelToResponse)
         .toList();
-    return new ResponseEntity<>(wasteBankResponses, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), wasteBankResponses);
   }
 
   @GetMapping("/waste-banks/me")
   @Operation(summary = "API to get current waste bank user")
-  public ResponseEntity<WasteBankResponse> getMe() {
+  public ApiResponse<WasteBankResponse> getMe() {
     WasteBankResponse wasteBankResponse = WasteBankTransformer.transformModelToResponse(
         wasteBankService.getMe()
     );
-    return new ResponseEntity<>(wasteBankResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), wasteBankResponse);
   }
 
   @GetMapping("/waste-banks/{user_id}")
   @Operation(summary = "API to get waste bank by user id")
-  public ResponseEntity<WasteBankResponse> getWasteBankByUserId(@PathVariable("user_id") String userId) {
+  public ApiResponse<WasteBankResponse> getWasteBankByUserId(@PathVariable("user_id") String userId) {
     WasteBankResponse wasteBankResponse = WasteBankTransformer.transformModelToResponse(
         wasteBankService.getWasteBankByUserId(userId)
     );
-    return new ResponseEntity<>(wasteBankResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), wasteBankResponse);
   }
 
   @PatchMapping("/waste-banks/{user_id}")
   @Operation(summary = "API to update waste bank")
-  public ResponseEntity<WasteBankResponse> update(@PathVariable("user_id") String userId,
+  public ApiResponse<WasteBankResponse> update(@PathVariable("user_id") String userId,
                                                   @RequestBody WasteBankRequest wasteBankRequest) {
     WasteBank wasteBank = WasteBankTransformer.transformRequestToModel(userId, wasteBankRequest);
     WasteBankResponse wasteBankResponse = WasteBankTransformer.transformModelToResponse(wasteBankService.update(wasteBank));
-    return new ResponseEntity<>(wasteBankResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), wasteBankResponse);
   }
 
   @DeleteMapping("/waste-banks/{user_id}")
   @Operation(summary = "API to delete waste bank by user id")
-  public ResponseEntity<MessageResponse> delete(@PathVariable("user_id") String userId) {
+  public ApiResponse<MessageResponse> delete(@PathVariable("user_id") String userId) {
     wasteBankService.delete(userId);
     String message = "Successfully delete waste bank with id " + userId;
-    return new ResponseEntity(message, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), message);
   }
 }

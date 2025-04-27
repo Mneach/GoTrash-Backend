@@ -1,5 +1,6 @@
 package com.gotrash.api.v1;
 
+import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.response.MessageResponse;
 import com.gotrash.api.v1.model.Company;
 import com.gotrash.api.v1.request.CompanyRequest;
@@ -10,7 +11,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,46 +31,46 @@ public class CompanyAPI {
 
   @GetMapping("/companies")
   @Operation(summary = "API to get all company data")
-  public ResponseEntity<List<CompanyResponse>> getCompanies() {
+  public ApiResponse<List<CompanyResponse>> getCompanies() {
     List<Company> companies = companyService.getCompanies();
     List<CompanyResponse> companyResponses = companies.stream()
         .map(CompanyTransformer::transformModelToResponse)
         .toList();
-    return new ResponseEntity<>(companyResponses, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), companyResponses);
   }
 
   @GetMapping("/companies/me")
   @Operation(summary = "API to get current company user")
-  public ResponseEntity<CompanyResponse> getMe() {
+  public ApiResponse<CompanyResponse> getMe() {
     CompanyResponse companyResponse = CompanyTransformer.transformModelToResponse(
         companyService.getMe()
     );
-    return new ResponseEntity<>(companyResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), companyResponse);
   }
 
   @GetMapping("/companies/{user_id}")
   @Operation(summary = "API to get company by user id")
-  public ResponseEntity<CompanyResponse> getCompanyByUserId(@PathVariable("user_id") String userId) {
+  public ApiResponse<CompanyResponse> getCompanyByUserId(@PathVariable("user_id") String userId) {
     CompanyResponse companyResponse = CompanyTransformer.transformModelToResponse(
         companyService.getCompanyByUserId(userId)
     );
-    return new ResponseEntity<>(companyResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), companyResponse);
   }
 
   @PatchMapping("/companies/{user_id}")
   @Operation(summary = "API to update company")
-  public ResponseEntity<CompanyResponse> update(@PathVariable("user_id") String userId,
+  public ApiResponse<CompanyResponse> update(@PathVariable("user_id") String userId,
                                                 @RequestBody CompanyRequest companyRequest) {
     Company company = CompanyTransformer.transformRequestToModel(userId, companyRequest);
     CompanyResponse companyResponse = CompanyTransformer.transformModelToResponse(companyService.update(company));
-    return new ResponseEntity<>(companyResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), companyResponse);
   }
 
   @DeleteMapping("/companies/{user_id}")
   @Operation(summary = "API to delete company by user id")
-  public ResponseEntity<MessageResponse> delete(@PathVariable("user_id") String userId) {
+  public ApiResponse<MessageResponse> delete(@PathVariable("user_id") String userId) {
     companyService.delete(userId);
     String message = "Successfully delete company with id " + userId;
-    return new ResponseEntity(message, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), message);
   }
 }

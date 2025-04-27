@@ -1,5 +1,6 @@
 package com.gotrash.api.v1;
 
+import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.response.MessageResponse;
 import com.gotrash.api.v1.model.Exchange;
 import com.gotrash.api.v1.request.ExchangeRequest;
@@ -10,7 +11,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,57 +32,57 @@ public class ExchangeAPI {
 
   @PostMapping("/exchanges")
   @Operation(summary = "API to create a new exchange")
-  public ResponseEntity<ExchangeResponse> save(@RequestBody ExchangeRequest exchangeRequest) {
+  public ApiResponse<ExchangeResponse> save(@RequestBody ExchangeRequest exchangeRequest) {
     Exchange exchange = exchangeService.save(ExchangeTransformer.transformRequestToModel(exchangeRequest));
     ExchangeResponse exchangeResponse = ExchangeTransformer.transformModelToResponse(exchange);
-    return new ResponseEntity<>(exchangeResponse, HttpStatus.CREATED);
+    return new ApiResponse<>(HttpStatus.CREATED.value(), exchangeResponse);
   }
 
   @GetMapping("/exchanges")
   @Operation(summary = "API to get all exchange data")
-  public ResponseEntity<List<ExchangeResponse>> getExchanges() {
+  public ApiResponse<List<ExchangeResponse>> getExchanges() {
     List<Exchange> exchanges = exchangeService.getExchanges();
     List<ExchangeResponse> exchangeResponses = exchanges.stream()
         .map(ExchangeTransformer::transformModelToResponse)
         .toList();
-    return new ResponseEntity<>(exchangeResponses, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), exchangeResponses);
   }
 
   @GetMapping("/exchanges/{exchange_id}")
   @Operation(summary = "API to get exchange by exchange id")
-  public ResponseEntity<ExchangeResponse> getExchangeByExchangeId(@PathVariable("exchange_id") String exchangeId) {
+  public ApiResponse<ExchangeResponse> getExchangeByExchangeId(@PathVariable("exchange_id") String exchangeId) {
     ExchangeResponse exchangeResponse = ExchangeTransformer.transformModelToResponse(exchangeService.getExchangeById(exchangeId));
-    return new ResponseEntity<>(exchangeResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), exchangeResponse);
   }
 
   @GetMapping("/exchanges/users/{user_id}")
   @Operation(summary = "API to get exchanges by user id")
-  public ResponseEntity<List<ExchangeResponse>> getExchangeByUserId(@PathVariable("user_id") String userId) {
+  public ApiResponse<List<ExchangeResponse>> getExchangeByUserId(@PathVariable("user_id") String userId) {
 
     List<Exchange> exchanges = exchangeService.getExchangeByUserId(userId);
     List<ExchangeResponse> exchangeResponses = exchanges.stream()
         .map(ExchangeTransformer::transformModelToResponse)
         .toList();
 
-    return new ResponseEntity<>(exchangeResponses, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), exchangeResponses);
   }
 
   @PatchMapping("/exchanges/{exchange_id}")
   @Operation(summary = "API to update exchange by exchange id")
-  public ResponseEntity<ExchangeResponse> updateExchange(@PathVariable("exchange_id") String exchangeId,
+  public ApiResponse<ExchangeResponse> updateExchange(@PathVariable("exchange_id") String exchangeId,
                                                          @RequestBody ExchangeRequest exchangeRequest) {
     Exchange exchange = exchangeService.update(ExchangeTransformer.transformRequestToModel(exchangeId, exchangeRequest));
     ExchangeResponse exchangeResponse = ExchangeTransformer.transformModelToResponse(exchange);
-    return new ResponseEntity<>(exchangeResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), exchangeResponse);
   }
 
   @DeleteMapping("/exchanges/{exchange_id}")
   @Operation(summary = "API to delete exchange by exchange id")
-  public ResponseEntity<MessageResponse> deleteByExchangeId(@PathVariable("exchange_id") String exchangeId) {
+  public ApiResponse<MessageResponse> deleteByExchangeId(@PathVariable("exchange_id") String exchangeId) {
     exchangeService.delete(exchangeId);
     String message = "Successfully Delete Exchange With ID " + exchangeId;
     MessageResponse messageResponse = new MessageResponse(message);
 
-    return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), messageResponse);
   }
 }
