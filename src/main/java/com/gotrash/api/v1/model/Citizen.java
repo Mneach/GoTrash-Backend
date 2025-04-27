@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -26,4 +27,6 @@ public class Citizen {
   private BigInteger coin;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
+  private List<TrashHistory> trashHistories;
+  private List<Group> groups;
 }
