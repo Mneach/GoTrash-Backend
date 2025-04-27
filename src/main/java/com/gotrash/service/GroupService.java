@@ -3,6 +3,7 @@ package com.gotrash.service;
 import com.gotrash.api.v1.model.*;
 import com.gotrash.api.v1.transformer.*;
 import com.gotrash.entity.*;
+import com.gotrash.exception.rest.BadRequestException;
 import com.gotrash.repository.CitizenRepository;
 import com.gotrash.repository.GroupMemberRepository;
 import com.gotrash.repository.GroupRepository;
@@ -48,14 +49,12 @@ public class GroupService {
     // Save GroupEntity
     groupEntity = groupRepository.save(groupEntity);
 
-    // Now create GroupMemberEntity
+    // Save GroupMemberEntity
     GroupMemberEntity groupMemberEntity = new GroupMemberEntity();
     groupMemberEntity.setUser(citizenEntity);
     groupMemberEntity.setGroup(groupEntity);
-
     groupMemberRepository.save(groupMemberEntity);
 
-    // Finally, return model
     Group resultGroup = GroupTransformer.transformEntityToModel(groupEntity);
     resultGroup.setGroupMembers(List.of(GroupMemberTransformer.transformEntityToModel(groupMemberEntity)));
 
@@ -66,13 +65,24 @@ public class GroupService {
   @Transactional
   public void addMember(GroupMember groupMember) {
 
-    Group group = getGroupByGroupId(groupMember.getGroup().getGroupId());
-    Citizen citizen = citizenService.getCitizenByUserId(groupMember.getUser().getUserId());
+    GroupEntity groupEntity = groupRepository.findById(UUID.fromString(groupMember.getGroup().getGroupId()))
+        .orElseThrow(() -> new EntityNotFoundException("Group not found"));
 
-    groupMember.setGroup(group);
-    groupMember.setUser(citizen);
+    CitizenEntity citizenEntity = citizenRepository.findById(UUID.fromString(groupMember.getUser().getUserId()))
+        .orElseThrow(() -> new RuntimeException("Citizen not found"));
 
-    groupMemberService.save(groupMember);
+    boolean isAlreadyMember = groupEntity.getGroupMembers().stream()
+        .anyMatch(groupMemberEntity -> groupMemberEntity.getUser().getUserId().equals(groupMember.getUser().getUserId()));;
+
+    if (isAlreadyMember) {
+      throw new BadRequestException("User is already a member of the group.");
+    }
+
+    // Save GroupMemberEntity
+    GroupMemberEntity groupMemberEntity = new GroupMemberEntity();
+    groupMemberEntity.setUser(citizenEntity);
+    groupMemberEntity.setGroup(groupEntity);
+    groupMemberRepository.save(groupMemberEntity);
   }
 
   @Transactional
@@ -82,7 +92,7 @@ public class GroupService {
     Citizen citizen = citizenService.getCitizenByUserId(groupMember.getUser().getUserId());
 
     GroupMemberEntity memberToRemove = groupEntity.getGroupMembers().stream()
-        .filter(member -> member.getUser().getUserId().equals(UUID.fromString(citizen.getUserId())))
+        .filter(member -> member.getUser().getUserId().equals(citizen.getUserId()))
         .findFirst()
         .orElseThrow(() -> new EntityNotFoundException("Group member not found"));
 

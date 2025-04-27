@@ -60,7 +60,7 @@ public class GovernmentAPI {
   @PatchMapping("/governments/{user_id}")
   @Operation(summary = "API to update government")
   public ApiResponse<GovernmentResponse> update(@PathVariable("user_id") String userId,
-                                                   @RequestBody GovernmentRequest governmentRequest) {
+                                                @RequestBody GovernmentRequest governmentRequest) {
     Government government = GovernmentTransformer.transformRequestToModel(userId, governmentRequest);
     GovernmentResponse governmentResponse = GovernmentTransformer.transformModelToResponse(governmentService.update(government));
     return new ApiResponse<>(HttpStatus.OK.value(), governmentResponse);

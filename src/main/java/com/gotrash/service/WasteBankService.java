@@ -2,10 +2,12 @@ package com.gotrash.service;
 
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.model.WasteBank;
+import com.gotrash.api.v1.transformer.CitizenTransformer;
 import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.api.v1.transformer.WasteBankTransformer;
 import com.gotrash.entity.UserEntity;
 import com.gotrash.entity.WasteBankEntity;
+import com.gotrash.helper.FileUploadHelper;
 import com.gotrash.repository.UserRepository;
 import com.gotrash.repository.WasteBankRepository;
 import com.gotrash.util.AuthorityUtil;
@@ -14,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,6 +30,7 @@ public class WasteBankService {
   private final WasteBankRepository wasteBankRepository;
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+  private final FileUploadHelper fileUploadHelper;
 
   @Transactional
   public WasteBank save(WasteBank wasteBank) {
@@ -70,7 +74,7 @@ public class WasteBankService {
   }
 
   @Transactional
-  public WasteBank update(WasteBank wasteBank) {
+  public WasteBank update(WasteBank wasteBank, MultipartFile imageFile) {
 
     WasteBankEntity wasteBankEntity = wasteBankRepository.findById(UUID.fromString(wasteBank.getUserId()))
         .orElseThrow(() -> new EntityNotFoundException("Waste Bank with ID " + wasteBank.getUserId() + " not found"));
@@ -78,20 +82,29 @@ public class WasteBankService {
     UserEntity userEntity = userRepository.findById(UUID.fromString(wasteBank.getUserId()))
         .orElseThrow(() -> new EntityNotFoundException("User with ID " + wasteBank.getUserId() + " not found"));
 
-    userEntity.setEmail(wasteBank.getEmail());
-    userEntity.setRole(wasteBank.getRole());
-    userEntity.setPassword(passwordEncoder.encode(wasteBank.getPassword()));
+    userEntity.setEmail(wasteBank.getEmail() != null ? wasteBank.getEmail() : userEntity.getEmail());
+    userEntity.setRole(wasteBank.getRole() != null ? wasteBank.getRole() : userEntity.getRole());
+    userEntity.setPassword(wasteBank.getPassword() != null ? passwordEncoder.encode(wasteBank.getPassword()) : userEntity.getPassword());
 
     userEntity = userRepository.save(userEntity);
 
     wasteBankEntity.setUser(userEntity);
-    wasteBankEntity.setName(wasteBank.getName());
-    wasteBankEntity.setAddress(wasteBank.getAddress());
-    wasteBankEntity.setLatitude(wasteBank.getLatitude());
-    wasteBankEntity.setLongitude(wasteBank.getLongitude());
-    wasteBankEntity.setImageUrl(wasteBank.getImageUrl());
-    wasteBankEntity.setImageName(wasteBank.getImageName());
+    wasteBankEntity.setName(wasteBank.getName() != null ? wasteBank.getName() : wasteBankEntity.getName());
+    wasteBankEntity.setAddress(wasteBank.getAddress() != null ? wasteBank.getAddress() : wasteBankEntity.getAddress());
+    wasteBankEntity.setLatitude(wasteBank.getLatitude() != null ? wasteBank.getLatitude() : wasteBankEntity.getLatitude());
+    wasteBankEntity.setLongitude(wasteBank.getLongitude() != null ? wasteBank.getLongitude() : wasteBankEntity.getLongitude());
+    wasteBankEntity.setImageUrl(wasteBank.getImageUrl() != null ? wasteBank.getImageUrl() : wasteBankEntity.getImageUrl());
     wasteBankEntity.setUpdatedAt(LocalDateTime.now());
+
+    if (imageFile != null && !imageFile.isEmpty()) {
+      try {
+        String filePath = fileUploadHelper.uploadFile("wastebanks", wasteBank.getEmail(), imageFile, wasteBankEntity.getImageUrl());
+        String imageUrl = fileUploadHelper.generateFileUrl(filePath);
+        wasteBankEntity.setImageUrl(imageUrl);
+      } catch (Exception e) {
+        throw new RuntimeException(e.getMessage());
+      }
+    }
 
     return WasteBankTransformer.transformEntityToModel(
         wasteBankRepository.save(wasteBankEntity)

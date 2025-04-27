@@ -7,8 +7,6 @@ import com.gotrash.api.v1.request.CitizenRequest;
 import com.gotrash.api.v1.request.auth.RegisterCitizenRequest;
 import com.gotrash.api.v1.response.CitizenResponse;
 import com.gotrash.entity.CitizenEntity;
-import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
-import com.gotrash.api.v1.transformer.GroupTransformer;
 
 import java.util.List;
 import java.util.UUID;
@@ -58,7 +56,6 @@ public class CitizenTransformer {
         .password(citizenRequest.getPassword())
         .email(citizenRequest.getEmail())
         .phoneNumber(citizenRequest.getPhoneNumber())
-        .imageUrl(citizenRequest.getImageUrl())
         .coin(citizenRequest.getCoin())
         .rating(citizenRequest.getRating())
         .role(citizenRequest.getRole())
@@ -74,7 +71,6 @@ public class CitizenTransformer {
           .password(citizenRequest.getPassword())
           .email(citizenRequest.getEmail())
           .phoneNumber(citizenRequest.getPhoneNumber())
-          .imageUrl(citizenRequest.getImageUrl())
           .coin(citizenRequest.getCoin())
           .rating(citizenRequest.getRating())
           .role(citizenRequest.getRole())
@@ -90,7 +86,6 @@ public class CitizenTransformer {
         .password(registerCitizenRequest.getPassword())
         .email(registerCitizenRequest.getEmail())
         .phoneNumber(registerCitizenRequest.getPhoneNumber())
-        .imageUrl(registerCitizenRequest.getImageUrl())
         .coin(registerCitizenRequest.getCoin())
         .rating(registerCitizenRequest.getRating())
         .role(registerCitizenRequest.getRole())

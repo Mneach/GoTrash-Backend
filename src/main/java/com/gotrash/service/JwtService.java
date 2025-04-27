@@ -27,7 +27,7 @@ public class JwtService {
   public String generateToken(Map<String, Object> extraClaims, User user) {
     return Jwts.builder()
         .claims(extraClaims)
-        .subject(user.getUserId())
+        .subject(user.getUserId().toString())
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
         .signWith(getSignInKey(), Jwts.SIG.HS256)

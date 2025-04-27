@@ -22,11 +22,11 @@ import java.util.List;
 public class RewardAPI {
     private final RewardService rewardService;
 
-    @PostMapping("/rewards")
+    @PostMapping(value = "/rewards", consumes = {"multipart/form-data"})
     @Operation(summary = "API to create a new reward")
-    public ApiResponse<RewardResponse> save(@RequestBody RewardRequest rewardRequest) {
+    public ApiResponse<RewardResponse> save(@ModelAttribute RewardRequest rewardRequest) {
         Reward reward = RewardTransformer.transformRequestToModel(rewardRequest);
-        RewardResponse rewardResponse = RewardTransformer.transformModelToResponse(rewardService.save(reward));
+        RewardResponse rewardResponse = RewardTransformer.transformModelToResponse(rewardService.save(reward, rewardRequest.getImageFile()));
         return new ApiResponse<>(HttpStatus.CREATED.value(), rewardResponse);
     }
 
@@ -49,12 +49,12 @@ public class RewardAPI {
         return new ApiResponse<>(HttpStatus.OK.value(), rewardResponse);
     }
 
-    @PatchMapping("/rewards/{reward_id}")
+    @PatchMapping(value = "/rewards/{reward_id}", consumes = {"multipart/form-data"})
     @Operation(summary = "API to update reward by reward id")
     public ApiResponse<RewardResponse> update(@PathVariable("reward_id") String rewardId,
-                                                 @RequestBody RewardRequest rewardRequest) {
+                                              @ModelAttribute RewardRequest rewardRequest) {
         Reward reward = RewardTransformer.transformRequestToModel(rewardId, rewardRequest);
-        RewardResponse rewardResponse = RewardTransformer.transformModelToResponse(rewardService.update(reward));
+        RewardResponse rewardResponse = RewardTransformer.transformModelToResponse(rewardService.update(reward, rewardRequest.getImageFile()));
         return new ApiResponse<>(HttpStatus.OK.value(), rewardResponse);
     }
 

@@ -8,12 +8,14 @@ import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.model.WasteBank;
 import com.gotrash.api.v1.response.AuthResponse;
 import com.gotrash.constant.UserRole;
+import com.gotrash.helper.FileUploadHelper;
 import com.gotrash.util.PasswordGeneratorUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 
@@ -28,6 +30,7 @@ public class AuthService {
   private final CompanyService companyService;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
+  private final FileUploadHelper fileUploadHelper;
 
   @Transactional
   public AuthResponse registerGuest() {
@@ -44,8 +47,10 @@ public class AuthService {
 
     citizen.setImageUrl("https://www.twtf.org.uk/wp-content/uploads/2024/01/dummy-image.jpg");
     citizen.setPhoneNumber("0851235421");
-    citizen.setCoin(BigInteger.valueOf(0L));
-    citizen.setRating(BigInteger.valueOf(0L));
+    citizen.setCurrentStreak(0);
+    citizen.setLongestStreak(0);
+    citizen.setRating(BigInteger.valueOf(0));
+    citizen.setCoin(BigInteger.valueOf(0));
 
     citizen = citizenService.save(citizen);
     String jwtToken = jwtService.generateToken(citizen.getUser());
@@ -56,7 +61,7 @@ public class AuthService {
   }
 
   @Transactional
-  public AuthResponse registerCitizen(Citizen citizen) {
+  public AuthResponse registerCitizen(Citizen citizen, MultipartFile imageFile) {
 
     if (userService.isEmailAlreadyExists(citizen.getEmail())) {
       throw new IllegalArgumentException("Email is already in use.");
@@ -64,23 +69,43 @@ public class AuthService {
       throw new IllegalArgumentException("Phone Number is already in use.");
     }
 
-    citizen.setCurrentStreak(0);
-    citizen.setLongestStreak(0);
-    citizen.setRating(BigInteger.valueOf(0));
-    citizen.setCoin(BigInteger.valueOf(0));
+    if (imageFile != null) {
+      try {
+        String filePath = fileUploadHelper.uploadFile("citizens", citizen.getEmail(), imageFile, null);
+        String imageUrl = fileUploadHelper.generateFileUrl(filePath);
+        citizen.setImageUrl(imageUrl);
+        citizen.setCurrentStreak(0);
+        citizen.setLongestStreak(0);
+        citizen.setRating(BigInteger.valueOf(0));
+        citizen.setCoin(BigInteger.valueOf(0));
+      } catch (Exception e) {
+        throw new RuntimeException(e.getMessage());
+      }
+    }
+
     citizen = citizenService.save(citizen);
     String jwtToken = jwtService.generateToken(citizen.getUser());
-
+    
     return AuthResponse.builder()
         .token(jwtToken)
         .build();
   }
 
   @Transactional
-  public AuthResponse registerWasteBank(WasteBank wasteBank) {
+  public AuthResponse registerWasteBank(WasteBank wasteBank, MultipartFile imageFile) {
 
     if (userService.isEmailAlreadyExists(wasteBank.getEmail())) {
       throw new IllegalArgumentException("Email is already in use.");
+    }
+
+    if (imageFile != null) {
+      try {
+        String filePath = fileUploadHelper.uploadFile("wastebanks", wasteBank.getEmail(), imageFile, null);
+        String imageUrl = fileUploadHelper.generateFileUrl(filePath);
+        wasteBank.setImageUrl(imageUrl);
+      } catch (Exception e) {
+        throw new RuntimeException(e.getMessage());
+      }
     }
 
     wasteBank = wasteBankService.save(wasteBank);

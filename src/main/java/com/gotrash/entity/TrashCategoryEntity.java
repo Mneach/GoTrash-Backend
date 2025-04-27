@@ -32,6 +32,9 @@ public class TrashCategoryEntity {
   @NotNull
   private String name;
 
+  @NotNull
+  private String imageUrl;
+
   @CreationTimestamp
   @Column(updatable = false)
   private LocalDateTime createdAt;

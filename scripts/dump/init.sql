@@ -66,7 +66,6 @@ CREATE TABLE gotrash.waste_banks (
   latitude DOUBLE PRECISION NOT NULL,
   longitude DOUBLE PRECISION NOT NULL,
   address TEXT NOT NULL,
-  image_name TEXT NOT NULL,
   image_url TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -89,6 +88,7 @@ CREATE TABLE gotrash.companies (
 CREATE TABLE gotrash.trash_categories (
     trash_category_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(255) NOT NULL,
+    image_url TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -114,7 +114,6 @@ CREATE TABLE gotrash.trash_bins (
   latitude DOUBLE PRECISION NOT NULL,
   longitude DOUBLE PRECISION NOT NULL,
   address TEXT NOT NULL,
-  image_name TEXT NOT NULL,
   image_url TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -155,7 +154,6 @@ CREATE TABLE gotrash.rewards (
     coin NUMERIC NOT NULL,
     stock INTEGER NOT NULL,
     description TEXT NOT NULL,
-    image_name VARCHAR(255) NOT NULL,
     image_url TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

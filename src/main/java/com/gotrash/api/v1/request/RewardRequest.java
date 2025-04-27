@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -18,7 +19,6 @@ public class RewardRequest {
     private String name;
     private BigInteger coin;
     private Integer stock;
+    private MultipartFile imageFile;
     private String description;
-    private String imageName;
-    private String imageUrl;
 }

@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class TrashCategoryResponse {
   private String trashCategoryId;
   private String name;
+  private String imageUrl;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

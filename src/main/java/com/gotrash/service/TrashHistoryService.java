@@ -7,7 +7,7 @@ import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
 import com.gotrash.entity.TrashHistoryEntity;
 import com.gotrash.repository.TrashHistoryRepository;
-import com.gotrash.util.CoinCalculatorUtil;
+import com.gotrash.util.CalculatorUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -43,8 +43,8 @@ public class TrashHistoryService {
                 TrashHistoryTransformer.transformModelToEntity(trashHistory)
         );
 
-        BigInteger totalCoin = CoinCalculatorUtil.calculateCoin(trashHistory.getWeight(), trash.getCoin());
-        BigInteger totalRating = CoinCalculatorUtil.calculateRating(trashHistory.getWeight(), trashHistory.getTrash().getRating());
+        BigInteger totalCoin = CalculatorUtil.calculateCoin(trashHistory.getWeight(), trash.getCoin());
+        BigInteger totalRating = CalculatorUtil.calculateRating(trashHistory.getWeight(), trashHistory.getTrash().getRating());
 
         streakService.updateCitizenStreak(user);
         citizenService.addCoin(user.getUserId(), totalCoin);
@@ -72,9 +72,7 @@ public class TrashHistoryService {
     }
 
     public List<TrashHistory> getTrashHistoryByUserId(String userId) {
-        List<TrashHistoryEntity> trashHistoryEntities = trashHistoryRepository.findAllByUser_UserId(
-                UUID.fromString(userId)
-        );
+        List<TrashHistoryEntity> trashHistoryEntities = trashHistoryRepository.findAllByUser_UserId(UUID.fromString(userId));
 
         return trashHistoryEntities
                 .stream()

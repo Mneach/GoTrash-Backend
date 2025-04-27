@@ -26,11 +26,11 @@ import java.util.List;
 public class TrashCategoryAPI {
     private final TrashCategoryService trashCategoryService;
 
-    @PostMapping("/trash-categories")
+    @PostMapping(value = "/trash-categories", consumes = {"multipart/form-data"})
     @Operation(summary = "API to create a new trash category")
-    public ApiResponse<TrashCategoryResponse> save(@RequestBody TrashCategoryRequest trashCategoryRequest) {
+    public ApiResponse<TrashCategoryResponse> save(@ModelAttribute TrashCategoryRequest trashCategoryRequest) {
         TrashCategory trashCategory = TrashCategoryTransformer.transformRequestToModel(trashCategoryRequest);
-        TrashCategoryResponse trashCategoryResponse = TrashCategoryTransformer.transformModelToResponse(trashCategoryService.save(trashCategory));
+        TrashCategoryResponse trashCategoryResponse = TrashCategoryTransformer.transformModelToResponse(trashCategoryService.save(trashCategory, trashCategoryRequest.getImageFile()));
         return new ApiResponse<>(HttpStatus.CREATED.value(), trashCategoryResponse);
     }
 
@@ -53,12 +53,12 @@ public class TrashCategoryAPI {
         return new ApiResponse<>(HttpStatus.OK.value(), trashCategoryResponse);
     }
 
-    @PatchMapping("/trash-categories/{trash_category_id}")
+    @PatchMapping(value = "/trash-categories/{trash_category_id}", consumes = {"multipart/form-data"})
     @Operation(summary = "API to update trash category")
     public ApiResponse<TrashCategoryResponse> update(@PathVariable("trash_category_id") String trashCategoryId,
-                                                        @RequestBody TrashCategoryRequest trashCategoryRequest) {
+                                                     @ModelAttribute TrashCategoryRequest trashCategoryRequest) {
         TrashCategory trashCategory = TrashCategoryTransformer.transformRequestToModel(trashCategoryId, trashCategoryRequest);
-        TrashCategoryResponse trashCategoryResponse = TrashCategoryTransformer.transformModelToResponse(trashCategoryService.update(trashCategory));
+        TrashCategoryResponse trashCategoryResponse = TrashCategoryTransformer.transformModelToResponse(trashCategoryService.update(trashCategory, trashCategoryRequest.getImageFile()));
         return new ApiResponse<>(HttpStatus.CREATED.value(), trashCategoryResponse);
     }
 
