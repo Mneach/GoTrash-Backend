@@ -19,7 +19,7 @@ public interface WasteBankRepository extends JpaRepository<WasteBankEntity, UUID
             SELECT      
                   wb.user_id AS wasteBankId,
                   wb.name AS wasteBankName,
-                  COUNT(*) as totalTrash
+                  TRUNC(SUM(weight), 2) as totalWeight 
             FROM gotrash.waste_banks AS wb
             INNER JOIN gotrash.trash_bins AS tb ON wb.user_id = tb.waste_bank_id
             INNER JOIN gotrash.trash_histories AS th ON th.trash_bin_id = tb.trash_bin_id
@@ -28,7 +28,7 @@ public interface WasteBankRepository extends JpaRepository<WasteBankEntity, UUID
         """,
       nativeQuery = true
   )
-  WasteBankTrashSummary countTotalTrashByWasteBankId(@Param("wasteBankUserId") UUID wasteBankUserId);
+  WasteBankTrashSummary sumTrashWeightByWasteBankId(@Param("wasteBankUserId") UUID wasteBankUserId);
 
 
   @Query(
@@ -36,7 +36,7 @@ public interface WasteBankRepository extends JpaRepository<WasteBankEntity, UUID
             SELECT 
                   wb.user_id AS wasteBankId,
                   wb.name AS wasteBankName,
-                  COUNT(*) as totalTrash
+                  TRUNC(SUM(weight), 2) as totalWeight
             FROM gotrash.waste_banks AS wb
             INNER JOIN gotrash.trash_bins AS tb ON wb.user_id = tb.waste_bank_id
             INNER JOIN gotrash.trash_histories AS th ON th.trash_bin_id = tb.trash_bin_id
@@ -44,14 +44,14 @@ public interface WasteBankRepository extends JpaRepository<WasteBankEntity, UUID
         """,
       nativeQuery = true
   )
-  List<WasteBankTrashSummary> countTotalTrashByGroupByWasteBankId();
+  List<WasteBankTrashSummary> sumTrashWeightByGroupByWasteBankId();
 
   @Query(value = """
         SELECT 
             wb.user_id AS wasteBankId,
             wb.name AS wasteBankName,
             tc.name AS trashCategory,
-            COUNT(*) AS totalTrash
+            TRUNC(SUM(weight), 2) as totalWeight
         FROM gotrash.waste_banks wb
         INNER JOIN gotrash.trash_bins tb ON wb.user_id = tb.waste_bank_id
         INNER JOIN gotrash.trash_histories th ON th.trash_bin_id = tb.trash_bin_id
@@ -60,5 +60,5 @@ public interface WasteBankRepository extends JpaRepository<WasteBankEntity, UUID
         WHERE wb.user_id = :wasteBankUserId
         GROUP BY wb.user_id, wb.name, tc.name
     """, nativeQuery = true)
-  List<WasteBankTrashCategorySummary> countTotalTrashByWasteBankIdGroupedByCategory(@Param("wasteBankUserId") UUID wasteBankUserId);
+  List<WasteBankTrashCategorySummary> sumTrashWeightByWasteBankIdGroupedByCategory(@Param("wasteBankUserId") UUID wasteBankUserId);
 }

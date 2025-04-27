@@ -16,7 +16,8 @@ public class TrashTransformer {
                 .trashId(trashEntity.getTrashId().toString())
                 .trashCategory(TrashCategoryTransformer.transformEntityToModel(trashEntity.getTrashCategory()))
                 .coin(trashEntity.getCoin())
-                .description(trashEntity.getDescription())
+                .rating(trashEntity.getRating())
+                .name(trashEntity.getName())
                 .createdAt(trashEntity.getCreatedAt())
                 .updatedAt(trashEntity.getUpdatedAt())
                 .build();
@@ -27,7 +28,8 @@ public class TrashTransformer {
                 .trashId(trash.getTrashId() != null ? UUID.fromString(trash.getTrashId()) : null)
                 .trashCategory(TrashCategoryTransformer.transformModelToEntity(trash.getTrashCategory()))
                 .coin(trash.getCoin())
-                .description(trash.getDescription())
+                .rating(trash.getRating())
+                .name(trash.getName())
                 .build();
     }
 
@@ -35,16 +37,18 @@ public class TrashTransformer {
         return Trash.builder()
                 .trashId(trashId)
                 .trashCategory(TrashCategory.builder().trashCategoryId(trashRequest.getTrashCategoryId()).build())
+                .rating(trashRequest.getRating())
                 .coin(trashRequest.getCoin())
-                .description(trashRequest.getDescription())
+                .name(trashRequest.getName())
                 .build();
     }
 
     public static Trash transformRequestToModel(TrashRequest trashRequest) {
         return Trash.builder()
             .trashCategory(TrashCategory.builder().trashCategoryId(trashRequest.getTrashCategoryId()).build())
+            .rating(trashRequest.getRating())
             .coin(trashRequest.getCoin())
-            .description(trashRequest.getDescription())
+            .name(trashRequest.getName())
             .build();
     }
 
@@ -53,7 +57,8 @@ public class TrashTransformer {
                 .trashId(trash.getTrashId())
                 .trashCategory(TrashCategoryTransformer.transformModelToResponse(trash.getTrashCategory()))
                 .coin(trash.getCoin())
-                .description(trash.getDescription())
+                .name(trash.getName())
+                .rating(trash.getRating())
                 .createdAt(trash.getCreatedAt())
                 .updatedAt(trash.getUpdatedAt())
                 .build();

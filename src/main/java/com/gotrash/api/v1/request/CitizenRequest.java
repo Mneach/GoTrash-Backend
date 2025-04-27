@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +19,10 @@ public class CitizenRequest {
   private UserRole role;
   private String name;
   private String phoneNumber;
-  private String imageName;
   private String imageUrl;
   private BigInteger coin;
+  private BigInteger rating;
+  private Integer currentStreak;
+  private Integer longestStreak;
+  private LocalDate lastTrashDate;
 }

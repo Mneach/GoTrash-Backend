@@ -16,14 +16,14 @@ public class DashboardService {
   private final WasteBankRepository wasteBankRepository;
 
   public WasteBankTrashSummary getTotalTrashByWasteBankId (String wasteBankId) {
-    return wasteBankRepository.countTotalTrashByWasteBankId(UUID.fromString(wasteBankId));
+    return wasteBankRepository.sumTrashWeightByWasteBankId(UUID.fromString(wasteBankId));
   }
 
   public List<WasteBankTrashSummary> getTotalTrashGroupByWasteBank() {
-    return wasteBankRepository.countTotalTrashByGroupByWasteBankId();
+    return wasteBankRepository.sumTrashWeightByGroupByWasteBankId();
   }
 
   public List<WasteBankTrashCategorySummary> getTotalTrashByWasteBankIdGroupByTrashCategory(String wasteBankId) {
-    return wasteBankRepository.countTotalTrashByWasteBankIdGroupedByCategory(UUID.fromString(wasteBankId));
+    return wasteBankRepository.sumTrashWeightByWasteBankIdGroupedByCategory(UUID.fromString(wasteBankId));
   }
 }

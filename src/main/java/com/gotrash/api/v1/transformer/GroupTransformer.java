@@ -1,9 +1,6 @@
 package com.gotrash.api.v1.transformer;
 
-import com.gotrash.api.v1.model.Group;
-import com.gotrash.api.v1.model.GroupMember;
-import com.gotrash.api.v1.model.Reward;
-import com.gotrash.api.v1.model.User;
+import com.gotrash.api.v1.model.*;
 import com.gotrash.api.v1.request.group.GroupRequest;
 import com.gotrash.api.v1.response.GroupResponse;
 import com.gotrash.entity.GroupEntity;
@@ -28,7 +25,7 @@ public class GroupTransformer {
         .reward(RewardTransformer.transformEntityToModel(groupEntity.getReward()))
         .name(groupEntity.getName())
         .coin(groupEntity.getCoin())
-        .owner(UserTransformer.transformEntityToModel(groupEntity.getOwner()))
+        .owner(CitizenTransformer.transformEntityToModel(groupEntity.getOwner()))
         .groupMembers(groupMembers)
         .createdAt(groupEntity.getCreatedAt())
         .updatedAt(groupEntity.getUpdatedAt())
@@ -39,7 +36,7 @@ public class GroupTransformer {
     return GroupEntity.builder()
         .groupId(group.getGroupId() != null ? UUID.fromString(group.getGroupId()) : null)
         .reward(RewardTransformer.transformModelToEntity(group.getReward()))
-        .owner(UserTransformer.transformModelToEntity(group.getOwner()))
+        .owner(CitizenTransformer.transformModelToEntity(group.getOwner()))
         .name(group.getName())
         .coin(group.getCoin())
         .build();
@@ -49,7 +46,7 @@ public class GroupTransformer {
     return Group.builder()
         .groupId(groupId)
         .reward(Reward.builder().rewardId(groupRequest.getRewardId()).build())
-        .owner(User.builder().userId(groupRequest.getUserId()).build())
+        .owner(Citizen.builder().userId(groupRequest.getUserId()).build())
         .name(groupRequest.getName())
         .coin(groupRequest.getCoin())
         .build();
@@ -58,7 +55,7 @@ public class GroupTransformer {
   public static Group transformRequestToModel(GroupRequest groupRequest) {
     return Group.builder()
         .reward(Reward.builder().rewardId(groupRequest.getRewardId()).build())
-        .owner(User.builder().userId(groupRequest.getUserId()).build())
+        .owner(Citizen.builder().userId(groupRequest.getUserId()).build())
         .name(groupRequest.getName())
         .coin(groupRequest.getCoin())
         .build();
@@ -71,7 +68,7 @@ public class GroupTransformer {
         .reward(RewardTransformer.transformModelToResponse(group.getReward()))
         .name(group.getName())
         .coin(group.getCoin())
-        .owner(UserTransformer.transformModelToResponse(group.getOwner()))
+        .owner(CitizenTransformer.transformModelToResponse(group.getOwner()))
         .groupMembers(
             group.getGroupMembers().stream()
                 .map(GroupMemberTransformer::transformModelToResponse)

@@ -37,9 +37,12 @@ CREATE TABLE gotrash.citizens (
   user_id UUID PRIMARY KEY,
   name TEXT NOT NULL,
   phone_number VARCHAR(20) NOT NULL,
-  image_name TEXT NOT NULL,
   image_url TEXT,
   coin NUMERIC NOT NULL,
+  rating NUMERIC NOT NULL,
+  current_streak INT default 0,
+  longest_streak INT default 0,
+  last_trash_date DATE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_citizen_user FOREIGN KEY (user_id)
@@ -95,7 +98,8 @@ CREATE TABLE gotrash.trashes (
     trash_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     trash_category_id UUID NOT NULL,
     coin NUMERIC NOT NULL,
-    description VARCHAR(255) NOT NULL,
+    rating NUMERIC NOT NULL,
+    name VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_trash_category FOREIGN KEY (trash_category_id)
@@ -124,6 +128,7 @@ CREATE TABLE gotrash.trash_histories (
   user_id UUID NOT NULL,
   trash_id UUID NOT NULL,
   trash_bin_id UUID NOT NULL,
+  weight NUMERIC (20, 2) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_trash_history_user FOREIGN KEY (user_id)
@@ -158,7 +163,7 @@ CREATE TABLE gotrash.rewards (
         REFERENCES gotrash.reward_categories(reward_category_id)
 );
 
--- 11. GROUPS TABLE (renamed from "group")
+-- 11. GROUPS TABLE
 CREATE TABLE gotrash.groups (
   group_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   reward_id UUID NOT NULL,

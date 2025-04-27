@@ -15,8 +15,9 @@ import java.time.LocalDateTime;
 public class Trash {
     private String trashId;
     private TrashCategory trashCategory;
+    private String name;
     private BigInteger coin;
-    private String description;
+    private BigInteger rating;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

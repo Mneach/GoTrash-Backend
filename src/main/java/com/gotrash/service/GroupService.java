@@ -1,19 +1,18 @@
 package com.gotrash.service;
 
 import com.gotrash.api.v1.model.*;
-import com.gotrash.api.v1.transformer.ExchangeTransformer;
-import com.gotrash.api.v1.transformer.GroupTransformer;
-import com.gotrash.api.v1.transformer.RewardTransformer;
-import com.gotrash.api.v1.transformer.UserTransformer;
-import com.gotrash.entity.ExchangeEntity;
-import com.gotrash.entity.GroupEntity;
-import com.gotrash.entity.GroupMemberEntity;
+import com.gotrash.api.v1.transformer.*;
+import com.gotrash.entity.*;
+import com.gotrash.repository.CitizenRepository;
+import com.gotrash.repository.GroupMemberRepository;
 import com.gotrash.repository.GroupRepository;
+import com.gotrash.repository.RewardRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,42 +23,54 @@ public class GroupService {
 
   private final GroupRepository groupRepository;
   private final GroupMemberService groupMemberService;
+  private final GroupMemberRepository groupMemberRepository;
   private final RewardService rewardService;
-  private final UserService userService;
+  private final CitizenService citizenService;
+  private final CitizenRepository citizenRepository;
+  private final RewardRepository rewardRepository;
 
   @Transactional
   public Group save(Group group) {
     Reward reward = rewardService.getRewardByRewardId(group.getReward().getRewardId());
-    User user = userService.getUserByUserId(group.getOwner().getUserId());
-    group.setReward(reward);
-    group.setOwner(user);
+    CitizenEntity citizenEntity = citizenRepository.findById(UUID.fromString(group.getOwner().getUserId()))
+        .orElseThrow(() -> new RuntimeException("Citizen not found"));
 
-    // Create group
-    GroupEntity groupEntity = groupRepository.save(GroupTransformer.transformModelToEntity(group));
+    RewardEntity rewardEntity = rewardRepository.findById(UUID.fromString(reward.getRewardId()))
+        .orElseThrow(() -> new RuntimeException("Reward not found"));
 
-    // Create group member
-    GroupMember groupMember = GroupMember.builder()
-        .user(user)
-        .group(GroupTransformer.transformEntityToModel(groupEntity))
-        .build();
+    // Build GroupEntity manually
+    GroupEntity groupEntity = new GroupEntity();
+    groupEntity.setName(group.getName());
+    groupEntity.setCoin(group.getCoin());
+    groupEntity.setOwner(citizenEntity);
+    groupEntity.setReward(rewardEntity);
 
-    groupMember = groupMemberService.save(groupMember);
+    // Save GroupEntity
+    groupEntity = groupRepository.save(groupEntity);
 
-    // Set reference group member
-    group = GroupTransformer.transformEntityToModel(groupEntity);
-    group.setGroupMembers(List.of(groupMember));
+    // Now create GroupMemberEntity
+    GroupMemberEntity groupMemberEntity = new GroupMemberEntity();
+    groupMemberEntity.setUser(citizenEntity);
+    groupMemberEntity.setGroup(groupEntity);
 
-    return group;
+    groupMemberRepository.save(groupMemberEntity);
+
+    // Finally, return model
+    Group resultGroup = GroupTransformer.transformEntityToModel(groupEntity);
+    resultGroup.setGroupMembers(List.of(GroupMemberTransformer.transformEntityToModel(groupMemberEntity)));
+
+    return resultGroup;
   }
+
 
   @Transactional
   public void addMember(GroupMember groupMember) {
 
     Group group = getGroupByGroupId(groupMember.getGroup().getGroupId());
-    User user = userService.getUserByUserId(groupMember.getUser().getUserId());
+    Citizen citizen = citizenService.getCitizenByUserId(groupMember.getUser().getUserId());
 
     groupMember.setGroup(group);
-    groupMember.setUser(user);
+    groupMember.setUser(citizen);
 
     groupMemberService.save(groupMember);
   }
@@ -68,10 +79,10 @@ public class GroupService {
   public void removeMember(GroupMember groupMember) {
     GroupEntity groupEntity = groupRepository.findById(UUID.fromString(groupMember.getGroup().getGroupId()))
         .orElseThrow(() -> new EntityNotFoundException("Group not found"));
-    User user = userService.getUserByUserId(groupMember.getUser().getUserId());
+    Citizen citizen = citizenService.getCitizenByUserId(groupMember.getUser().getUserId());
 
     GroupMemberEntity memberToRemove = groupEntity.getGroupMembers().stream()
-        .filter(member -> member.getUser().getUserId().equals(UUID.fromString(user.getUserId())))
+        .filter(member -> member.getUser().getUserId().equals(UUID.fromString(citizen.getUserId())))
         .findFirst()
         .orElseThrow(() -> new EntityNotFoundException("Group member not found"));
 
@@ -115,7 +126,7 @@ public class GroupService {
         .orElseThrow(() -> new EntityNotFoundException("Group With ID " + group.getGroupId() + " Not Found"));
 
     if (group.getOwner() != null && group.getOwner().getUserId() != null) {
-      group.setOwner(userService.getUserByUserId(group.getOwner().getUserId()));
+      group.setOwner(citizenService.getCitizenByUserId(group.getOwner().getUserId()));
     }
 
     if (group.getReward() != null && group.getReward().getRewardId() != null) {
@@ -124,7 +135,7 @@ public class GroupService {
 
     groupEntity.setName(group.getName());
     groupEntity.setReward(RewardTransformer.transformModelToEntity(group.getReward()));
-    groupEntity.setOwner(UserTransformer.transformModelToEntity(group.getOwner()));
+    groupEntity.setOwner(CitizenTransformer.transformModelToEntity(group.getOwner()));
     groupEntity.setCoin(group.getCoin());
 
     return GroupTransformer.transformEntityToModel(

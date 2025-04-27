@@ -44,7 +44,7 @@ public class GroupMemberEntity {
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id", nullable = false)
-  private UserEntity user;
+  private CitizenEntity user;
 
   @ManyToOne
   @JoinColumn(name = "group_id", nullable = false)

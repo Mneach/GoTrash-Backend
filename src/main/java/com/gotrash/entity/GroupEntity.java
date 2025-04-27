@@ -49,7 +49,7 @@ public class GroupEntity {
 
   @ManyToOne
   @JoinColumn(name = "user_id")
-  private UserEntity owner;
+  private CitizenEntity owner;
 
   @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
   private List<GroupMemberEntity> groupMembers;

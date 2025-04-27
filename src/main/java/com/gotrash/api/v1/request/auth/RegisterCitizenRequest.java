@@ -24,4 +24,5 @@ public class RegisterCitizenRequest {
   private String imageName;
   private String imageUrl;
   private BigInteger coin;
+  private BigInteger rating;
 }

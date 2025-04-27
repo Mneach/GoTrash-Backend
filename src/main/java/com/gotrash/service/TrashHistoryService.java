@@ -7,11 +7,13 @@ import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
 import com.gotrash.entity.TrashHistoryEntity;
 import com.gotrash.repository.TrashHistoryRepository;
+import com.gotrash.util.CoinCalculatorUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,6 +26,8 @@ public class TrashHistoryService {
     private final UserService userService;
     private final TrashService trashService;
     private final TrashBinService trashBinService;
+    private final StreakService streakService;
+    private final CitizenService citizenService;
 
     @Transactional
     public TrashHistory save(TrashHistory trashHistory) {
@@ -39,7 +43,14 @@ public class TrashHistoryService {
                 TrashHistoryTransformer.transformModelToEntity(trashHistory)
         );
 
-        return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity);
+        BigInteger totalCoin = CoinCalculatorUtil.calculateCoin(trashHistory.getWeight(), trash.getCoin());
+        BigInteger totalRating = CoinCalculatorUtil.calculateRating(trashHistory.getWeight(), trashHistory.getTrash().getRating());
+
+        streakService.updateCitizenStreak(user);
+        citizenService.addCoin(user.getUserId(), totalCoin);
+        citizenService.addRating(user.getUserId(), totalRating);
+
+        return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity, totalCoin);
     }
 
     public List<TrashHistory> getTrashHistories() {

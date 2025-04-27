@@ -9,6 +9,7 @@ import com.gotrash.api.v1.response.TrashHistoryResponse;
 import com.gotrash.api.v1.response.GroupResponse;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,9 +23,12 @@ public class CitizenResponse {
   private UserRole role;
   private String name;
   private String phoneNumber;
-  private String imageName;
   private String imageUrl;
   private BigInteger coin;
+  private BigInteger rating;
+  private Integer currentStreak;
+  private Integer longestStreak;
+  private LocalDate lastTrashDate;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private List<TrashHistoryResponse> trashHistories;

@@ -7,7 +7,6 @@ import com.gotrash.api.v1.model.Group;
 import com.gotrash.api.v1.transformer.CitizenTransformer;
 import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.entity.CitizenEntity;
-import com.gotrash.entity.GovernmentEntity;
 import com.gotrash.entity.UserEntity;
 import com.gotrash.repository.CitizenRepository;
 import com.gotrash.repository.UserRepository;
@@ -18,6 +17,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,8 +29,6 @@ public class CitizenService {
   private final CitizenRepository citizenRepository;
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
-  private final TrashHistoryService trashHistoryService;
-  private final GroupService groupService;
 
   @Transactional
   public Citizen save(Citizen citizen) {
@@ -71,15 +69,7 @@ public class CitizenService {
   public Citizen getMe() {
     String userId = AuthorityUtil.getCurrentUserId();
 
-    List<TrashHistory> trashHistories = trashHistoryService.getTrashHistoryByUserId(userId);
-    Citizen citizen = getCitizenByUserId(userId);
-
-    List<Group> groups = groupService.getGroupsFilterByUserId(userId);
-
-    citizen.setTrashHistories(trashHistories);
-    citizen.setGroups(groups);
-
-    return citizen;
+    return getCitizenByUserId(userId);
   }
 
   @Transactional
@@ -99,9 +89,9 @@ public class CitizenService {
     citizenEntity.setUser(userEntity);
     citizenEntity.setName(citizen.getName());
     citizenEntity.setPhoneNumber(citizen.getPhoneNumber());
-    citizenEntity.setImageName(citizen.getImageName());
     citizenEntity.setImageUrl(citizen.getImageUrl());
     citizenEntity.setCoin(citizen.getCoin());
+    citizenEntity.setRating(citizen.getRating());
     citizenEntity.setUpdatedAt(LocalDateTime.now());
 
     return CitizenTransformer.transformEntityToModel(
@@ -117,4 +107,29 @@ public class CitizenService {
     citizenRepository.deleteById(UUID.fromString(citizenId));
   }
 
+  @Transactional
+  public void addCoin(String userId, BigInteger totalCoin) {
+    CitizenEntity citizenEntity = citizenRepository.findById(UUID.fromString(userId))
+        .orElseThrow(() -> new EntityNotFoundException("Citizen with ID " + userId + " not found"));
+    citizenEntity.setCoin(citizenEntity.getCoin().add(totalCoin));
+    citizenRepository.save(citizenEntity);
+  }
+
+  @Transactional
+  public void addRating(String userId, BigInteger totalRating) {
+    CitizenEntity citizenEntity = citizenRepository.findById(UUID.fromString(userId))
+        .orElseThrow(() -> new EntityNotFoundException("Citizen with ID " + userId + " not found"));
+    citizenEntity.setRating(citizenEntity.getCoin().add(totalRating));
+    citizenRepository.save(citizenEntity);
+  }
+
+  public boolean isPhoneNumberAlreadyExists(String phoneNumber) {
+    Optional<CitizenEntity> citizenEntityOptional = citizenRepository.findByPhoneNumber(phoneNumber);
+
+    if (citizenEntityOptional.isPresent()) {
+      return true;
+    }
+
+    return false;
+  }
 }

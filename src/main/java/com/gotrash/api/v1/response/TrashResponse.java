@@ -15,9 +15,10 @@ import java.time.LocalDateTime;
 @Builder
 public class TrashResponse {
   private String trashId;
+  private String name;
   private TrashCategoryResponse trashCategory;
   private BigInteger coin;
-  private String description;
+  private BigInteger rating;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

@@ -22,7 +22,7 @@ import java.util.UUID;
 public class Group {
     private String groupId;
     private Reward reward;
-    private User owner;
+    private Citizen owner;
     private List<GroupMember> groupMembers;
     private String name;
     private BigInteger coin;
