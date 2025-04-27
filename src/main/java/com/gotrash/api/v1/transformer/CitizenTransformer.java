@@ -5,6 +5,8 @@ import com.gotrash.api.v1.request.CitizenRequest;
 import com.gotrash.api.v1.request.auth.RegisterCitizenRequest;
 import com.gotrash.api.v1.response.CitizenResponse;
 import com.gotrash.entity.CitizenEntity;
+import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
+import com.gotrash.api.v1.transformer.GroupTransformer;
 
 import java.util.UUID;
 
@@ -106,6 +108,10 @@ public class CitizenTransformer {
             .currentStreak(citizen.getCurrentStreak())
             .longestStreak(citizen.getLongestStreak())
             .lastTrashDate(citizen.getLastTrashDate())
+            .trashHistories(
+                citizen.getTrashHistories().stream().map(TrashHistoryTransformer::transformModelToResponse).toList())
+            .groups(
+                citizen.getGroups().stream().map(GroupTransformer::transformModelToResponse).toList())
             .createdAt(citizen.getCreatedAt())
             .updatedAt(citizen.getUpdatedAt())
             .build();

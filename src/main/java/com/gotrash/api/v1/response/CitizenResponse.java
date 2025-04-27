@@ -5,10 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.gotrash.api.v1.response.TrashHistoryResponse;
+import com.gotrash.api.v1.response.GroupResponse;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -28,4 +31,6 @@ public class CitizenResponse {
   private LocalDate lastTrashDate;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
+  private List<TrashHistoryResponse> trashHistories;
+  private List<GroupResponse> groups;
 }

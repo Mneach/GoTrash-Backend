@@ -43,8 +43,6 @@ public class AuthService {
         .build();
 
     citizen.setPhoneNumber("Guest");
-    citizen.setImageName("Guest");
-    citizen.setImageUrl("Guest");
     citizen.setCoin(BigInteger.valueOf(0L));
 
     citizen = citizenService.save(citizen);

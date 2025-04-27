@@ -2,6 +2,8 @@ package com.gotrash.service;
 
 import com.gotrash.api.v1.model.Citizen;
 import com.gotrash.api.v1.model.User;
+import com.gotrash.api.v1.model.TrashHistory;
+import com.gotrash.api.v1.model.Group;
 import com.gotrash.api.v1.transformer.CitizenTransformer;
 import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.entity.CitizenEntity;
@@ -19,14 +21,16 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
 public class CitizenService {
-
   private final CitizenRepository citizenRepository;
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+  private final TrashHistoryService trashHistoryService;
+  private final GroupService groupService;
 
   @Transactional
   public Citizen save(Citizen citizen) {
@@ -43,8 +47,7 @@ public class CitizenService {
     citizenEntity.setUser(userEntity);
 
     return CitizenTransformer.transformEntityToModel(
-        citizenRepository.save(citizenEntity)
-    );
+        citizenRepository.save(citizenEntity));
   }
 
   public List<Citizen> getCitizens() {
@@ -67,12 +70,21 @@ public class CitizenService {
 
   public Citizen getMe() {
     String userId = AuthorityUtil.getCurrentUserId();
-    return getCitizenByUserId(userId);
+
+    List<TrashHistory> trashHistories = trashHistoryService.getTrashHistoryByUserId(userId);
+    Citizen citizen = getCitizenByUserId(userId);
+
+    List<Group> groups = groupService.getGroupsFilterByUserId(userId);
+
+    citizen.setTrashHistories(trashHistories);
+    citizen.setGroups(groups);
+
+    return citizen;
   }
 
   @Transactional
   public Citizen update(Citizen citizen) {
-    
+
     CitizenEntity citizenEntity = citizenRepository.findById(UUID.fromString(citizen.getUserId()))
         .orElseThrow(() -> new EntityNotFoundException("Citizen with ID " + citizen.getUserId() + " not found"));
 
@@ -90,11 +102,10 @@ public class CitizenService {
     citizenEntity.setImageName(citizen.getImageName());
     citizenEntity.setImageUrl(citizen.getImageUrl());
     citizenEntity.setCoin(citizen.getCoin());
-    citizenEntity.setUpdatedAt(citizen.getUpdatedAt());
+    citizenEntity.setUpdatedAt(LocalDateTime.now());
 
     return CitizenTransformer.transformEntityToModel(
-        citizenRepository.save(citizenEntity)
-    );
+        citizenRepository.save(citizenEntity));
   }
 
   @Transactional

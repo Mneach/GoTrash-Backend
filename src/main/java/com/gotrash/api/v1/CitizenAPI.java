@@ -1,6 +1,5 @@
 package com.gotrash.api.v1;
 
-
 import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.response.MessageResponse;
 import com.gotrash.api.v1.model.Citizen;
@@ -49,8 +48,7 @@ public class CitizenAPI {
   @Operation(summary = "API to get current citizen user")
   public ApiResponse<CitizenResponse> getMe() {
     CitizenResponse citizenResponse = CitizenTransformer.transformModelToResponse(
-        citizenService.getMe()
-    );
+        citizenService.getMe());
     return new ApiResponse<>(HttpStatus.OK.value(), citizenResponse);
   }
 
@@ -58,14 +56,14 @@ public class CitizenAPI {
   @Operation(summary = "API to get citizen by user id")
   public ApiResponse<CitizenResponse> getCitizenByUserId(@PathVariable("user_id") String userId) {
     CitizenResponse citizenResponse = CitizenTransformer.transformModelToResponse(
-        citizenService.getCitizenByUserId(userId)
-    );
+        citizenService.getCitizenByUserId(userId));
     return new ApiResponse<>(HttpStatus.OK.value(), citizenResponse);
   }
 
   @PatchMapping("/citizens/{user_id}")
   @Operation(summary = "API to update citizen")
-  public ApiResponse<CitizenResponse> update(@PathVariable("user_id") String userId, @RequestBody CitizenRequest citizenRequest) {
+  public ApiResponse<CitizenResponse> update(@PathVariable("user_id") String userId,
+      @RequestBody CitizenRequest citizenRequest) {
     Citizen citizen = CitizenTransformer.transformRequestToModel(userId, citizenRequest);
     CitizenResponse citizenResponse = CitizenTransformer.transformModelToResponse(citizenService.update(citizen));
     return new ApiResponse<>(HttpStatus.OK.value(), citizenResponse);
