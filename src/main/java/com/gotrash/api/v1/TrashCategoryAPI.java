@@ -1,5 +1,6 @@
 package com.gotrash.api.v1;
 
+import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.response.MessageResponse;
 import com.gotrash.api.v1.model.TrashBin;
 import com.gotrash.api.v1.model.TrashCategory;
@@ -27,45 +28,45 @@ public class TrashCategoryAPI {
 
     @PostMapping("/trash-categories")
     @Operation(summary = "API to create a new trash category")
-    public ResponseEntity<TrashCategoryResponse> save(@RequestBody TrashCategoryRequest trashCategoryRequest) {
+    public ApiResponse<TrashCategoryResponse> save(@RequestBody TrashCategoryRequest trashCategoryRequest) {
         TrashCategory trashCategory = TrashCategoryTransformer.transformRequestToModel(trashCategoryRequest);
         TrashCategoryResponse trashCategoryResponse = TrashCategoryTransformer.transformModelToResponse(trashCategoryService.save(trashCategory));
-        return new ResponseEntity<>(trashCategoryResponse, HttpStatus.CREATED);
+        return new ApiResponse<>(HttpStatus.CREATED.value(), trashCategoryResponse);
     }
 
     @GetMapping("/trash-categories")
     @Operation(summary = "API to get all trash category data")
-    public ResponseEntity<List<TrashCategoryResponse>> getTrashCategories() {
+    public ApiResponse<List<TrashCategoryResponse>> getTrashCategories() {
         List<TrashCategory> trashCategories = trashCategoryService.getTrashCategories();
         List<TrashCategoryResponse> trashCategoryResponses = trashCategories.stream()
             .map(TrashCategoryTransformer::transformModelToResponse)
             .toList();
-        return new ResponseEntity<>(trashCategoryResponses, HttpStatus.OK);
+        return new ApiResponse<>(HttpStatus.OK.value(), trashCategoryResponses);
     }
 
     @GetMapping("/trash-categories/{trash_category_id}")
     @Operation(summary = "API to get trash category by trash category id")
-    public ResponseEntity<TrashCategoryResponse> getTrashCategoryByTrashCategoryId(@PathVariable("trash_category_id") String trashCategoryId) {
+    public ApiResponse<TrashCategoryResponse> getTrashCategoryByTrashCategoryId(@PathVariable("trash_category_id") String trashCategoryId) {
         TrashCategoryResponse trashCategoryResponse = TrashCategoryTransformer.transformModelToResponse(
                 trashCategoryService.getTrashCategoryByTrashCategoryId(trashCategoryId)
         );
-        return new ResponseEntity<>(trashCategoryResponse, HttpStatus.OK);
+        return new ApiResponse<>(HttpStatus.OK.value(), trashCategoryResponse);
     }
 
     @PatchMapping("/trash-categories/{trash_category_id}")
     @Operation(summary = "API to update trash category")
-    public ResponseEntity<TrashCategoryResponse> update(@PathVariable("trash_category_id") String trashCategoryId,
+    public ApiResponse<TrashCategoryResponse> update(@PathVariable("trash_category_id") String trashCategoryId,
                                                         @RequestBody TrashCategoryRequest trashCategoryRequest) {
         TrashCategory trashCategory = TrashCategoryTransformer.transformRequestToModel(trashCategoryId, trashCategoryRequest);
         TrashCategoryResponse trashCategoryResponse = TrashCategoryTransformer.transformModelToResponse(trashCategoryService.update(trashCategory));
-        return new ResponseEntity<>(trashCategoryResponse, HttpStatus.CREATED);
+        return new ApiResponse<>(HttpStatus.CREATED.value(), trashCategoryResponse);
     }
 
     @DeleteMapping("/trash-categories/{trash_category_id}")
     @Operation(summary = "API to delete trash category by trash category id")
-    public ResponseEntity<MessageResponse> delete(@PathVariable("trash_category_id") String trashCategoryId) {
+    public ApiResponse<MessageResponse> delete(@PathVariable("trash_category_id") String trashCategoryId) {
         trashCategoryService.delete(trashCategoryId);
         String message = "Successfully delete trash category with id " + trashCategoryId;
-        return new ResponseEntity(message, HttpStatus.OK);
+        return new ApiResponse<>(HttpStatus.OK.value(), message);
     }
 }

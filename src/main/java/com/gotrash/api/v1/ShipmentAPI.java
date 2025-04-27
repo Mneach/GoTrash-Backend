@@ -1,5 +1,6 @@
 package com.gotrash.api.v1;
 
+import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.response.MessageResponse;
 import com.gotrash.api.v1.model.Shipment;
 import com.gotrash.api.v1.request.ShipmentRequest;
@@ -10,7 +11,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -33,15 +33,15 @@ public class ShipmentAPI {
 
   @PostMapping("/shipments")
   @Operation(summary = "API to create a new shipment")
-  public ResponseEntity<ShipmentResponse> save(@RequestBody ShipmentRequest shipmentRequest) {
+  public ApiResponse<ShipmentResponse> save(@RequestBody ShipmentRequest shipmentRequest) {
     Shipment shipment = ShipmentTransformer.transformRequestToModel(shipmentRequest);
     ShipmentResponse shipmentResponse = ShipmentTransformer.transformModelToResponse(shipmentService.save(shipment));
-    return new ResponseEntity<>(shipmentResponse, HttpStatus.CREATED);
+    return new ApiResponse<>(HttpStatus.CREATED.value(), shipmentResponse);
   }
 
   @GetMapping("/shipments")
   @Operation(summary = "API to get all shipment data")
-  public ResponseEntity<List<ShipmentResponse>> getShipments(
+  public ApiResponse<List<ShipmentResponse>> getShipments(
       @RequestParam(name = "companyId", required = false) String companyId,
       @RequestParam(name = "wasteBankId", required = false) String wasteBankId
   ) {
@@ -58,32 +58,32 @@ public class ShipmentAPI {
     List<ShipmentResponse> shipmentResponses = shipments.stream()
         .map(ShipmentTransformer::transformModelToResponse)
         .toList();
-    return new ResponseEntity<>(shipmentResponses, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), shipmentResponses);
   }
 
   @GetMapping("/shipments/{shipment_id}")
   @Operation(summary = "API to get shipment by shipment id")
-  public ResponseEntity<ShipmentResponse> getShipmentByShipmentId(@PathVariable("shipment_id") String shipmentId) {
+  public ApiResponse<ShipmentResponse> getShipmentByShipmentId(@PathVariable("shipment_id") String shipmentId) {
     ShipmentResponse shipmentResponse = ShipmentTransformer.transformModelToResponse(
         shipmentService.getShipmentByShipmentId(shipmentId)
     );
-    return new ResponseEntity<>(shipmentResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), shipmentResponse);
   }
 
   @PatchMapping("/shipments/{shipment_id}")
   @Operation(summary = "API to update shipment by shipment id")
-  public ResponseEntity<ShipmentResponse> update(@PathVariable("shipment_id") String shipmentId,
+  public ApiResponse<ShipmentResponse> update(@PathVariable("shipment_id") String shipmentId,
                                                  @RequestBody ShipmentRequest shipmentRequest) {
     Shipment shipment = ShipmentTransformer.transformRequestToModel(shipmentId, shipmentRequest);
     ShipmentResponse shipmentResponse = ShipmentTransformer.transformModelToResponse(shipmentService.update(shipment));
-    return new ResponseEntity<>(shipmentResponse, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), shipmentResponse);
   }
 
   @DeleteMapping("/shipments/{shipment_id}")
   @Operation(summary = "API to delete shipment by shipment id")
-  public ResponseEntity<MessageResponse> delete(@PathVariable("shipment_id") String shipmentId) {
+  public ApiResponse<MessageResponse> delete(@PathVariable("shipment_id") String shipmentId) {
     shipmentService.delete(shipmentId);
     String message = "Successfully delete trash category with id " + shipmentId;
-    return new ResponseEntity(message, HttpStatus.OK);
+    return new ApiResponse<>(HttpStatus.OK.value(), message);
   }
 }
