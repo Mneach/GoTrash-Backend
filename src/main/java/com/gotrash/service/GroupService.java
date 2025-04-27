@@ -72,7 +72,7 @@ public class GroupService {
         .orElseThrow(() -> new RuntimeException("Citizen not found"));
 
     boolean isAlreadyMember = groupEntity.getGroupMembers().stream()
-        .anyMatch(groupMemberEntity -> groupMemberEntity.getUser().getUserId().equals(groupMember.getUser().getUserId()));;
+        .anyMatch(groupMemberEntity -> groupMemberEntity.getUser().getUserId().equals(UUID.fromString(groupMember.getUser().getUserId())));;
 
     if (isAlreadyMember) {
       throw new BadRequestException("User is already a member of the group.");
@@ -92,7 +92,7 @@ public class GroupService {
     Citizen citizen = citizenService.getCitizenByUserId(groupMember.getUser().getUserId());
 
     GroupMemberEntity memberToRemove = groupEntity.getGroupMembers().stream()
-        .filter(member -> member.getUser().getUserId().equals(citizen.getUserId()))
+        .filter(member -> member.getUser().getUserId().equals(UUID.fromString(citizen.getUserId())))
         .findFirst()
         .orElseThrow(() -> new EntityNotFoundException("Group member not found"));
 
