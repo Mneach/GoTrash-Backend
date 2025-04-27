@@ -80,8 +80,8 @@ public class FileUploadHelper {
     // Replace spaces with underscores, remove unsafe characters
     return originalFileName
         .trim()
-        .replaceAll("\\s+", "_")
-        .replaceAll("[^a-zA-Z0-9\\-_.]", "")
-        .toLowerCase();
+        .replaceAll("\\s+", "_") // Replace spaces with underscores
+        .replaceAll("[^a-zA-Z0-9\\-_.@]", "") // Allow only alphanumeric, -, _, ., and @
+        .toLowerCase(); // Convert to lowercase
   }
 }

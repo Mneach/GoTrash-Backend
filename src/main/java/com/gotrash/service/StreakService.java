@@ -88,7 +88,7 @@ public class StreakService {
 
     // Get all trash in that range
     List<TrashHistoryEntity> trashHistoryEntities = trashHistoryRepository.findAllByUser_UserIdAndCreatedAtBetween(
-        citizenId, startDateTime, endDateTime
+        UUID.fromString(citizenId), startDateTime, endDateTime
     );
 
     List<TrashHistory> trashHistories = trashHistoryEntities.stream()
