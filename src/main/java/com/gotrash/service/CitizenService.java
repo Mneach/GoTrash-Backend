@@ -6,6 +6,7 @@ import com.gotrash.api.v1.transformer.CitizenTransformer;
 import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.entity.CitizenEntity;
 import com.gotrash.entity.UserEntity;
+import com.gotrash.exception.rest.BadRequestException;
 import com.gotrash.helper.FileUploadHelper;
 import com.gotrash.repository.CitizenRepository;
 import com.gotrash.repository.UserRepository;
@@ -133,6 +134,18 @@ public class CitizenService {
         .orElseThrow(() -> new EntityNotFoundException("Citizen with ID " + userId + " not found"));
     citizenEntity.setRating(citizenEntity.getCoin().add(totalRating));
     citizenRepository.save(citizenEntity);
+  }
+
+  public Citizen findCitizenByPhoneNumber(String phoneNumber) {
+    Optional<CitizenEntity> citizenEntityOptional = citizenRepository.findByPhoneNumber(phoneNumber);
+
+    if (citizenEntityOptional.isEmpty()) {
+      throw new BadRequestException("User Not Found");
+    }
+
+    return CitizenTransformer.transformEntityToModel(
+        citizenEntityOptional.get()
+    );
   }
 
   public boolean isPhoneNumberAlreadyExists(String phoneNumber) {

@@ -1,8 +1,10 @@
 package com.gotrash.service;
 
+import com.gotrash.api.v1.model.Citizen;
 import com.gotrash.api.v1.model.Trash;
 import com.gotrash.api.v1.model.TrashBin;
 import com.gotrash.api.v1.model.TrashHistory;
+import com.gotrash.api.v1.model.TrashHistoryManual;
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
 import com.gotrash.entity.TrashHistoryEntity;
@@ -59,6 +61,33 @@ public class TrashHistoryService {
         return trashHistoryEntities.stream()
             .map(TrashHistoryTransformer::transformEntityToModel)
             .toList();
+    }
+
+    public TrashHistory storeTrashManually(TrashHistoryManual trashHistoryManual) {
+        Citizen citizen = citizenService.findCitizenByPhoneNumber(trashHistoryManual.getPhoneNumber());
+        Trash trash = trashService.getTrashByTrashId(trashHistoryManual.getTrashId());
+        TrashBin trashBin = trashBinService.getTrashBinByTrashBinId(trashHistoryManual.getTrashBinId());
+
+        TrashHistory trashHistory = TrashHistory.builder()
+            .citizen(citizen.getUser())
+            .trash(trash)
+            .trashBin(trashBin)
+            .weight(trashHistoryManual.getWeight())
+            .build();
+
+
+        TrashHistoryEntity trashHistoryEntity = trashHistoryRepository.save(
+            TrashHistoryTransformer.transformModelToEntity(trashHistory)
+        );
+
+        BigInteger totalCoin = CalculatorUtil.calculateCoin(trashHistory.getWeight(), trash.getCoin());
+        BigInteger totalRating = CalculatorUtil.calculateRating(trashHistory.getWeight(), trashHistory.getTrash().getRating());
+
+        streakService.updateCitizenStreak(citizen.getUser());
+        citizenService.addCoin(citizen.getUser().getUserId(), totalCoin);
+        citizenService.addRating(citizen.getUser().getUserId(), totalRating);
+
+        return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity, totalCoin);
     }
 
     public TrashHistory getTrashHistoryByTrashHistoryId(String trashHistoryId) {

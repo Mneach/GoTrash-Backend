@@ -35,6 +35,7 @@ CREATE TABLE gotrash.users (
 -- 2. CITIZENS TABLE
 CREATE TABLE gotrash.citizens (
   user_id UUID PRIMARY KEY,
+  ble_id NUMERIC NOT NULL,
   name TEXT NOT NULL,
   phone_number VARCHAR(20) NOT NULL,
   image_url TEXT,
