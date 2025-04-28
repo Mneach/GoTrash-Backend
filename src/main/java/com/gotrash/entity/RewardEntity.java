@@ -51,9 +51,6 @@ public class RewardEntity {
   private String description;
 
   @NotNull
-  private String imageName;
-
-  @NotNull
   private String imageUrl;
 
   @CreationTimestamp

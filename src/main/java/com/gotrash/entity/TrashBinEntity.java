@@ -49,9 +49,6 @@ public class TrashBinEntity {
   private String address;
 
   @NotNull
-  private String imageName;
-
-  @NotNull
   private String imageUrl;
 
   @CreationTimestamp

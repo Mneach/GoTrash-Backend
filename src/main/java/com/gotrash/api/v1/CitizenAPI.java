@@ -7,6 +7,7 @@ import com.gotrash.api.v1.model.Group;
 import com.gotrash.api.v1.model.TrashHistory;
 import com.gotrash.api.v1.model.streak.Streak;
 import com.gotrash.api.v1.request.CitizenRequest;
+import com.gotrash.api.v1.request.auth.RegisterCitizenRequest;
 import com.gotrash.api.v1.response.CitizenResponse;
 import com.gotrash.api.v1.response.streak.StreakResponse;
 import com.gotrash.api.v1.transformer.CitizenTransformer;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -86,12 +88,12 @@ public class CitizenAPI {
     return new ApiResponse<>(HttpStatus.OK.value(), citizenResponse);
   }
 
-  @PatchMapping("/citizens/{user_id}")
+  @PatchMapping(value = "/citizens/{user_id}", consumes = {"multipart/form-data"})
   @Operation(summary = "API to update citizen")
   public ApiResponse<CitizenResponse> update(@PathVariable("user_id") String userId,
-      @RequestBody CitizenRequest citizenRequest) {
+                                             @ModelAttribute CitizenRequest citizenRequest) {
     Citizen citizen = CitizenTransformer.transformRequestToModel(userId, citizenRequest);
-    citizen = citizenService.update(citizen);
+    citizen = citizenService.update(citizen, citizenRequest.getImageFile());
     List<Group> groups = groupService.getGroupsFilterByUserId(userId);
     List<TrashHistory> trashHistories = trashHistoryService.getTrashHistoryByUserId(userId);
     CitizenResponse citizenResponse = CitizenTransformer.transformModelToResponse(

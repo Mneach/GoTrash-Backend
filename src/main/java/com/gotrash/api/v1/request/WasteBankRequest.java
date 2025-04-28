@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -19,9 +20,8 @@ public class WasteBankRequest {
   private String password;
   private Double latitude;
   private Double longitude;
+  private MultipartFile imageFile;
   private String address;
-  private String imageName;
-  private String imageUrl;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

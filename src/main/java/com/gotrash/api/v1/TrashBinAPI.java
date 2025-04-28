@@ -23,11 +23,11 @@ import java.util.List;
 public class TrashBinAPI {
     private final TrashBinService trashBinService;
 
-    @PostMapping("/trash-bins")
+    @PostMapping(value = "/trash-bins", consumes = {"multipart/form-data"})
     @Operation(summary = "API to create a new trash bin")
-    public ApiResponse<TrashBinResponse> save(@RequestBody TrashBinRequest trashBinRequest) {
+    public ApiResponse<TrashBinResponse> save(@ModelAttribute TrashBinRequest trashBinRequest) {
         TrashBin trashBin = TrashBinTransformer.transformRequestToModel(trashBinRequest);
-        TrashBinResponse trashBinResponse = TrashBinTransformer.transformModelToResponse(trashBinService.save(trashBin));
+        TrashBinResponse trashBinResponse = TrashBinTransformer.transformModelToResponse(trashBinService.save(trashBin, trashBinRequest.getImageFile()));
         return new ApiResponse<>(HttpStatus.CREATED.value(), trashBinResponse);
     }
 
@@ -59,12 +59,12 @@ public class TrashBinAPI {
         return new ApiResponse<>(HttpStatus.OK.value(), trashBinResponse);
     }
 
-    @PatchMapping("/trash-bins/{trash_bin_id}")
+    @PatchMapping(value = "/trash-bins/{trash_bin_id}", consumes = {"multipart/form-data"})
     @Operation(summary = "API to update trash bin by trash bin id")
     public ApiResponse<TrashBinResponse> update(@PathVariable("trash_bin_id") String trashBinId,
-                                                   @RequestBody TrashBinRequest trashBinRequest) {
+                                                @ModelAttribute TrashBinRequest trashBinRequest) {
         TrashBin trashBin = TrashBinTransformer.transformRequestToModel(trashBinId, trashBinRequest);
-        TrashBinResponse trashBinResponse = TrashBinTransformer.transformModelToResponse(trashBinService.update(trashBin));
+        TrashBinResponse trashBinResponse = TrashBinTransformer.transformModelToResponse(trashBinService.update(trashBin, trashBinRequest.getImageFile()));
         return new ApiResponse<>(HttpStatus.OK.value(), trashBinResponse);
     }
 

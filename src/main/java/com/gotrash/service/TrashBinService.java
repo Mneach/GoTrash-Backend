@@ -5,13 +5,16 @@ import com.gotrash.api.v1.model.WasteBank;
 import com.gotrash.api.v1.transformer.TrashBinTransformer;
 import com.gotrash.entity.TrashBinEntity;
 import com.gotrash.entity.WasteBankEntity;
+import com.gotrash.helper.FileUploadHelper;
 import com.gotrash.repository.TrashBinRepository;
 import com.gotrash.repository.WasteBankRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,12 +25,23 @@ public class TrashBinService {
 
     private final WasteBankRepository wasteBankRepository;
     private final TrashBinRepository trashBinRepository;
+    private final FileUploadHelper fileUploadHelper;
 
     @Transactional
-    public TrashBin save(TrashBin trashBin) {
+    public TrashBin save(TrashBin trashBin, MultipartFile imageFile) {
         // Ensure we have a managed waste bank entity
         WasteBankEntity wasteBankEntity = wasteBankRepository.findById(UUID.fromString(trashBin.getWasteBank().getUserId()))
             .orElseThrow(() -> new EntityNotFoundException("WasteBank Data With ID "+ trashBin.getWasteBank().getUserId() +" Not Found"));
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                String filePath = fileUploadHelper.uploadFile("trashbin", trashBin.getName(), imageFile, null);
+                String imageUrl = fileUploadHelper.generateFileUrl(filePath);
+                trashBin.setImageUrl(imageUrl);
+            } catch (Exception e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        }
 
         TrashBinEntity trashBinEntity = TrashBinTransformer.transformModelToEntity(trashBin);
         trashBinEntity.setWasteBank(wasteBankEntity);
@@ -64,7 +78,7 @@ public class TrashBinService {
     }
 
     @Transactional
-    public TrashBin update(TrashBin trashBin) {
+    public TrashBin update(TrashBin trashBin, MultipartFile imageFile) {
 
         if (!trashBinRepository.existsById(UUID.fromString(trashBin.getTrashBinId()))) {
             throw new EntityNotFoundException("Trash Bin with ID " + trashBin.getTrashBinId() + " Not Found");
@@ -74,7 +88,21 @@ public class TrashBinService {
             .orElseThrow(() -> new EntityNotFoundException("WasteBank Data With ID "+ trashBin.getWasteBank().getUserId() +" Not Found"));
 
         TrashBinEntity trashBinEntity = TrashBinTransformer.transformModelToEntity(trashBin);
-        trashBinEntity.setWasteBank(wasteBankEntity);
+        trashBinEntity.setName(trashBin.getName() != null ? trashBin.getName() : trashBinEntity.getName());
+        trashBinEntity.setAddress(trashBin.getAddress() != null ? trashBin.getAddress() : trashBinEntity.getAddress());
+        trashBinEntity.setLatitude(trashBin.getLatitude() != null ? trashBin.getLatitude() : trashBinEntity.getLatitude());
+        trashBinEntity.setLongitude(trashBin.getLongitude() != null ? trashBin.getLongitude() : trashBinEntity.getLongitude());
+        trashBinEntity.setUpdatedAt(LocalDateTime.now());
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                String filePath = fileUploadHelper.uploadFile("trashbin", trashBin.getName(), imageFile, trashBinEntity.getImageUrl());
+                String imageUrl = fileUploadHelper.generateFileUrl(filePath);
+                trashBinEntity.setImageUrl(imageUrl);
+            } catch (Exception e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        }
 
         return TrashBinTransformer.transformEntityToModel(
                 trashBinRepository.save(trashBinEntity)

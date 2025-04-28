@@ -50,7 +50,9 @@ public class SecurityConfig {
       "/up",
       "/actuator/**",
       "/api/v1/swagger-ui/**",
-      "/swagger-ui.html"
+      "/swagger-ui.html",
+      "/images/*",
+      "/images/**"
   };
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;

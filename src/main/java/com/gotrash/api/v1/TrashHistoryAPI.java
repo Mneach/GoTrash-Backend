@@ -4,10 +4,13 @@ import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.response.MessageResponse;
 import com.gotrash.api.v1.model.TrashCategory;
 import com.gotrash.api.v1.model.TrashHistory;
+import com.gotrash.api.v1.model.TrashHistoryManual;
+import com.gotrash.api.v1.request.TrashHistoryManualRequest;
 import com.gotrash.api.v1.request.TrashHistoryRequest;
 import com.gotrash.api.v1.response.TrashCategoryResponse;
 import com.gotrash.api.v1.response.TrashHistoryResponse;
 import com.gotrash.api.v1.transformer.TrashCategoryTransformer;
+import com.gotrash.api.v1.transformer.TrashHistoryManualTransformer;
 import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
 import com.gotrash.service.TrashHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,6 +35,14 @@ public class TrashHistoryAPI {
     public ApiResponse<TrashHistoryResponse> save(@RequestBody TrashHistoryRequest trashHistoryRequest) {
         TrashHistory trashHistory = TrashHistoryTransformer.transformRequestToModel(trashHistoryRequest);
         TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(trashHistoryService.save(trashHistory));
+        return new ApiResponse<>(HttpStatus.CREATED.value(), trashHistoryResponse);
+    }
+
+    @PostMapping("/trash-histories/manual")
+    @Operation(summary = "API to manually create a new trash history by waste bank officer")
+    public ApiResponse<TrashHistoryResponse> storeTrashManually(@RequestBody TrashHistoryManualRequest trashHistoryManualRequest) {
+        TrashHistoryManual trashHistoryManual = TrashHistoryManualTransformer.transformRequestToModel(trashHistoryManualRequest);
+        TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(trashHistoryService.storeTrashManually(trashHistoryManual));
         return new ApiResponse<>(HttpStatus.CREATED.value(), trashHistoryResponse);
     }
 

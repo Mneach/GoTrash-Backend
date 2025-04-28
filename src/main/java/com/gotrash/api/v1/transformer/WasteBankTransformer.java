@@ -20,8 +20,6 @@ public class WasteBankTransformer {
         .latitude(wasteBankRequest.getLatitude())
         .longitude(wasteBankRequest.getLongitude())
         .address(wasteBankRequest.getAddress())
-        .imageName(wasteBankRequest.getImageName())
-        .imageUrl(wasteBankRequest.getImageUrl())
         .build();
   }
 
@@ -34,8 +32,6 @@ public class WasteBankTransformer {
         .latitude(wasteBankRequest.getLatitude())
         .longitude(wasteBankRequest.getLongitude())
         .address(wasteBankRequest.getAddress())
-        .imageName(wasteBankRequest.getImageName())
-        .imageUrl(wasteBankRequest.getImageUrl())
         .build();
   }
 
@@ -48,7 +44,6 @@ public class WasteBankTransformer {
         .latitude(registerWasteBankRequest.getLatitude())
         .longitude(registerWasteBankRequest.getLongitude())
         .address(registerWasteBankRequest.getAddress())
-        .imageName(registerWasteBankRequest.getImageName())
         .imageUrl(registerWasteBankRequest.getImageUrl())
         .build();
   }
@@ -63,7 +58,6 @@ public class WasteBankTransformer {
         .latitude(wasteBankEntity.getLatitude())
         .longitude(wasteBankEntity.getLongitude())
         .address(wasteBankEntity.getAddress())
-        .imageName(wasteBankEntity.getImageName())
         .imageUrl(wasteBankEntity.getImageUrl())
         .createdAt(wasteBankEntity.getCreatedAt())
         .updatedAt(wasteBankEntity.getUpdatedAt())
@@ -78,7 +72,6 @@ public class WasteBankTransformer {
         .latitude(wasteBank.getLatitude())
         .longitude(wasteBank.getLongitude())
         .address(wasteBank.getAddress())
-        .imageName(wasteBank.getImageName())
         .imageUrl(wasteBank.getImageUrl())
         .build();
   }
@@ -92,7 +85,6 @@ public class WasteBankTransformer {
         .latitude(wasteBank.getLatitude())
         .longitude(wasteBank.getLongitude())
         .address(wasteBank.getAddress())
-        .imageName(wasteBank.getImageName())
         .imageUrl(wasteBank.getImageUrl())
         .createdAt(wasteBank.getCreatedAt())
         .updatedAt(wasteBank.getUpdatedAt())
