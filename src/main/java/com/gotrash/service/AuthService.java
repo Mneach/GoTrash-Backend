@@ -81,6 +81,8 @@ public class AuthService {
       } catch (Exception e) {
         throw new RuntimeException(e.getMessage());
       }
+    } else {
+      citizen.setImageUrl("https://www.twtf.org.uk/wp-content/uploads/2024/01/dummy-image.jpg");
     }
 
     citizen.setCurrentStreak(0);
@@ -91,7 +93,7 @@ public class AuthService {
 
     citizen = citizenService.save(citizen);
     String jwtToken = jwtService.generateToken(citizen.getUser());
-    
+
     return AuthResponse.builder()
         .token(jwtToken)
         .build();
@@ -156,9 +158,7 @@ public class AuthService {
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(
             auth.getEmail(),
-            auth.getPassword()
-        )
-    );
+            auth.getPassword()));
 
     User user = userService.getUserByEmail(auth.getEmail());
     String jwtToken = jwtService.generateToken(user);
