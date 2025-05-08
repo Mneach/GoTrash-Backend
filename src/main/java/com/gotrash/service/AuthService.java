@@ -59,6 +59,7 @@ public class AuthService {
 
     return AuthResponse.builder()
         .token(jwtToken)
+        .role(citizen.getRole())
         .build();
   }
 
@@ -96,6 +97,7 @@ public class AuthService {
 
     return AuthResponse.builder()
         .token(jwtToken)
+        .role(citizen.getRole())
         .build();
   }
 
@@ -121,6 +123,7 @@ public class AuthService {
 
     return AuthResponse.builder()
         .token(jwtToken)
+        .role(wasteBank.getRole())
         .build();
   }
 
@@ -136,6 +139,7 @@ public class AuthService {
 
     return AuthResponse.builder()
         .token(jwtToken)
+        .role(government.getRole())
         .build();
   }
 
@@ -151,6 +155,7 @@ public class AuthService {
 
     return AuthResponse.builder()
         .token(jwtToken)
+        .role(company.getRole())
         .build();
   }
 
@@ -165,6 +170,7 @@ public class AuthService {
 
     return AuthResponse.builder()
         .token(jwtToken)
+        .role(user.getRole())
         .build();
   }
 
