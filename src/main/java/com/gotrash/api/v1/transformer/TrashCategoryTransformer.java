@@ -26,6 +26,7 @@ public class TrashCategoryTransformer {
         return TrashCategory.builder()
                 .trashCategoryId(trashCategoryEntity.getTrashCategoryId().toString())
                 .name(trashCategoryEntity.getName())
+                .imageUrl(trashCategoryEntity.getImageUrl())
                 .createdAt(trashCategoryEntity.getCreatedAt())
                 .updatedAt(trashCategoryEntity.getUpdatedAt())
                 .build();
@@ -35,6 +36,7 @@ public class TrashCategoryTransformer {
         return TrashCategoryEntity.builder()
                 .trashCategoryId(trashCategory.getTrashCategoryId() != null ? UUID.fromString(trashCategory.getTrashCategoryId()) : null)
                 .name(trashCategory.getName())
+                .imageUrl(trashCategory.getImageUrl())
                 .createdAt(trashCategory.getCreatedAt())
                 .updatedAt(trashCategory.getUpdatedAt())
                 .build();
@@ -44,6 +46,7 @@ public class TrashCategoryTransformer {
         return TrashCategoryResponse.builder()
                 .trashCategoryId(trashCategory.getTrashCategoryId())
                 .name(trashCategory.getName())
+                .imageUrl(trashCategory.getImageUrl())
                 .createdAt(trashCategory.getCreatedAt())
                 .updatedAt(trashCategory.getUpdatedAt())
                 .build();

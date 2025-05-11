@@ -17,7 +17,6 @@ public class RewardTransformer {
                 .coin(rewardEntity.getCoin())
                 .stock(rewardEntity.getStock())
                 .description(rewardEntity.getDescription())
-                .imageName(rewardEntity.getImageName())
                 .imageUrl(rewardEntity.getImageUrl())
                 .createdAt(rewardEntity.getCreatedAt())
                 .updatedAt(rewardEntity.getUpdatedAt())
@@ -32,7 +31,6 @@ public class RewardTransformer {
                 .coin(reward.getCoin())
                 .stock(reward.getStock())
                 .description(reward.getDescription())
-                .imageName(reward.getImageName())
                 .imageUrl(reward.getImageUrl())
                 .build();
     }
@@ -45,8 +43,6 @@ public class RewardTransformer {
             .coin(rewardRequest.getCoin())
             .stock(rewardRequest.getStock())
             .description(rewardRequest.getDescription())
-            .imageName(rewardRequest.getImageName())
-            .imageUrl(rewardRequest.getImageUrl())
             .build();
     }
 
@@ -57,8 +53,6 @@ public class RewardTransformer {
                 .coin(rewardRequest.getCoin())
                 .stock(rewardRequest.getStock())
                 .description(rewardRequest.getDescription())
-                .imageName(rewardRequest.getImageName())
-                .imageUrl(rewardRequest.getImageUrl())
                 .build();
     }
 
@@ -70,7 +64,6 @@ public class RewardTransformer {
                 .coin(reward.getCoin())
                 .stock(reward.getStock())
                 .description(reward.getDescription())
-                .imageName(reward.getImageName())
                 .imageUrl(reward.getImageUrl())
                 .createdAt(reward.getCreatedAt())
                 .updatedAt(reward.getUpdatedAt())

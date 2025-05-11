@@ -7,8 +7,6 @@ import com.gotrash.api.v1.request.CitizenRequest;
 import com.gotrash.api.v1.request.auth.RegisterCitizenRequest;
 import com.gotrash.api.v1.response.CitizenResponse;
 import com.gotrash.entity.CitizenEntity;
-import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
-import com.gotrash.api.v1.transformer.GroupTransformer;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +17,7 @@ public class CitizenTransformer {
       return CitizenEntity.builder()
           .userId(citizen.getUserId() != null ? UUID.fromString(citizen.getUserId()) : null)
           .user(citizen.getUser() != null ? UserTransformer.transformModelToEntity(citizen.getUser()) : null)
+          .bleId(citizen.getBleId())
           .name(citizen.getName())
           .phoneNumber(citizen.getPhoneNumber())
           .imageUrl(citizen.getImageUrl())
@@ -35,6 +34,7 @@ public class CitizenTransformer {
     public static Citizen transformEntityToModel(CitizenEntity citizenEntity) {
       return Citizen.builder()
           .userId(citizenEntity.getUserId().toString())
+          .bleId(citizenEntity.getBleId())
           .user(UserTransformer.transformEntityToModel(citizenEntity.getUser()))
           .email(citizenEntity.getUser().getEmail())
           .role(citizenEntity.getUser().getRole())
@@ -58,7 +58,6 @@ public class CitizenTransformer {
         .password(citizenRequest.getPassword())
         .email(citizenRequest.getEmail())
         .phoneNumber(citizenRequest.getPhoneNumber())
-        .imageUrl(citizenRequest.getImageUrl())
         .coin(citizenRequest.getCoin())
         .rating(citizenRequest.getRating())
         .role(citizenRequest.getRole())
@@ -74,7 +73,6 @@ public class CitizenTransformer {
           .password(citizenRequest.getPassword())
           .email(citizenRequest.getEmail())
           .phoneNumber(citizenRequest.getPhoneNumber())
-          .imageUrl(citizenRequest.getImageUrl())
           .coin(citizenRequest.getCoin())
           .rating(citizenRequest.getRating())
           .role(citizenRequest.getRole())
@@ -90,7 +88,6 @@ public class CitizenTransformer {
         .password(registerCitizenRequest.getPassword())
         .email(registerCitizenRequest.getEmail())
         .phoneNumber(registerCitizenRequest.getPhoneNumber())
-        .imageUrl(registerCitizenRequest.getImageUrl())
         .coin(registerCitizenRequest.getCoin())
         .rating(registerCitizenRequest.getRating())
         .role(registerCitizenRequest.getRole())
@@ -100,6 +97,7 @@ public class CitizenTransformer {
   public static CitizenResponse transformModelToResponse(Citizen citizen) {
     return CitizenResponse.builder()
         .userId(citizen.getUserId())
+        .bleId(citizen.getBleId())
         .name(citizen.getName())
         .email(citizen.getEmail())
         .role(citizen.getRole())
@@ -121,6 +119,7 @@ public class CitizenTransformer {
                                                            List<Group> groups) {
       return CitizenResponse.builder()
           .userId(citizen.getUserId())
+          .bleId(citizen.getBleId())
           .name(citizen.getName())
           .email(citizen.getEmail())
           .role(citizen.getRole())

@@ -22,7 +22,6 @@ public class WasteBankResponse {
   private Double latitude;
   private Double longitude;
   private String address;
-  private String imageName;
   private String imageUrl;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;

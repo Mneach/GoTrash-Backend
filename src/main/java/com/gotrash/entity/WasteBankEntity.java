@@ -52,9 +52,6 @@ public class WasteBankEntity {
   private String address;
 
   @NotNull
-  private String imageName;
-
-  @NotNull
   private String imageUrl;
 
   @CreationTimestamp

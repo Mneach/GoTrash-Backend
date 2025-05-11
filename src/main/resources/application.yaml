@@ -2,6 +2,12 @@ server:
   port: 8080
 
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 5MB
+      location: ${FILE_UPLOAD_BASE_DIR}
   application:
     name: gotrash-backend
   datasource:
@@ -23,6 +29,12 @@ application:
 
 cors:
   allowed-origins: ${FRONTEND_ORIGINS}
+
+file:
+  upload:
+    base:
+      dir: ${FILE_UPLOAD_BASE_DIR}
+      url: ${FILE_UPLOAD_BASE_URL}
 
 management:
   endpoints:

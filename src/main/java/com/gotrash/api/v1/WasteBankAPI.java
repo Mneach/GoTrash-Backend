@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +34,7 @@ public class WasteBankAPI {
   private final WasteBankService wasteBankService;
   private final WasteBankWarehouseService wasteBankWarehouseService;
 
-  @GetMapping("/waste-banks")
+  @GetMapping(value = "/waste-banks")
   @Operation(summary = "API to get all waste bank data")
   public ApiResponse<List<WasteBankResponse>> getWasteBanks() {
     List<WasteBank> wasteBanks = wasteBankService.getWasteBanks();
@@ -74,7 +75,7 @@ public class WasteBankAPI {
     return new ApiResponse<>(HttpStatus.OK.value(), wasteBankResponse);
   }
 
-  @PatchMapping("/waste-banks/{user_id}")
+  @PatchMapping(value = "/waste-banks/{user_id}", consumes = {"multipart/form-data"})
   @Operation(summary = "API to update waste bank")
   public ApiResponse<WasteBankResponse> update(@PathVariable("user_id") String userId,
                                                @RequestBody WasteBankRequest wasteBankRequest) {

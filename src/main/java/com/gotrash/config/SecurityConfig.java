@@ -50,7 +50,9 @@ public class SecurityConfig {
       "/up",
       "/actuator/**",
       "/api/v1/swagger-ui/**",
-      "/swagger-ui.html"
+      "/swagger-ui.html",
+      "/images/*",
+      "/images/**"
   };
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -61,7 +63,7 @@ public class SecurityConfig {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowedOrigins(corsAllowedOrigins);
-    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    config.setAllowedMethods(List.of("GET", "POST", "PATCH" , "PUT", "DELETE", "OPTIONS"));
     config.setAllowedHeaders(List.of("*"));
     config.setAllowCredentials(true);
 

@@ -11,7 +11,7 @@ import com.gotrash.entity.CitizenEntity;
 import com.gotrash.entity.TrashHistoryEntity;
 import com.gotrash.repository.CitizenRepository;
 import com.gotrash.repository.TrashHistoryRepository;
-import com.gotrash.util.CoinCalculatorUtil;
+import com.gotrash.util.CalculatorUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -102,7 +102,7 @@ public class StreakService {
       String trashCategory = trashHistory.getTrash().getTrashCategory().getName();
       BigDecimal weight = trashHistory.getWeight();
       BigInteger baseCoin = trashHistory.getTrash().getCoin();
-      BigInteger totalCoin = CoinCalculatorUtil.calculateCoin(weight, baseCoin);
+      BigInteger totalCoin = CalculatorUtil.calculateCoin(weight, baseCoin);
 
       StreakTrashHistory streakTrashHistory = StreakTrashHistory.builder()
           .name(trashName)

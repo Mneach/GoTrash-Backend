@@ -2,12 +2,12 @@ package com.gotrash.service;
 
 import com.gotrash.api.v1.model.Citizen;
 import com.gotrash.api.v1.model.User;
-import com.gotrash.api.v1.model.TrashHistory;
-import com.gotrash.api.v1.model.Group;
 import com.gotrash.api.v1.transformer.CitizenTransformer;
 import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.entity.CitizenEntity;
 import com.gotrash.entity.UserEntity;
+import com.gotrash.exception.rest.BadRequestException;
+import com.gotrash.helper.FileUploadHelper;
 import com.gotrash.repository.CitizenRepository;
 import com.gotrash.repository.UserRepository;
 import com.gotrash.util.AuthorityUtil;
@@ -16,19 +16,22 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class CitizenService {
+
   private final CitizenRepository citizenRepository;
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+  private final FileUploadHelper fileUploadHelper;
 
   @Transactional
   public Citizen save(Citizen citizen) {
@@ -45,7 +48,8 @@ public class CitizenService {
     citizenEntity.setUser(userEntity);
 
     return CitizenTransformer.transformEntityToModel(
-        citizenRepository.save(citizenEntity));
+        citizenRepository.save(citizenEntity)
+    );
   }
 
   public List<Citizen> getCitizens() {
@@ -68,12 +72,11 @@ public class CitizenService {
 
   public Citizen getMe() {
     String userId = AuthorityUtil.getCurrentUserId();
-
     return getCitizenByUserId(userId);
   }
 
   @Transactional
-  public Citizen update(Citizen citizen) {
+  public Citizen update(Citizen citizen, MultipartFile imageFile) {
 
     CitizenEntity citizenEntity = citizenRepository.findById(UUID.fromString(citizen.getUserId()))
         .orElseThrow(() -> new EntityNotFoundException("Citizen with ID " + citizen.getUserId() + " not found"));
@@ -81,23 +84,31 @@ public class CitizenService {
     UserEntity userEntity = userRepository.findById(UUID.fromString(citizen.getUserId()))
         .orElseThrow(() -> new EntityNotFoundException("User with ID " + citizen.getUserId() + " not found"));
 
-    userEntity.setEmail(citizen.getEmail());
-    userEntity.setRole(citizen.getRole());
-    if (citizen.getPassword() != null) {
-      userEntity.setPassword(passwordEncoder.encode(citizen.getPassword()));
-    }
+    userEntity.setEmail(citizen.getEmail() != null ? citizen.getEmail() : userEntity.getEmail());
+    userEntity.setRole(citizen.getRole() != null ? citizen.getRole() : userEntity.getRole());
+    userEntity.setPassword(citizen.getPassword() != null ? passwordEncoder.encode(citizen.getPassword()) : userEntity.getPassword());
     userEntity = userRepository.save(userEntity);
 
     citizenEntity.setUser(userEntity);
     citizenEntity.setName(citizen.getName() != null ? citizen.getName() : citizenEntity.getName());
-    citizenEntity.setPhoneNumber(citizen.getPhoneNumber() != null ? citizen.getImageUrl() : citizenEntity.getPhoneNumber());
-    citizenEntity.setImageUrl(citizen.getImageUrl() != null ? citizen.getImageUrl() : citizenEntity.getImageUrl());
+    citizenEntity.setPhoneNumber(citizen.getPhoneNumber() != null ? citizen.getPhoneNumber() : citizenEntity.getPhoneNumber());
     citizenEntity.setCoin(citizen.getCoin() != null ? citizen.getCoin() : citizenEntity.getCoin());
     citizenEntity.setRating(citizen.getRating() != null ? citizen.getRating() : citizenEntity.getRating());
     citizenEntity.setUpdatedAt(LocalDateTime.now());
 
+    if (imageFile != null && !imageFile.isEmpty()) {
+      try {
+        String filePath = fileUploadHelper.uploadFile("citizens", citizen.getEmail(), imageFile, citizenEntity.getImageUrl());
+        String imageUrl = fileUploadHelper.generateFileUrl(filePath);
+        citizenEntity.setImageUrl(imageUrl);
+      } catch (Exception e) {
+        throw new RuntimeException(e.getMessage());
+      }
+    }
+
     return CitizenTransformer.transformEntityToModel(
-        citizenRepository.save(citizenEntity));
+        citizenRepository.save(citizenEntity)
+    );
   }
 
   @Transactional
@@ -123,6 +134,18 @@ public class CitizenService {
         .orElseThrow(() -> new EntityNotFoundException("Citizen with ID " + userId + " not found"));
     citizenEntity.setRating(citizenEntity.getCoin().add(totalRating));
     citizenRepository.save(citizenEntity);
+  }
+
+  public Citizen findCitizenByPhoneNumber(String phoneNumber) {
+    Optional<CitizenEntity> citizenEntityOptional = citizenRepository.findByPhoneNumber(phoneNumber);
+
+    if (citizenEntityOptional.isEmpty()) {
+      throw new BadRequestException("User Not Found");
+    }
+
+    return CitizenTransformer.transformEntityToModel(
+        citizenEntityOptional.get()
+    );
   }
 
   public boolean isPhoneNumberAlreadyExists(String phoneNumber) {

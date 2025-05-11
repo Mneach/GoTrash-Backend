@@ -4,7 +4,7 @@ import com.gotrash.api.v1.model.*;
 import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
 import com.gotrash.entity.TrashHistoryEntity;
 import com.gotrash.repository.TrashHistoryRepository;
-import com.gotrash.util.CoinCalculatorUtil;
+import com.gotrash.util.CalculatorUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -41,8 +41,8 @@ public class TrashHistoryService {
                 TrashHistoryTransformer.transformModelToEntity(trashHistory)
         );
 
-        BigInteger totalCoin = CoinCalculatorUtil.calculateCoin(trashHistory.getWeight(), trash.getCoin());
-        BigInteger totalRating = CoinCalculatorUtil.calculateRating(trashHistory.getWeight(), trashHistory.getTrash().getRating());
+        BigInteger totalCoin = CalculatorUtil.calculateCoin(trashHistory.getWeight(), trash.getCoin());
+        BigInteger totalRating = CalculatorUtil.calculateRating(trashHistory.getWeight(), trashHistory.getTrash().getRating());
 
         streakService.updateCitizenStreak(user);
         citizenService.addCoin(user.getUserId(), totalCoin);
@@ -67,6 +67,33 @@ public class TrashHistoryService {
             .toList();
     }
 
+    public TrashHistory storeTrashManually(TrashHistoryManual trashHistoryManual) {
+        Citizen citizen = citizenService.findCitizenByPhoneNumber(trashHistoryManual.getPhoneNumber());
+        Trash trash = trashService.getTrashByTrashId(trashHistoryManual.getTrashId());
+        TrashBin trashBin = trashBinService.getTrashBinByTrashBinId(trashHistoryManual.getTrashBinId());
+
+        TrashHistory trashHistory = TrashHistory.builder()
+            .citizen(citizen.getUser())
+            .trash(trash)
+            .trashBin(trashBin)
+            .weight(trashHistoryManual.getWeight())
+            .build();
+
+
+        TrashHistoryEntity trashHistoryEntity = trashHistoryRepository.save(
+            TrashHistoryTransformer.transformModelToEntity(trashHistory)
+        );
+
+        BigInteger totalCoin = CalculatorUtil.calculateCoin(trashHistory.getWeight(), trash.getCoin());
+        BigInteger totalRating = CalculatorUtil.calculateRating(trashHistory.getWeight(), trashHistory.getTrash().getRating());
+
+        streakService.updateCitizenStreak(citizen.getUser());
+        citizenService.addCoin(citizen.getUser().getUserId(), totalCoin);
+        citizenService.addRating(citizen.getUser().getUserId(), totalRating);
+
+        return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity, totalCoin);
+    }
+
     public TrashHistory getTrashHistoryByTrashHistoryId(String trashHistoryId) {
         Optional<TrashHistoryEntity> trashHistoryEntityOptional = trashHistoryRepository.findById(UUID.fromString(trashHistoryId));
 
@@ -78,9 +105,7 @@ public class TrashHistoryService {
     }
 
     public List<TrashHistory> getTrashHistoryByUserId(String userId) {
-        List<TrashHistoryEntity> trashHistoryEntities = trashHistoryRepository.findAllByUser_UserId(
-                UUID.fromString(userId)
-        );
+        List<TrashHistoryEntity> trashHistoryEntities = trashHistoryRepository.findAllByUser_UserId(UUID.fromString(userId));
 
         return trashHistoryEntities
                 .stream()

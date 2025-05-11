@@ -20,7 +20,6 @@ public class RewardResponse {
     private BigInteger coin;
     private Integer stock;
     private String description;
-    private String imageName;
     private String imageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

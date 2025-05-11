@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
@@ -19,7 +20,7 @@ public class CitizenRequest {
   private UserRole role;
   private String name;
   private String phoneNumber;
-  private String imageUrl;
+  private MultipartFile imageFile;
   private BigInteger coin;
   private BigInteger rating;
   private Integer currentStreak;

@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +19,7 @@ import java.util.List;
 public class Citizen {
   private String userId;
   private User user;
+  private BigInteger bleId;
   private String email;
   private String password;
   private UserRole role;

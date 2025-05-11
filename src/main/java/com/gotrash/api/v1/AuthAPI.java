@@ -22,10 +22,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -43,20 +44,20 @@ public class AuthAPI {
     return new ApiResponse<>(HttpStatus.OK.value(), authResponse);
   }
 
-  @PostMapping("auth/register/citizen")
+  @PostMapping(value = "auth/register/citizen", consumes = {"multipart/form-data"})
   @Operation(summary = "API for register a new citizen")
-  public ApiResponse<AuthResponse> registerCitizen(@RequestBody RegisterCitizenRequest registerCitizenRequest) {
+  public ApiResponse<AuthResponse> registerCitizen(@ModelAttribute RegisterCitizenRequest registerCitizenRequest) {
     Citizen citizen = CitizenTransformer.transformRequestToModel(registerCitizenRequest);
-    AuthResponse authResponse = authService.registerCitizen(citizen);
+    AuthResponse authResponse = authService.registerCitizen(citizen, registerCitizenRequest.getImageFile());
 
     return new ApiResponse<>(HttpStatus.OK.value(), authResponse);
   }
 
-  @PostMapping("auth/register/waste-bank")
+  @PostMapping(value = "auth/register/waste-bank", consumes = {"multipart/form-data"})
   @Operation(summary = "API for register a new waste bank")
-  public ApiResponse<AuthResponse> registerWasteBank(@RequestBody RegisterWasteBankRequest registerWasteBankRequest) {
+  public ApiResponse<AuthResponse> registerWasteBank(@ModelAttribute RegisterWasteBankRequest registerWasteBankRequest) {
     WasteBank wasteBank = WasteBankTransformer.transformRequestToModel(registerWasteBankRequest);
-    AuthResponse authResponse = authService.registerWasteBank(wasteBank);
+    AuthResponse authResponse = authService.registerWasteBank(wasteBank, registerWasteBankRequest.getImageFile());
 
     return new ApiResponse<>(HttpStatus.OK.value(), authResponse);
   }

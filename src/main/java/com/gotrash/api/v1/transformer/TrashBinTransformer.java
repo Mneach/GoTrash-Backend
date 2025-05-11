@@ -18,8 +18,6 @@ public class TrashBinTransformer {
             .latitude(trashBinRequest.getLatitude())
             .longitude(trashBinRequest.getLongitude())
             .address(trashBinRequest.getAddress())
-            .imageName(trashBinRequest.getImageName())
-            .imageUrl(trashBinRequest.getImageUrl())
             .build();
     }
 
@@ -30,8 +28,6 @@ public class TrashBinTransformer {
                 .latitude(trashBinRequest.getLatitude())
                 .longitude(trashBinRequest.getLongitude())
                 .address(trashBinRequest.getAddress())
-                .imageName(trashBinRequest.getImageName())
-                .imageUrl(trashBinRequest.getImageUrl())
                 .build();
     }
 
@@ -43,7 +39,6 @@ public class TrashBinTransformer {
                 .latitude(trashBinEntity.getLatitude())
                 .longitude(trashBinEntity.getLongitude())
                 .address(trashBinEntity.getAddress())
-                .imageName(trashBinEntity.getImageName())
                 .imageUrl(trashBinEntity.getImageUrl())
                 .createdAt(trashBinEntity.getCreatedAt())
                 .updatedAt(trashBinEntity.getUpdatedAt())
@@ -58,7 +53,6 @@ public class TrashBinTransformer {
                 .latitude(trashBin.getLatitude())
                 .longitude(trashBin.getLongitude())
                 .address(trashBin.getAddress())
-                .imageName(trashBin.getImageName())
                 .imageUrl(trashBin.getImageUrl())
                 .build();
     }
@@ -71,7 +65,6 @@ public class TrashBinTransformer {
                 .latitude(trashBin.getLatitude())
                 .longitude(trashBin.getLongitude())
                 .address(trashBin.getAddress())
-                .imageName(trashBin.getImageName())
                 .imageUrl(trashBin.getImageUrl())
                 .createdAt(trashBin.getCreatedAt())
                 .updatedAt(trashBin.getUpdatedAt())

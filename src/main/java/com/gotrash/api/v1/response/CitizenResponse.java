@@ -19,6 +19,7 @@ import java.util.List;
 @Builder
 public class CitizenResponse {
   private String userId;
+  private BigInteger bleId;
   private String email;
   private UserRole role;
   private String name;
