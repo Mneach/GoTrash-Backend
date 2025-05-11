@@ -11,23 +11,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ShipmentRepository extends JpaRepository<ShipmentEntity, UUID> {
-
   List<ShipmentEntity> findAllByDestinationCompany_UserId(UUID companyId);
   List<ShipmentEntity> findAllByWasteBank_UserId(UUID wasteBankId);
-
-  @Query(
-      value = """
-            SELECT      
-                  wb.user_id AS wasteBankId,
-                  wb.name AS wasteBankName,
-                  TRUNC(SUM(price), 3) as money 
-            FROM gotrash.shipments AS sm
-            INNER JOIN gotrash.waste_banks AS wb ON wb.user_id = sm.waste_bank_id
-            WHERE wb.user_id = :wasteBankUserId
-            GROUP BY wb.user_id, wb.name
-        """,
-      nativeQuery = true
-  )
-  WasteBankMoneySummary sumWasteBankMoneyByWasteBankId(@Param("wasteBankUserId") UUID wasteBankUserId);
-
 }

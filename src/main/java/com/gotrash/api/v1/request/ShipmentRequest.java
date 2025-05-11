@@ -17,8 +17,8 @@ import java.math.BigDecimal;
 public class ShipmentRequest {
   private String wasteBankId;
   private String companyId;
-  private ShipmentTrashCategory category;
+  private String trashCategoryId;
   private BigDecimal weight;
   private BigDecimal price;
-  private ShipmentStatus status;
+  private String status;
 }

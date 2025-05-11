@@ -25,5 +25,5 @@ public class WasteBankResponse {
   private String imageUrl;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
-  private List<WasteBankWarehouse> wasteBankWarehouses;
+  private List<WasteBankWarehouseResponse> wasteBankWarehouses;
 }

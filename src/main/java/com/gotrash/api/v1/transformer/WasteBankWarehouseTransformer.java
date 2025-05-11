@@ -17,6 +17,7 @@ public class WasteBankWarehouseTransformer {
         .wasteBankWarehouseId(wasteBankWarehouseEntity.getWasteBankWarehouseId())
         .wasteBank(WasteBankTransformer.transformEntityToModel(wasteBankWarehouseEntity.getWasteBankEntity()))
         .trashCategory(TrashCategoryTransformer.transformEntityToModel(wasteBankWarehouseEntity.getTrashCategoryEntity()))
+        .totalWeight(wasteBankWarehouseEntity.getTotalWeight())
         .createdAt(wasteBankWarehouseEntity.getCreatedAt())
         .updatedAt(wasteBankWarehouseEntity.getUpdatedAt())
         .build();
@@ -33,8 +34,8 @@ public class WasteBankWarehouseTransformer {
 
   public static WasteBankWarehouseResponse transformModelToResponse(WasteBankWarehouse wasteBankWarehouse) {
     return WasteBankWarehouseResponse.builder()
-        .wasteBankWarehouseId(wasteBankWarehouse.getWasteBankWarehouseId())
-        .trashCategoryResponse(TrashCategoryTransformer.transformModelToResponse(wasteBankWarehouse.getTrashCategory()))
+        .wasteBankId(wasteBankWarehouse.getWasteBank().getUserId())
+        .trashCategory(TrashCategoryTransformer.transformModelToResponse(wasteBankWarehouse.getTrashCategory()))
         .totalWeight(wasteBankWarehouse.getTotalWeight())
         .createdAt(wasteBankWarehouse.getCreatedAt())
         .updatedAt(wasteBankWarehouse.getUpdatedAt())

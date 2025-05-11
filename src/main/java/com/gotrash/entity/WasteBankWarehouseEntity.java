@@ -1,5 +1,6 @@
 package com.gotrash.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gotrash.entity.id.WasteBankWarehouseId;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -27,6 +28,7 @@ public class WasteBankWarehouseEntity {
   @ManyToOne
   @MapsId("wasteBankId")
   @JoinColumn(name = "waste_bank_id")
+  @JsonIgnore
   private WasteBankEntity wasteBankEntity;
 
   @ManyToOne

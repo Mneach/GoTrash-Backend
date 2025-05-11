@@ -46,7 +46,6 @@ public class WasteBankTransformer {
         .latitude(registerWasteBankRequest.getLatitude())
         .longitude(registerWasteBankRequest.getLongitude())
         .address(registerWasteBankRequest.getAddress())
-        .imageUrl(registerWasteBankRequest.getImageUrl())
         .build();
   }
 
@@ -102,9 +101,12 @@ public class WasteBankTransformer {
         .latitude(wasteBank.getLatitude())
         .longitude(wasteBank.getLongitude())
         .address(wasteBank.getAddress())
-        .imageName(wasteBank.getImageName())
         .imageUrl(wasteBank.getImageUrl())
-        .wasteBankWarehouses(wasteBankWarehouses)
+        .wasteBankWarehouses(
+            wasteBankWarehouses.stream()
+                .map(WasteBankWarehouseTransformer::transformModelToResponse)
+                .toList()
+        )
         .createdAt(wasteBank.getCreatedAt())
         .updatedAt(wasteBank.getUpdatedAt())
         .build();

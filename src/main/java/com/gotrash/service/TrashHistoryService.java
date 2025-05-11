@@ -3,6 +3,7 @@ package com.gotrash.service;
 import com.gotrash.api.v1.model.*;
 import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
 import com.gotrash.entity.TrashHistoryEntity;
+import com.gotrash.entity.id.WasteBankWarehouseId;
 import com.gotrash.repository.TrashHistoryRepository;
 import com.gotrash.util.CalculatorUtil;
 import jakarta.persistence.EntityNotFoundException;
@@ -51,8 +52,15 @@ public class TrashHistoryService {
         // Add the data into waste bank warehouse
         wasteBankWarehouseService.addTrashToWasteBankWarehouse(
             WasteBankWarehouse.builder()
+                .wasteBankWarehouseId(
+                    new WasteBankWarehouseId(
+                        UUID.fromString(trashBin.getWasteBank().getUserId()),
+                        UUID.fromString(trash.getTrashCategory().getTrashCategoryId())
+                    )
+                )
                 .wasteBank(trashBin.getWasteBank())
                 .trashCategory(trash.getTrashCategory())
+                .totalWeight(trashHistory.getWeight())
                 .build()
         );
 
@@ -142,5 +150,17 @@ public class TrashHistoryService {
         }
 
         trashHistoryRepository.deleteById(UUID.fromString(trashHistoryId));
+    }
+
+    @Transactional
+    public List<TrashHistory> getTrashHistoriesByWasteBankId(String wasteBankId) {
+
+        List<TrashHistoryEntity> trashHistoryEntities = trashHistoryRepository.findAllByWasteBankId(
+            UUID.fromString(wasteBankId)
+        );
+
+        return trashHistoryEntities.stream()
+            .map(TrashHistoryTransformer::transformEntityToModel)
+            .toList();
     }
 }

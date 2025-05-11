@@ -2,6 +2,7 @@ package com.gotrash.api.v1.transformer;
 
 import com.gotrash.api.v1.model.Company;
 import com.gotrash.api.v1.model.Shipment;
+import com.gotrash.api.v1.model.TrashCategory;
 import com.gotrash.api.v1.model.WasteBank;
 import com.gotrash.api.v1.request.ShipmentRequest;
 import com.gotrash.api.v1.response.ShipmentResponse;
@@ -15,7 +16,7 @@ public class ShipmentTransformer {
         .shipmentId(shipment.getShipmentId() != null ? UUID.fromString(shipment.getShipmentId()) : null)
         .wasteBank(shipment.getWasteBank() != null ? WasteBankTransformer.transformModelToEntity(shipment.getWasteBank()) : null)
         .destinationCompany(shipment.getDestinationCompany() != null ? CompanyTransformer.transformModelToEntity(shipment.getDestinationCompany()) : null)
-        .category(shipment.getCategory())
+        .trashCategory(shipment.getTrashCategory() != null ? TrashCategoryTransformer.transformModelToEntity(shipment.getTrashCategory()) : null)
         .weight(shipment.getWeight())
         .price(shipment.getPrice())
         .status(shipment.getStatus())
@@ -28,7 +29,7 @@ public class ShipmentTransformer {
     return Shipment.builder()
         .shipmentId(shipmentEntity.getShipmentId().toString())
         .wasteBank(WasteBankTransformer.transformEntityToModel(shipmentEntity.getWasteBank()))
-        .category(shipmentEntity.getCategory())
+        .trashCategory(TrashCategoryTransformer.transformEntityToModel(shipmentEntity.getTrashCategory()))
         .weight(shipmentEntity.getWeight())
         .destinationCompany(CompanyTransformer.transformEntityToModel(shipmentEntity.getDestinationCompany()))
         .price(shipmentEntity.getPrice())
@@ -42,7 +43,7 @@ public class ShipmentTransformer {
     return Shipment.builder()
         .wasteBank(WasteBank.builder().userId(shipmentRequest.getWasteBankId()).build())
         .destinationCompany(Company.builder().userId(shipmentRequest.getCompanyId()).build())
-        .category(shipmentRequest.getCategory())
+        .trashCategory(TrashCategory.builder().trashCategoryId(shipmentRequest.getTrashCategoryId()).build())
         .weight(shipmentRequest.getWeight())
         .price(shipmentRequest.getPrice())
         .status(shipmentRequest.getStatus())
@@ -54,10 +55,9 @@ public class ShipmentTransformer {
         .shipmentId(shipmentId)
         .wasteBank(WasteBank.builder().userId(shipmentRequest.getWasteBankId()).build())
         .destinationCompany(Company.builder().userId(shipmentRequest.getCompanyId()).build())
-        .category(shipmentRequest.getCategory())
+        .trashCategory(TrashCategory.builder().trashCategoryId(shipmentRequest.getTrashCategoryId()).build())
         .weight(shipmentRequest.getWeight())
         .price(shipmentRequest.getPrice())
-        .status(shipmentRequest.getStatus())
         .build();
   }
 
@@ -66,7 +66,7 @@ public class ShipmentTransformer {
         .shipmentId(shipment.getShipmentId())
         .wasteBank(WasteBankTransformer.transformModelToResponse(shipment.getWasteBank()))
         .destinationCompany(CompanyTransformer.transformModelToResponse(shipment.getDestinationCompany()))
-        .category(shipment.getCategory())
+        .trashCategory(TrashCategoryTransformer.transformModelToResponse(shipment.getTrashCategory()))
         .weight(shipment.getWeight())
         .price(shipment.getPrice())
         .status(shipment.getStatus())

@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class WasteBankWarehouseResponse {
-  private WasteBankWarehouseId wasteBankWarehouseId;
-  private TrashCategoryResponse trashCategoryResponse;
+  private String wasteBankId;
+  private TrashCategoryResponse trashCategory;
   private BigDecimal totalWeight;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;

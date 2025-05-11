@@ -7,6 +7,7 @@ import com.gotrash.api.v1.transformer.WasteBankWarehouseTransformer;
 import com.gotrash.entity.TrashCategoryEntity;
 import com.gotrash.entity.WasteBankEntity;
 import com.gotrash.entity.WasteBankWarehouseEntity;
+import com.gotrash.entity.id.WasteBankWarehouseId;
 import com.gotrash.exception.rest.BadRequestException;
 import com.gotrash.exception.rest.EntityNotFoundException;
 import com.gotrash.repository.TrashCategoryRepository;
@@ -49,6 +50,12 @@ public class WasteBankWarehouseService {
           .orElseThrow(() -> new EntityNotFoundException("TrashCategory not found"));
 
       WasteBankWarehouseEntity wasteBankWarehouseEntity = WasteBankWarehouseEntity.builder()
+          .wasteBankWarehouseId(
+              new WasteBankWarehouseId(
+                  wasteBankEntity.getUserId(),
+                  trashCategoryEntity.getTrashCategoryId()
+              )
+          )
           .wasteBankEntity(wasteBankEntity)
           .trashCategoryEntity(trashCategoryEntity)
           .totalWeight(wasteBankWarehouse.getTotalWeight())
@@ -65,12 +72,12 @@ public class WasteBankWarehouseService {
     WasteBankWarehouseEntity wasteBankWarehouseEntity = wasteBankWarehouseRepository.findById(wasteBankWarehouse.getWasteBankWarehouseId())
         .orElseThrow(() -> new EntityNotFoundException("WasteBankWarehouse not found"));
 
-    if (wasteBankWarehouse.getTotalWeight().compareTo(shipment.getWeight()) < 0) {
+    if (wasteBankWarehouseEntity.getTotalWeight().compareTo(shipment.getWeight()) < 0) {
       throw new BadRequestException("Shipment weight cannot be more than total weight in warehouse");
     }
 
     wasteBankWarehouseEntity.setTotalWeight(
-        wasteBankWarehouseEntity.getTotalWeight().subtract(wasteBankWarehouse.getTotalWeight())
+        wasteBankWarehouseEntity.getTotalWeight().subtract(shipment.getWeight())
     );
 
     return WasteBankWarehouseTransformer.transformEntityToModel(

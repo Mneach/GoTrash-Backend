@@ -44,7 +44,7 @@ public class ShipmentService {
     ShipmentEntity shipmentEntity = ShipmentTransformer.transformModelToEntity(shipment);
     shipmentEntity.setWasteBank(wasteBankEntity);
     shipmentEntity.setDestinationCompany(companyEntity);
-    shipmentEntity.setTrashCategoryEntity(trashCategoryEntity);
+    shipmentEntity.setTrashCategory(trashCategoryEntity);
     shipmentEntity.setStatus(ShipmentStatus.SEDANG_DIKIRIM);
 
     wasteBankWarehouseService.decreaseTrashFromWasteBankWarehouse(
@@ -100,7 +100,7 @@ public class ShipmentService {
   }
 
   @Transactional
-  public Shipment markShipmentAsDone(String shipmentId) {
+  public Shipment updateShipmentStatusToDone(String shipmentId) {
 
     ShipmentEntity shipmentEntity = shipmentRepository.findById(UUID.fromString(shipmentId))
         .orElseThrow(() -> new EntityNotFoundException("WasteBank not found"));
@@ -129,7 +129,7 @@ public class ShipmentService {
     ShipmentEntity shipmentEntity = ShipmentTransformer.transformModelToEntity(shipment);
     shipmentEntity.setWasteBank(wasteBankEntity);
     shipmentEntity.setDestinationCompany(companyEntity);
-    shipmentEntity.setTrashCategoryEntity(trashCategoryEntity);
+    shipmentEntity.setTrashCategory(trashCategoryEntity);
     shipmentEntity.setStatus(shipment.getStatus());
 
 

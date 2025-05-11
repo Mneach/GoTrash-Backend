@@ -33,7 +33,7 @@ public class ShipmentEntity {
   @NotNull
   @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "trash_category_id", nullable = false)
-  private TrashCategoryEntity trashCategoryEntity;
+  private TrashCategoryEntity trashCategory;
 
   @NotNull
   @Column(precision = 19, scale = 2)

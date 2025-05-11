@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -19,4 +20,5 @@ import java.time.LocalDateTime;
 public class TrashCategoryRequest {
   private String name;
   private MultipartFile imageFile;
+  private BigDecimal price;
 }

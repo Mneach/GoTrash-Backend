@@ -80,7 +80,7 @@ public class WasteBankAPI {
   public ApiResponse<WasteBankResponse> update(@PathVariable("user_id") String userId,
                                                @RequestBody WasteBankRequest wasteBankRequest) {
     WasteBank wasteBank = WasteBankTransformer.transformRequestToModel(userId, wasteBankRequest);
-    wasteBank = wasteBankService.update(wasteBank);
+    wasteBank = wasteBankService.update(wasteBank, wasteBankRequest.getImageFile());
     List<WasteBankWarehouse> wasteBankWarehouses = wasteBankWarehouseService.getWasteBankWarehousesByWasteBankId(wasteBank.getUserId());
     WasteBankResponse wasteBankResponse = WasteBankTransformer.transformModelToResponse(
         wasteBank,

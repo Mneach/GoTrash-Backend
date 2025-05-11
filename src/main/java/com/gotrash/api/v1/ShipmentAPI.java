@@ -73,9 +73,18 @@ public class ShipmentAPI {
   @PatchMapping("/shipments/{shipment_id}")
   @Operation(summary = "API to update shipment by shipment id")
   public ApiResponse<ShipmentResponse> update(@PathVariable("shipment_id") String shipmentId,
-                                                 @RequestBody ShipmentRequest shipmentRequest) {
+                                              @RequestBody ShipmentRequest shipmentRequest) {
     Shipment shipment = ShipmentTransformer.transformRequestToModel(shipmentId, shipmentRequest);
     ShipmentResponse shipmentResponse = ShipmentTransformer.transformModelToResponse(shipmentService.update(shipment));
+    return new ApiResponse<>(HttpStatus.OK.value(), shipmentResponse);
+  }
+
+  @PatchMapping("/shipments/{shipment_id}/status/done")
+  @Operation(summary = "API to update shipment status to done")
+  public ApiResponse<ShipmentResponse> updateShipmentStatusToDone(@PathVariable("shipment_id") String shipmentId) {
+    ShipmentResponse shipmentResponse = ShipmentTransformer.transformModelToResponse(
+        shipmentService.updateShipmentStatusToDone(shipmentId)
+    );
     return new ApiResponse<>(HttpStatus.OK.value(), shipmentResponse);
   }
 
