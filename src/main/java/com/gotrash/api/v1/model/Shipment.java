@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -16,11 +17,11 @@ import java.time.LocalDateTime;
 public class Shipment {
   private String shipmentId;
   private WasteBank wasteBank;
-  private ShipmentTrashCategory category;
-  private Double weight;
+  private TrashCategory trashCategory;
+  private BigDecimal weight;
   private Company destinationCompany;
-  private Double price;
-  private ShipmentStatus status;
+  private BigDecimal price;
+  private String status;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

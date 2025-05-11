@@ -65,9 +65,20 @@ public class TrashHistoryAPI {
         return new ApiResponse<>(HttpStatus.OK.value(), trashHistoryResponse);
     }
 
+    @GetMapping("/trash-histories/wastebank/{wastebank_id}")
+    @Operation(summary = "API to get trash history by wastebank id")
+    public ApiResponse<List<TrashHistoryResponse>> getTrashHistoriesByWasteBankId(@PathVariable("wastebank_id") String wasteBankId) {
+        List<TrashHistory> trashHistories = trashHistoryService.getTrashHistoriesByWasteBankId(wasteBankId);
+        List<TrashHistoryResponse> trashHistoryResponses = trashHistories.stream()
+            .map(TrashHistoryTransformer::transformModelToResponse)
+            .toList();
+        return new ApiResponse<>(HttpStatus.OK.value(), trashHistoryResponses);
+    }
+
+
     @GetMapping("/trash-histories/citizen/{citizen_id}")
     @Operation(summary = "API to get trash history by citizen id")
-    public ApiResponse<List<TrashHistoryResponse>> getTrashByUserId(@PathVariable("citizen_id") String citizenId) {
+    public ApiResponse<List<TrashHistoryResponse>> getTrashHistoriesByUserId(@PathVariable("citizen_id") String citizenId) {
         List<TrashHistory> trashHistories = trashHistoryService.getTrashHistoryByUserId(citizenId);
         List<TrashHistoryResponse> trashHistoryResponses = trashHistories.stream()
                 .map(TrashHistoryTransformer::transformModelToResponse)

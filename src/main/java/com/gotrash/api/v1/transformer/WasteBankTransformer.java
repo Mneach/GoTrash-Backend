@@ -1,11 +1,13 @@
 package com.gotrash.api.v1.transformer;
 
 import com.gotrash.api.v1.model.WasteBank;
+import com.gotrash.api.v1.model.WasteBankWarehouse;
 import com.gotrash.api.v1.request.WasteBankRequest;
 import com.gotrash.api.v1.request.auth.RegisterWasteBankRequest;
 import com.gotrash.api.v1.response.WasteBankResponse;
 import com.gotrash.entity.WasteBankEntity;
 
+import java.util.List;
 import java.util.UUID;
 
 public class WasteBankTransformer {
@@ -44,7 +46,6 @@ public class WasteBankTransformer {
         .latitude(registerWasteBankRequest.getLatitude())
         .longitude(registerWasteBankRequest.getLongitude())
         .address(registerWasteBankRequest.getAddress())
-        .imageUrl(registerWasteBankRequest.getImageUrl())
         .build();
   }
 
@@ -91,4 +92,23 @@ public class WasteBankTransformer {
         .build();
   }
 
+  public static WasteBankResponse transformModelToResponse(WasteBank wasteBank, List<WasteBankWarehouse> wasteBankWarehouses) {
+    return WasteBankResponse.builder()
+        .userId(wasteBank.getUserId())
+        .email(wasteBank.getEmail())
+        .role(wasteBank.getRole())
+        .name(wasteBank.getName())
+        .latitude(wasteBank.getLatitude())
+        .longitude(wasteBank.getLongitude())
+        .address(wasteBank.getAddress())
+        .imageUrl(wasteBank.getImageUrl())
+        .wasteBankWarehouses(
+            wasteBankWarehouses.stream()
+                .map(WasteBankWarehouseTransformer::transformModelToResponse)
+                .toList()
+        )
+        .createdAt(wasteBank.getCreatedAt())
+        .updatedAt(wasteBank.getUpdatedAt())
+        .build();
+  }
 }

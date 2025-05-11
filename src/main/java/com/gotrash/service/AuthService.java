@@ -116,6 +116,8 @@ public class AuthService {
       } catch (Exception e) {
         throw new RuntimeException(e.getMessage());
       }
+    } else {
+      wasteBank.setImageUrl("https://www.twtf.org.uk/wp-content/uploads/2024/01/dummy-image.jpg");
     }
 
     wasteBank = wasteBankService.save(wasteBank);

@@ -1,15 +1,10 @@
 package com.gotrash.entity;
 
+import com.gotrash.api.v1.model.TrashCategory;
 import com.gotrash.constant.ShipmentStatus;
 import com.gotrash.constant.ShipmentTrashCategory;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,11 +12,12 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "shipments")
+@Table(name = "shipments", schema = "gotrash")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,18 +30,23 @@ public class ShipmentEntity {
   @ManyToOne
   private WasteBankEntity wasteBank;
 
-  @Enumerated(EnumType.STRING)
-  private ShipmentTrashCategory category;
+  @NotNull
+  @OneToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "trash_category_id", nullable = false)
+  private TrashCategoryEntity trashCategory;
 
-  private Double weight;
+  @NotNull
+  @Column(precision = 19, scale = 2)
+  private BigDecimal weight;
 
   @ManyToOne
   private CompanyEntity destinationCompany;
 
-  private Double price;
+  @NotNull
+  @Column(precision = 20, scale = 6)
+  private BigDecimal price;
 
-  @Enumerated(EnumType.STRING)
-  private ShipmentStatus status;
+  private String status;
 
   @CreationTimestamp
   @Column(updatable = false)

@@ -1,5 +1,7 @@
 package com.gotrash.api.v1.response;
 
+
+import com.gotrash.entity.id.WasteBankWarehouseId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +14,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TrashCategoryResponse {
-  private String trashCategoryId;
-  private String name;
-  private String imageUrl;
-  private BigDecimal price;
+public class WasteBankWarehouseResponse {
+  private String wasteBankId;
+  private TrashCategoryResponse trashCategory;
+  private BigDecimal totalWeight;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

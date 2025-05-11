@@ -24,5 +24,4 @@ public class RegisterWasteBankRequest {
   private MultipartFile imageFile;
   private Double longitude;
   private String address;
-  private String imageUrl;
 }

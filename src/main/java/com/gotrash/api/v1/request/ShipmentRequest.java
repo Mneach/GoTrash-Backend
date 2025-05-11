@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 
 @Data
 @AllArgsConstructor
@@ -15,8 +17,8 @@ import lombok.NoArgsConstructor;
 public class ShipmentRequest {
   private String wasteBankId;
   private String companyId;
-  private ShipmentTrashCategory category;
-  private Double weight;
-  private Double price;
-  private ShipmentStatus status;
+  private String trashCategoryId;
+  private BigDecimal weight;
+  private BigDecimal price;
+  private String status;
 }
