@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -31,6 +32,10 @@ public class TrashCategoryEntity {
 
   @NotNull
   private String name;
+
+  @NotNull
+  @Column(precision = 20, scale = 6)
+  private BigDecimal price;
 
   @CreationTimestamp
   @Column(updatable = false)

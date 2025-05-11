@@ -1,7 +1,6 @@
 package com.gotrash.api.v1.model;
 
-import com.gotrash.constant.ShipmentStatus;
-import com.gotrash.constant.ShipmentTrashCategory;
+import com.gotrash.entity.id.WasteBankWarehouseId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,14 +13,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Shipment {
-  private String shipmentId;
+public class WasteBankWarehouse {
+  private WasteBankWarehouseId wasteBankWarehouseId;
   private WasteBank wasteBank;
   private TrashCategory trashCategory;
-  private BigDecimal weight;
-  private Company destinationCompany;
-  private BigDecimal price;
-  private String status;
+  private BigDecimal totalWeight;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

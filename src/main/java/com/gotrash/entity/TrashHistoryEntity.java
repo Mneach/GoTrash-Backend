@@ -38,7 +38,7 @@ public class TrashHistoryEntity {
   private TrashBinEntity trashBin;
 
   @NotNull
-  @Column(precision = 20, scale = 6)
+  @Column(precision = 19, scale = 2)
   private BigDecimal weight;
 
   @CreationTimestamp

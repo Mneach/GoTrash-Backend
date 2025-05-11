@@ -83,15 +83,17 @@ public class CitizenService {
 
     userEntity.setEmail(citizen.getEmail());
     userEntity.setRole(citizen.getRole());
-    userEntity.setPassword(passwordEncoder.encode(citizen.getPassword()));
+    if (citizen.getPassword() != null) {
+      userEntity.setPassword(passwordEncoder.encode(citizen.getPassword()));
+    }
     userEntity = userRepository.save(userEntity);
 
     citizenEntity.setUser(userEntity);
-    citizenEntity.setName(citizen.getName());
-    citizenEntity.setPhoneNumber(citizen.getPhoneNumber());
-    citizenEntity.setImageUrl(citizen.getImageUrl());
-    citizenEntity.setCoin(citizen.getCoin());
-    citizenEntity.setRating(citizen.getRating());
+    citizenEntity.setName(citizen.getName() != null ? citizen.getName() : citizenEntity.getName());
+    citizenEntity.setPhoneNumber(citizen.getPhoneNumber() != null ? citizen.getImageUrl() : citizenEntity.getPhoneNumber());
+    citizenEntity.setImageUrl(citizen.getImageUrl() != null ? citizen.getImageUrl() : citizenEntity.getImageUrl());
+    citizenEntity.setCoin(citizen.getCoin() != null ? citizen.getCoin() : citizenEntity.getCoin());
+    citizenEntity.setRating(citizen.getRating() != null ? citizen.getRating() : citizenEntity.getRating());
     citizenEntity.setUpdatedAt(LocalDateTime.now());
 
     return CitizenTransformer.transformEntityToModel(

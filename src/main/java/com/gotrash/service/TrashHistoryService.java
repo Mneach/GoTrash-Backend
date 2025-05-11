@@ -1,9 +1,6 @@
 package com.gotrash.service;
 
-import com.gotrash.api.v1.model.Trash;
-import com.gotrash.api.v1.model.TrashBin;
-import com.gotrash.api.v1.model.TrashHistory;
-import com.gotrash.api.v1.model.User;
+import com.gotrash.api.v1.model.*;
 import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
 import com.gotrash.entity.TrashHistoryEntity;
 import com.gotrash.repository.TrashHistoryRepository;
@@ -23,6 +20,7 @@ import java.util.UUID;
 public class TrashHistoryService {
 
     private final TrashHistoryRepository trashHistoryRepository;
+    private final WasteBankWarehouseService wasteBankWarehouseService;
     private final UserService userService;
     private final TrashService trashService;
     private final TrashBinService trashBinService;
@@ -49,6 +47,14 @@ public class TrashHistoryService {
         streakService.updateCitizenStreak(user);
         citizenService.addCoin(user.getUserId(), totalCoin);
         citizenService.addRating(user.getUserId(), totalRating);
+
+        // Add the data into waste bank warehouse
+        wasteBankWarehouseService.addTrashToWasteBankWarehouse(
+            WasteBankWarehouse.builder()
+                .wasteBank(trashBin.getWasteBank())
+                .trashCategory(trash.getTrashCategory())
+                .build()
+        );
 
         return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity, totalCoin);
     }

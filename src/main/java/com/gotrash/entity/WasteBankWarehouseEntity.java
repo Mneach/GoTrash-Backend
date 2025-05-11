@@ -1,8 +1,6 @@
 package com.gotrash.entity;
 
-import com.gotrash.api.v1.model.TrashCategory;
-import com.gotrash.constant.ShipmentStatus;
-import com.gotrash.constant.ShipmentTrashCategory;
+import com.gotrash.entity.id.WasteBankWarehouseId;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -14,39 +12,31 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
-@Table(name = "shipments", schema = "gotrash")
+@Table(name = "waste_bank_warehouses", schema = "gotrash")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ShipmentEntity {
-  @Id
-  @GeneratedValue
-  private UUID shipmentId;
+public class WasteBankWarehouseEntity {
+
+  @EmbeddedId
+  private WasteBankWarehouseId wasteBankWarehouseId;
 
   @ManyToOne
-  private WasteBankEntity wasteBank;
+  @MapsId("wasteBankId")
+  @JoinColumn(name = "waste_bank_id")
+  private WasteBankEntity wasteBankEntity;
 
-  @NotNull
-  @OneToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "trash_category_id", nullable = false)
+  @ManyToOne
+  @MapsId("trashCategoryId")
+  @JoinColumn(name = "trash_category_id")
   private TrashCategoryEntity trashCategoryEntity;
 
   @NotNull
   @Column(precision = 19, scale = 2)
-  private BigDecimal weight;
-
-  @ManyToOne
-  private CompanyEntity destinationCompany;
-
-  @NotNull
-  @Column(precision = 20, scale = 6)
-  private BigDecimal price;
-
-  private String status;
+  private BigDecimal totalWeight;
 
   @CreationTimestamp
   @Column(updatable = false)

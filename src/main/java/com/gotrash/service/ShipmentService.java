@@ -1,12 +1,17 @@
 package com.gotrash.service;
 
 import com.gotrash.api.v1.model.Shipment;
+import com.gotrash.api.v1.model.WasteBankWarehouse;
 import com.gotrash.api.v1.transformer.ShipmentTransformer;
+import com.gotrash.constant.ShipmentStatus;
 import com.gotrash.entity.CompanyEntity;
 import com.gotrash.entity.ShipmentEntity;
+import com.gotrash.entity.TrashCategoryEntity;
 import com.gotrash.entity.WasteBankEntity;
+import com.gotrash.entity.id.WasteBankWarehouseId;
 import com.gotrash.repository.CompanyRepository;
 import com.gotrash.repository.ShipmentRepository;
+import com.gotrash.repository.TrashCategoryRepository;
 import com.gotrash.repository.WasteBankRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -24,6 +29,8 @@ public class ShipmentService {
   private final ShipmentRepository shipmentRepository;
   private final WasteBankRepository wasteBankRepository;
   private final CompanyRepository companyRepository;
+  private final TrashCategoryRepository trashCategoryRepository;
+  private final WasteBankWarehouseService wasteBankWarehouseService;
 
   @Transactional
   public Shipment save(Shipment shipment) {
@@ -31,10 +38,26 @@ public class ShipmentService {
         .orElseThrow(() -> new EntityNotFoundException("WasteBank not found"));
     CompanyEntity companyEntity = companyRepository.findById(UUID.fromString(shipment.getDestinationCompany().getUserId()))
         .orElseThrow(() -> new EntityNotFoundException("Company not found"));
+    TrashCategoryEntity trashCategoryEntity = trashCategoryRepository.findById(UUID.fromString(shipment.getTrashCategory().getTrashCategoryId()))
+        .orElseThrow(() -> new EntityNotFoundException("Trash Category not found"));
 
     ShipmentEntity shipmentEntity = ShipmentTransformer.transformModelToEntity(shipment);
     shipmentEntity.setWasteBank(wasteBankEntity);
     shipmentEntity.setDestinationCompany(companyEntity);
+    shipmentEntity.setTrashCategoryEntity(trashCategoryEntity);
+    shipmentEntity.setStatus(ShipmentStatus.SEDANG_DIKIRIM);
+
+    wasteBankWarehouseService.decreaseTrashFromWasteBankWarehouse(
+        WasteBankWarehouse.builder()
+            .wasteBankWarehouseId(
+               new WasteBankWarehouseId(
+                   wasteBankEntity.getUserId(),
+                   trashCategoryEntity.getTrashCategoryId()
+               )
+            )
+            .build(),
+        shipment
+    );
 
     return ShipmentTransformer.transformEntityToModel(
         shipmentRepository.save(shipmentEntity)
@@ -77,6 +100,19 @@ public class ShipmentService {
   }
 
   @Transactional
+  public Shipment markShipmentAsDone(String shipmentId) {
+
+    ShipmentEntity shipmentEntity = shipmentRepository.findById(UUID.fromString(shipmentId))
+        .orElseThrow(() -> new EntityNotFoundException("WasteBank not found"));
+
+    shipmentEntity.setStatus(ShipmentStatus.SUDAH_SAMPAI_TUJUAN);
+
+    return ShipmentTransformer.transformEntityToModel(
+        shipmentRepository.save(shipmentEntity)
+    );
+  }
+
+  @Transactional
   public Shipment update(Shipment shipment) {
 
     if (!shipmentRepository.existsById(UUID.fromString(shipment.getShipmentId()))) {
@@ -87,10 +123,14 @@ public class ShipmentService {
         .orElseThrow(() -> new EntityNotFoundException("WasteBank not found"));
     CompanyEntity companyEntity = companyRepository.findById(UUID.fromString(shipment.getDestinationCompany().getUserId()))
         .orElseThrow(() -> new EntityNotFoundException("Company not found"));
+    TrashCategoryEntity trashCategoryEntity = trashCategoryRepository.findById(UUID.fromString(shipment.getTrashCategory().getTrashCategoryId()))
+        .orElseThrow(() -> new EntityNotFoundException("Trash Category not found"));
 
     ShipmentEntity shipmentEntity = ShipmentTransformer.transformModelToEntity(shipment);
     shipmentEntity.setWasteBank(wasteBankEntity);
     shipmentEntity.setDestinationCompany(companyEntity);
+    shipmentEntity.setTrashCategoryEntity(trashCategoryEntity);
+    shipmentEntity.setStatus(shipment.getStatus());
 
 
     return ShipmentTransformer.transformEntityToModel(

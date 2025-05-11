@@ -20,6 +20,7 @@ CREATE SCHEMA IF NOT EXISTS "gotrash";
 -- 13. exchanges
 -- 14. notifications
 -- 15. shipments
+-- 16. waste_bank_warehouses
 
 -- 1. USERS TABLE
 CREATE TABLE gotrash.users (
@@ -128,7 +129,7 @@ CREATE TABLE gotrash.trash_histories (
   user_id UUID NOT NULL,
   trash_id UUID NOT NULL,
   trash_bin_id UUID NOT NULL,
-  weight NUMERIC (20, 2) NOT NULL,
+  weight NUMERIC (19, 2) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_trash_history_user FOREIGN KEY (user_id)
@@ -210,18 +211,44 @@ CREATE TABLE gotrash.notifications (
 
 -- 15. SHIPMENTS TABLE
 CREATE TABLE gotrash.shipments (
-    shipment_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    shipment_id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     waste_bank_id UUID NOT NULL,
-    destination_company_id UUID NOT NULL,
-    category TEXT NOT NULL CHECK (category IN ('PLASTIC', 'METAL', 'ORGANIC','GLASS', 'OTHERS')),
-    weight DOUBLE PRECISION NOT NULL,
-    price DOUBLE PRECISION NOT NULL,
-    status VARCHAR(50) NOT NULL CHECK (status IN ('WAITING_CONFIRMATION','CONFIRMED','RECEIVED', 'PICKED_UP', 'IN_TRANSIT', 'DELIVERED','RECEIVED','CANCELLED')),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    trash_category_id UUID NOT NULL,
+    weight NUMERIC (19, 2) NOT NULL,
+    destination_company_id UUID,
+    price NUMERIC (20, 6) NOT NULL,
+    status VARCHAR(50),
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
 
-    CONSTRAINT fk_waste_bank FOREIGN KEY (waste_bank_id)
-        REFERENCES gotrash.waste_banks (user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_shipment_wastebank
+        FOREIGN KEY (waste_bank_id)
+        REFERENCES gotrash.waste_banks(user_id),
 
-    CONSTRAINT fk_destination_company FOREIGN KEY (destination_company_id)
-        REFERENCES gotrash.companies (user_id) ON DELETE CASCADE
+    CONSTRAINT fk_shipment_trashcategory
+        FOREIGN KEY (trash_category_id)
+        REFERENCES gotrash.trash_categories(trash_category_id),
+
+    CONSTRAINT fk_shipment_company
+        FOREIGN KEY (destination_company_id)
+        REFERENCES gotrash.companies(company_id)
+);
+
+-- 16. WASTE BANK WAREHOUSE TABLE
+CREATE TABLE gotrash.waste_bank_warehouses (
+    waste_bank_id UUID NOT NULL,
+    trash_category_id UUID NOT NULL,
+    total_weight NUMERIC(19, 2) NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+
+    PRIMARY KEY (waste_bank_id, trash_category_id),
+
+    CONSTRAINT fk_warehouse_wastebank
+        FOREIGN KEY (waste_bank_id)
+        REFERENCES gotrash.waste_banks(user_id),
+
+    CONSTRAINT fk_warehouse_trashcategory
+        FOREIGN KEY (trash_category_id)
+        REFERENCES gotrash.trash_categories(trash_category_id)
 );
