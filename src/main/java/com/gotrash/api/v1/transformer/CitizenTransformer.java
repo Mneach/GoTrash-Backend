@@ -2,7 +2,7 @@ package com.gotrash.api.v1.transformer;
 
 import com.gotrash.api.v1.model.Citizen;
 import com.gotrash.api.v1.model.Group;
-import com.gotrash.api.v1.model.TrashHistory;
+import com.gotrash.api.v1.model.trashhistory.TrashHistory;
 import com.gotrash.api.v1.request.CitizenRequest;
 import com.gotrash.api.v1.request.auth.RegisterCitizenRequest;
 import com.gotrash.api.v1.response.CitizenResponse;

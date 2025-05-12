@@ -1,6 +1,9 @@
 package com.gotrash.service;
 
 import com.gotrash.api.v1.model.*;
+import com.gotrash.api.v1.model.trashhistory.TrashHistory;
+import com.gotrash.api.v1.model.trashhistory.TrashHistoryIoT;
+import com.gotrash.api.v1.model.trashhistory.TrashHistoryManual;
 import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
 import com.gotrash.entity.TrashHistoryEntity;
 import com.gotrash.entity.id.WasteBankWarehouseId;
@@ -37,6 +40,7 @@ public class TrashHistoryService {
         trashHistory.setCitizen(user);
         trashHistory.setTrash(trash);
         trashHistory.setTrashBin(trashBin);
+        trashHistory.setBleId(BigInteger.valueOf(trashHistoryRepository.getTotalUser() + 1));
 
         TrashHistoryEntity trashHistoryEntity = trashHistoryRepository.save(
                 TrashHistoryTransformer.transformModelToEntity(trashHistory)
@@ -84,9 +88,9 @@ public class TrashHistoryService {
             .citizen(citizen.getUser())
             .trash(trash)
             .trashBin(trashBin)
+            .bleId(BigInteger.valueOf(trashHistoryRepository.getTotalUser() + 1))
             .weight(trashHistoryManual.getWeight())
             .build();
-
 
         TrashHistoryEntity trashHistoryEntity = trashHistoryRepository.save(
             TrashHistoryTransformer.transformModelToEntity(trashHistory)
@@ -102,11 +106,49 @@ public class TrashHistoryService {
         return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity, totalCoin);
     }
 
+    @Transactional
+    public TrashHistory storeTrashFromIoT(TrashHistoryIoT trashHistoryIoT) {
+        Citizen citizen = citizenService.findCitizenByBleId(trashHistoryIoT.getBleId());
+        Trash trash = trashService.getTrashByTrashName(trashHistoryIoT.getTrashName());
+        TrashBin trashBin = trashBinService.getTrashBinByTrashBinId(trashHistoryIoT.getTrashBinId());
+
+        TrashHistory trashHistory = TrashHistory.builder()
+            .citizen(citizen.getUser())
+            .trash(trash)
+            .trashBin(trashBin)
+            .bleId(BigInteger.valueOf(trashHistoryRepository.getTotalUser() + 1))
+            .weight(trashHistoryIoT.getWeight())
+            .build();
+
+        TrashHistoryEntity trashHistoryEntity = trashHistoryRepository.save(
+            TrashHistoryTransformer.transformModelToEntity(trashHistory)
+        );
+
+        BigInteger totalCoin = CalculatorUtil.calculateCoin(trashHistoryIoT.getWeight(), trash.getCoin());
+        BigInteger totalRating = CalculatorUtil.calculateRating(trashHistoryIoT.getWeight(), trash.getRating());
+
+        streakService.updateCitizenStreak(citizen.getUser());
+        citizenService.addCoin(citizen.getUser().getUserId(), totalCoin);
+        citizenService.addRating(citizen.getUser().getUserId(), totalRating);
+
+        return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity, totalCoin);
+    }
+
     public TrashHistory getTrashHistoryByTrashHistoryId(String trashHistoryId) {
         Optional<TrashHistoryEntity> trashHistoryEntityOptional = trashHistoryRepository.findById(UUID.fromString(trashHistoryId));
 
         if (trashHistoryEntityOptional.isEmpty()) {
             throw new EntityNotFoundException("Trash History with ID " + trashHistoryId + " Not Found");
+        }
+
+        return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntityOptional.get());
+    }
+
+    public TrashHistory getTrashHistoryByTrashHistoryBleId(BigInteger bleId) {
+        Optional<TrashHistoryEntity> trashHistoryEntityOptional = trashHistoryRepository.findByBleId(bleId);
+
+        if (trashHistoryEntityOptional.isEmpty()) {
+            throw new EntityNotFoundException("Trash History with Ble ID " + bleId + " Not Found");
         }
 
         return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntityOptional.get());
@@ -135,6 +177,7 @@ public class TrashHistoryService {
         trashHistory.setCitizen(user);
         trashHistory.setTrash(trash);
         trashHistory.setTrashBin(trashBin);
+        trashHistory.setBleId(BigInteger.valueOf(trashHistoryRepository.getTotalUser() + 1));
 
         TrashHistoryEntity trashHistoryEntity = trashHistoryRepository.save(
                 TrashHistoryTransformer.transformModelToEntity(trashHistory)

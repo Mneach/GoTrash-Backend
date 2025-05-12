@@ -1,6 +1,7 @@
 package com.gotrash.api.v1.response.streak;
 
 import com.gotrash.api.v1.model.streak.StreakTrashHistory;
+import com.gotrash.api.v1.response.TrashHistoryResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +18,5 @@ public class StreakResponse {
   private LocalDate startDate;
   private LocalDate endDate;
   private Integer totalStreak;
-  private List<StreakTrashHistoryResponse> trashHistory;
+  private List<TrashHistoryResponse> trashHistories;
 }

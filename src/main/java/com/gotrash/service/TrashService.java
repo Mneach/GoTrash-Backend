@@ -1,12 +1,10 @@
 package com.gotrash.service;
 
-import com.gotrash.api.v1.model.Notification;
 import com.gotrash.api.v1.model.Trash;
 import com.gotrash.api.v1.model.TrashCategory;
-import com.gotrash.api.v1.transformer.NotificationTransformer;
 import com.gotrash.api.v1.transformer.TrashTransformer;
-import com.gotrash.entity.NotificationEntity;
 import com.gotrash.entity.TrashEntity;
+import com.gotrash.exception.rest.BadRequestException;
 import com.gotrash.repository.TrashRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -26,6 +24,13 @@ public class TrashService {
 
     @Transactional
     public Trash save(Trash trash) {
+
+        Optional<TrashEntity> trashEntityOptional = trashRepository.findByName(trash.getName());
+
+        if (trashEntityOptional.isPresent()) {
+            throw new BadRequestException("Trash with name " + trash.getName() + " is already exists");
+        }
+
         TrashCategory trashCategory = trashCategoryService.getTrashCategoryByTrashCategoryId(
                 trash.getTrashCategory().getTrashCategoryId()
         );
@@ -48,6 +53,16 @@ public class TrashService {
 
         if (trashEntityOptional.isEmpty()) {
             throw new EntityNotFoundException("Trash with ID " + trashId + " Not Found");
+        }
+
+        return TrashTransformer.transformEntityToModel(trashEntityOptional.get());
+    }
+
+    public Trash getTrashByTrashName(String trashName) {
+        Optional<TrashEntity> trashEntityOptional = trashRepository.findByName(trashName);
+
+        if (trashEntityOptional.isEmpty()) {
+            throw new EntityNotFoundException("Trash with name " + trashName + " Not Found");
         }
 
         return TrashTransformer.transformEntityToModel(trashEntityOptional.get());

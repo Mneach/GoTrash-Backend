@@ -2,14 +2,15 @@ package com.gotrash.api.v1;
 
 import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.response.MessageResponse;
-import com.gotrash.api.v1.model.TrashCategory;
-import com.gotrash.api.v1.model.TrashHistory;
-import com.gotrash.api.v1.model.TrashHistoryManual;
-import com.gotrash.api.v1.request.TrashHistoryManualRequest;
-import com.gotrash.api.v1.request.TrashHistoryRequest;
-import com.gotrash.api.v1.response.TrashCategoryResponse;
+import com.gotrash.api.v1.model.trashhistory.TrashHistory;
+import com.gotrash.api.v1.model.trashhistory.TrashHistoryIoT;
+import com.gotrash.api.v1.model.trashhistory.TrashHistoryManual;
+import com.gotrash.api.v1.request.trashhistory.TrashHistoryIoTRequest;
+import com.gotrash.api.v1.request.trashhistory.TrashHistoryManualRequest;
+import com.gotrash.api.v1.request.trashhistory.TrashHistoryRequest;
+import com.gotrash.api.v1.response.TrashHistoryIoTResponse;
 import com.gotrash.api.v1.response.TrashHistoryResponse;
-import com.gotrash.api.v1.transformer.TrashCategoryTransformer;
+import com.gotrash.api.v1.transformer.TrashHistoryIoTTransformer;
 import com.gotrash.api.v1.transformer.TrashHistoryManualTransformer;
 import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
 import com.gotrash.service.TrashHistoryService;
@@ -17,9 +18,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -44,6 +45,22 @@ public class TrashHistoryAPI {
         TrashHistoryManual trashHistoryManual = TrashHistoryManualTransformer.transformRequestToModel(trashHistoryManualRequest);
         TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(trashHistoryService.storeTrashManually(trashHistoryManual));
         return new ApiResponse<>(HttpStatus.CREATED.value(), trashHistoryResponse);
+    }
+
+    @GetMapping("/trash-histories/iot/{ble_id}")
+    @Operation(summary = "API to get trash histories by trash history ble_id")
+    public ApiResponse<TrashHistoryResponse> storeTrashFromIoT(@PathVariable("ble_id") BigInteger bleId) {
+        TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(trashHistoryService.getTrashHistoryByTrashHistoryBleId(bleId));
+        return new ApiResponse<>(HttpStatus.CREATED.value(), trashHistoryResponse);
+    }
+
+    @PostMapping("/trash-histories/iot")
+    @Operation(summary = "API to create a new trash history from IoT")
+    public ApiResponse<TrashHistoryIoTResponse> storeTrashFromIoT(@RequestBody TrashHistoryIoTRequest trashHistoryIoTRequest) {
+        TrashHistoryIoT trashHistoryIoT = TrashHistoryIoTTransformer.transformRequestToModel(trashHistoryIoTRequest);
+        TrashHistory trashHistory = trashHistoryService.storeTrashFromIoT(trashHistoryIoT);
+        TrashHistoryIoTResponse trashHistoryIoTResponse = new TrashHistoryIoTResponse(trashHistory.getBleId());
+        return new ApiResponse<>(HttpStatus.CREATED.value(), trashHistoryIoTResponse);
     }
 
     @GetMapping("/trash-histories")

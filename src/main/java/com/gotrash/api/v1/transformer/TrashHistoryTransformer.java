@@ -2,9 +2,9 @@ package com.gotrash.api.v1.transformer;
 
 import com.gotrash.api.v1.model.Trash;
 import com.gotrash.api.v1.model.TrashBin;
-import com.gotrash.api.v1.model.TrashHistory;
+import com.gotrash.api.v1.model.trashhistory.TrashHistory;
 import com.gotrash.api.v1.model.User;
-import com.gotrash.api.v1.request.TrashHistoryRequest;
+import com.gotrash.api.v1.request.trashhistory.TrashHistoryRequest;
 import com.gotrash.api.v1.response.TrashHistoryResponse;
 import com.gotrash.entity.TrashHistoryEntity;
 
@@ -38,6 +38,7 @@ public class TrashHistoryTransformer {
                 .trash(TrashTransformer.transformEntityToModel(trashHistoryEntity.getTrash()))
                 .citizen(UserTransformer.transformEntityToModel(trashHistoryEntity.getUser()))
                 .weight(trashHistoryEntity.getWeight())
+                .bleId(trashHistoryEntity.getBleId())
                 .trashBin(TrashBinTransformer.transformEntityToModel(trashHistoryEntity.getTrashBin()))
                 .createdAt(trashHistoryEntity.getCreatedAt())
                 .updatedAt(trashHistoryEntity.getUpdatedAt())
@@ -51,6 +52,7 @@ public class TrashHistoryTransformer {
             .citizen(UserTransformer.transformEntityToModel(trashHistoryEntity.getUser()))
             .trashBin(TrashBinTransformer.transformEntityToModel(trashHistoryEntity.getTrashBin()))
             .weight(trashHistoryEntity.getWeight())
+            .bleId(trashHistoryEntity.getBleId())
             .totalCoin(totalCoin)
             .createdAt(trashHistoryEntity.getCreatedAt())
             .updatedAt(trashHistoryEntity.getUpdatedAt())
@@ -63,6 +65,7 @@ public class TrashHistoryTransformer {
                 .trash(TrashTransformer.transformModelToEntity(trashHistory.getTrash()))
                 .user(UserTransformer.transformModelToEntity(trashHistory.getCitizen()))
                 .trashBin(TrashBinTransformer.transformModelToEntity(trashHistory.getTrashBin()))
+                .bleId(trashHistory.getBleId())
                 .weight(trashHistory.getWeight())
                 .build();
     }
@@ -74,6 +77,7 @@ public class TrashHistoryTransformer {
                 .citizen(UserTransformer.transformModelToResponse(trashHistory.getCitizen()))
                 .trashBin(TrashBinTransformer.transformModelToResponse(trashHistory.getTrashBin()))
                 .weight(trashHistory.getWeight())
+                .bleId(trashHistory.getBleId())
                 .totalCoin(trashHistory.getTotalCoin())
                 .createdAt(trashHistory.getCreatedAt())
                 .updatedAt(trashHistory.getUpdatedAt())

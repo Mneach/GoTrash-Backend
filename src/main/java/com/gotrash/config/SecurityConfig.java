@@ -52,7 +52,8 @@ public class SecurityConfig {
       "/api/v1/swagger-ui/**",
       "/swagger-ui.html",
       "/images/*",
-      "/images/**"
+      "/images/**",
+      "api/v1/trash-categories/iot"
   };
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;

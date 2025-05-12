@@ -24,6 +24,7 @@ public class TrashHistoryResponse {
   private TrashBinResponse trashBin;
   private BigDecimal weight;
   private BigInteger totalCoin;
+  private BigInteger bleId;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

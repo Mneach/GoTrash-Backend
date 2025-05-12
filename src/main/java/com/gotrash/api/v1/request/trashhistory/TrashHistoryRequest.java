@@ -1,4 +1,4 @@
-package com.gotrash.api.v1.request;
+package com.gotrash.api.v1.request.trashhistory;
 
 import com.gotrash.entity.UserEntity;
 import jakarta.persistence.*;

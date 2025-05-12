@@ -11,9 +11,10 @@ public class StreakTransformer {
         .startDate(streak.getStartDate())
         .endDate(streak.getEndDate())
         .totalStreak(streak.getTotalStreak())
-        .trashHistory(
-            streak.getTrashHistory().stream()
-                .map(StreakTrashHistoryTransformer::transformModelToResponse)
+        .trashHistories(
+            streak.getTrashHistories()
+                .stream()
+                .map(TrashHistoryTransformer::transformModelToResponse)
                 .toList()
         )
         .build();

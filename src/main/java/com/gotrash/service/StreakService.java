@@ -1,27 +1,22 @@
 package com.gotrash.service;
 
 import com.gotrash.api.v1.model.Citizen;
-import com.gotrash.api.v1.model.TrashHistory;
+import com.gotrash.api.v1.model.trashhistory.TrashHistory;
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.model.streak.Streak;
-import com.gotrash.api.v1.model.streak.StreakTrashHistory;
 import com.gotrash.api.v1.transformer.CitizenTransformer;
 import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
 import com.gotrash.entity.CitizenEntity;
 import com.gotrash.entity.TrashHistoryEntity;
 import com.gotrash.repository.CitizenRepository;
 import com.gotrash.repository.TrashHistoryRepository;
-import com.gotrash.util.CalculatorUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -95,30 +90,11 @@ public class StreakService {
         .map(TrashHistoryTransformer::transformEntityToModel)
         .toList();
 
-    List<StreakTrashHistory> streakTrashHistories = new ArrayList<>();
-
-    for (TrashHistory trashHistory : trashHistories) {
-      String trashName = trashHistory.getTrash().getName();
-      String trashCategory = trashHistory.getTrash().getTrashCategory().getName();
-      BigDecimal weight = trashHistory.getWeight();
-      BigInteger baseCoin = trashHistory.getTrash().getCoin();
-      BigInteger totalCoin = CalculatorUtil.calculateCoin(weight, baseCoin);
-
-      StreakTrashHistory streakTrashHistory = StreakTrashHistory.builder()
-          .name(trashName)
-          .category(trashCategory)
-          .weight(weight)
-          .totalCoin(totalCoin)
-          .build();
-
-      streakTrashHistories.add(streakTrashHistory);
-    }
-
     return Streak.builder()
         .startDate(startDate)
         .endDate(endDate)
         .totalStreak(citizen.getCurrentStreak())
-        .trashHistory(streakTrashHistories)
+        .trashHistories(trashHistories)
         .build();
   }
 }

@@ -1,5 +1,8 @@
-package com.gotrash.api.v1.model;
+package com.gotrash.api.v1.model.trashhistory;
 
+import com.gotrash.api.v1.model.Trash;
+import com.gotrash.api.v1.model.TrashBin;
+import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.response.TrashResponse;
 import com.gotrash.entity.UserEntity;
 import lombok.AllArgsConstructor;
@@ -22,6 +25,7 @@ public class TrashHistory {
     private TrashBin trashBin;
     private BigDecimal weight;
     private BigInteger totalCoin;
+    private BigInteger bleId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

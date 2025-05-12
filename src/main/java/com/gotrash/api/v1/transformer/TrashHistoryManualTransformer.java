@@ -1,7 +1,7 @@
 package com.gotrash.api.v1.transformer;
 
-import com.gotrash.api.v1.model.TrashHistoryManual;
-import com.gotrash.api.v1.request.TrashHistoryManualRequest;
+import com.gotrash.api.v1.model.trashhistory.TrashHistoryManual;
+import com.gotrash.api.v1.request.trashhistory.TrashHistoryManualRequest;
 
 public class TrashHistoryManualTransformer {
 

@@ -130,6 +130,7 @@ CREATE TABLE gotrash.trash_histories (
   trash_id UUID NOT NULL,
   trash_bin_id UUID NOT NULL,
   weight NUMERIC (19, 2) NOT NULL,
+  ble_id NUMERIC NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_trash_history_user FOREIGN KEY (user_id)

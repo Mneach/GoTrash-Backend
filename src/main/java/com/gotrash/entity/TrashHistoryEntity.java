@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -40,6 +41,10 @@ public class TrashHistoryEntity {
   @NotNull
   @Column(precision = 19, scale = 2)
   private BigDecimal weight;
+
+  @NotNull
+  @Column
+  private BigInteger bleId;
 
   @CreationTimestamp
   @Column(updatable = false)
