@@ -47,7 +47,7 @@ public class AuthService {
         .build();
 
     citizen.setImageUrl("https://www.twtf.org.uk/wp-content/uploads/2024/01/dummy-image.jpg");
-    citizen.setPhoneNumber("0851235421");
+    citizen.setPhoneNumber(totalUser.toString());
     citizen.setCurrentStreak(0);
     citizen.setLongestStreak(0);
     citizen.setRating(BigInteger.valueOf(0));
