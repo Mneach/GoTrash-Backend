@@ -112,9 +112,13 @@ public class CitizenAPI {
 
   @GetMapping("/citizens/{user_id}/streak")
   @Operation(summary = "API to get citizen streak by user id")
-  public ApiResponse<StreakResponse> getCitizenStreak(@PathVariable("user_id") String userId) {
-    Streak streak = streakService.getStreak(userId);
-    StreakResponse streakResponse = StreakTransformer.transformModelToResponse(streak);
-    return new ApiResponse<>(HttpStatus.OK.value(), streakResponse);
+  public ApiResponse<List<StreakResponse>> getCitizenStreak(@PathVariable("user_id") String userId) {
+    List<Streak> streaks = streakService.getDailyStreaks(userId);
+
+    List<StreakResponse> streakResponses = streaks.stream()
+        .map(StreakTransformer::transformModelToResponse)
+        .toList();
+
+    return new ApiResponse<>(HttpStatus.OK.value(), streakResponses);
   }
 }

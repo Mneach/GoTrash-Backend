@@ -75,7 +75,7 @@ CREATE TABLE gotrash.waste_banks (
     REFERENCES gotrash.users(user_id)
 );
 
--- 5. WASTE_BANKS TABLE
+-- 5. COMPANIES TABLE
 CREATE TABLE gotrash.companies (
   user_id UUID PRIMARY KEY,
   name TEXT NOT NULL UNIQUE,
@@ -231,7 +231,7 @@ CREATE TABLE gotrash.shipments (
 
     CONSTRAINT fk_shipment_company
         FOREIGN KEY (destination_company_id)
-        REFERENCES gotrash.companies(company_id)
+        REFERENCES gotrash.companies(user_id)
 );
 
 -- 16. WASTE BANK WAREHOUSE TABLE
