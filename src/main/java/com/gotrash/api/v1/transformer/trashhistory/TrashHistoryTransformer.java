@@ -1,11 +1,14 @@
-package com.gotrash.api.v1.transformer;
+package com.gotrash.api.v1.transformer.trashhistory;
 
 import com.gotrash.api.v1.model.Trash;
 import com.gotrash.api.v1.model.TrashBin;
 import com.gotrash.api.v1.model.trashhistory.TrashHistory;
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.request.trashhistory.TrashHistoryRequest;
-import com.gotrash.api.v1.response.TrashHistoryResponse;
+import com.gotrash.api.v1.response.trashhistory.TrashHistoryResponse;
+import com.gotrash.api.v1.transformer.TrashBinTransformer;
+import com.gotrash.api.v1.transformer.TrashTransformer;
+import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.entity.TrashHistoryEntity;
 
 import java.math.BigInteger;
@@ -44,6 +47,8 @@ public class TrashHistoryTransformer {
                 .updatedAt(trashHistoryEntity.getUpdatedAt())
                 .build();
     }
+
+
 
     public static TrashHistory transformEntityToModel(TrashHistoryEntity trashHistoryEntity, BigInteger totalCoin) {
         return TrashHistory.builder()

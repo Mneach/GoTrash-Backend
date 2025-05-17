@@ -22,6 +22,8 @@ public class WasteBankRequest {
   private Double longitude;
   private MultipartFile imageFile;
   private String address;
+  private String phoneNumber;
+  private String operationalHours;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

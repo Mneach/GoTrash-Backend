@@ -1,7 +1,6 @@
 package com.gotrash.api.v1.response.streak;
 
-import com.gotrash.api.v1.model.streak.StreakTrashHistory;
-import com.gotrash.api.v1.response.TrashHistoryResponse;
+import com.gotrash.api.v1.response.trashhistory.TrashHistoryResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

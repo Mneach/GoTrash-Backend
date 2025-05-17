@@ -1,4 +1,4 @@
-package com.gotrash.api.v1.response;
+package com.gotrash.api.v1.response.trashhistory;
 
 
 import lombok.AllArgsConstructor;

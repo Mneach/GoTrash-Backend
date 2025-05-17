@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.gotrash.api.v1.response.TrashHistoryResponse;
-import com.gotrash.api.v1.response.GroupResponse;
+import com.gotrash.api.v1.response.trashhistory.TrashHistoryResponse;
 
 import java.math.BigInteger;
 import java.time.LocalDate;

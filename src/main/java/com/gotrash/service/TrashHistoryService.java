@@ -4,7 +4,11 @@ import com.gotrash.api.v1.model.*;
 import com.gotrash.api.v1.model.trashhistory.TrashHistory;
 import com.gotrash.api.v1.model.trashhistory.TrashHistoryIoT;
 import com.gotrash.api.v1.model.trashhistory.TrashHistoryManual;
-import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
+import com.gotrash.api.v1.model.trashhistory.TrashHistoryWasteBank;
+import com.gotrash.api.v1.transformer.TrashBinTransformer;
+import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryTransformer;
+import com.gotrash.api.v1.transformer.TrashTransformer;
+import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryWasteBankTransformer;
 import com.gotrash.entity.TrashHistoryEntity;
 import com.gotrash.entity.id.WasteBankWarehouseId;
 import com.gotrash.repository.TrashHistoryRepository;
@@ -15,9 +19,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -196,14 +200,36 @@ public class TrashHistoryService {
     }
 
     @Transactional
-    public List<TrashHistory> getTrashHistoriesByWasteBankId(String wasteBankId) {
+    public List<TrashHistoryWasteBank> getTrashHistoriesByWasteBankId(String wasteBankId) {
 
         List<TrashHistoryEntity> trashHistoryEntities = trashHistoryRepository.findAllByWasteBankId(
             UUID.fromString(wasteBankId)
         );
 
-        return trashHistoryEntities.stream()
+        List<TrashHistory> trashHistories = trashHistoryEntities
+            .stream()
             .map(TrashHistoryTransformer::transformEntityToModel)
+            .toList();
+
+        List<UUID> citizenIds = trashHistoryEntities.stream()
+            .map(trashHistoryEntity -> trashHistoryEntity.getUser().getUserId())
+            .toList();
+
+        List<Citizen> citizens = citizenService.getCitizensByIds(citizenIds);
+
+        Map<String, Citizen> citizenMap = citizens.stream()
+            .collect(Collectors.toMap(
+                Citizen::getUserId,
+                Function.identity()
+            ));
+
+
+        return trashHistories
+            .stream()
+            .map(trashHistory -> TrashHistoryWasteBankTransformer.transformToModel(
+                trashHistory,
+                citizenMap.get(trashHistory.getCitizen().getUserId())
+            ))
             .toList();
     }
 }

@@ -60,6 +60,14 @@ public class CitizenService {
         .toList();
   }
 
+  public List<Citizen> getCitizensByIds(List<UUID> citizenIds) {
+    List<CitizenEntity> citizenEntities = citizenRepository.findAllById(citizenIds);
+
+    return citizenEntities.stream()
+        .map(CitizenTransformer::transformEntityToModel)
+        .toList();
+  }
+
   public Citizen getCitizenByUserId(String userId) {
     Optional<CitizenEntity> citizenEntityOptional = citizenRepository.findByUser_UserId(UUID.fromString(userId));
 
