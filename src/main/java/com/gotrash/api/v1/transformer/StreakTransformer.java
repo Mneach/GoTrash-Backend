@@ -2,7 +2,7 @@ package com.gotrash.api.v1.transformer;
 
 import com.gotrash.api.v1.model.streak.Streak;
 import com.gotrash.api.v1.response.streak.StreakResponse;
-import com.gotrash.api.v1.response.streak.StreakTrashHistoryResponse;
+import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryTransformer;
 
 public class StreakTransformer {
 

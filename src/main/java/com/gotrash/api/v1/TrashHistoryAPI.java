@@ -5,14 +5,17 @@ import com.gotrash.api.response.MessageResponse;
 import com.gotrash.api.v1.model.trashhistory.TrashHistory;
 import com.gotrash.api.v1.model.trashhistory.TrashHistoryIoT;
 import com.gotrash.api.v1.model.trashhistory.TrashHistoryManual;
+import com.gotrash.api.v1.model.trashhistory.TrashHistoryWasteBank;
 import com.gotrash.api.v1.request.trashhistory.TrashHistoryIoTRequest;
 import com.gotrash.api.v1.request.trashhistory.TrashHistoryManualRequest;
 import com.gotrash.api.v1.request.trashhistory.TrashHistoryRequest;
-import com.gotrash.api.v1.response.TrashHistoryIoTResponse;
-import com.gotrash.api.v1.response.TrashHistoryResponse;
-import com.gotrash.api.v1.transformer.TrashHistoryIoTTransformer;
-import com.gotrash.api.v1.transformer.TrashHistoryManualTransformer;
-import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
+import com.gotrash.api.v1.response.trashhistory.TrashHistoryIoTResponse;
+import com.gotrash.api.v1.response.trashhistory.TrashHistoryResponse;
+import com.gotrash.api.v1.response.trashhistory.TrashHistoryWasteBankResponse;
+import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryIoTTransformer;
+import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryManualTransformer;
+import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryTransformer;
+import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryWasteBankTransformer;
 import com.gotrash.service.TrashHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -84,12 +87,12 @@ public class TrashHistoryAPI {
 
     @GetMapping("/trash-histories/wastebank/{wastebank_id}")
     @Operation(summary = "API to get trash history by wastebank id")
-    public ApiResponse<List<TrashHistoryResponse>> getTrashHistoriesByWasteBankId(@PathVariable("wastebank_id") String wasteBankId) {
-        List<TrashHistory> trashHistories = trashHistoryService.getTrashHistoriesByWasteBankId(wasteBankId);
-        List<TrashHistoryResponse> trashHistoryResponses = trashHistories.stream()
-            .map(TrashHistoryTransformer::transformModelToResponse)
+    public ApiResponse<List<TrashHistoryWasteBankResponse>> getTrashHistoriesByWasteBankId(@PathVariable("wastebank_id") String wasteBankId) {
+        List<TrashHistoryWasteBank> trashHistoryWasteBanks = trashHistoryService.getTrashHistoriesByWasteBankId(wasteBankId);
+        List<TrashHistoryWasteBankResponse> trashHistoryWasteBankResponses = trashHistoryWasteBanks.stream()
+            .map(TrashHistoryWasteBankTransformer::transformModelToResponse)
             .toList();
-        return new ApiResponse<>(HttpStatus.OK.value(), trashHistoryResponses);
+        return new ApiResponse<>(HttpStatus.OK.value(), trashHistoryWasteBankResponses);
     }
 
 

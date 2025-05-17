@@ -54,6 +54,12 @@ public class WasteBankEntity {
   @NotNull
   private String imageUrl;
 
+  @NotNull
+  private String phoneNumber;
+
+  @NotNull
+  private String operationalHours;
+
   @CreationTimestamp
   @Column(updatable = false)
   private LocalDateTime createdAt;

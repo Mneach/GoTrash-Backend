@@ -1,4 +1,4 @@
-package com.gotrash.api.v1.transformer;
+package com.gotrash.api.v1.transformer.trashhistory;
 
 import com.gotrash.api.v1.model.trashhistory.TrashHistoryIoT;
 import com.gotrash.api.v1.model.trashhistory.TrashHistoryManual;
@@ -9,10 +9,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class TrashHistoryIoTTransformer {
-  private String trashName;
-  private BigInteger bleId;
-  private String trashBinId;
-  private BigDecimal weight;
   public static TrashHistoryIoT transformRequestToModel(TrashHistoryIoTRequest trashHistoryIoTRequest) {
     return TrashHistoryIoT.builder()
         .trashName(trashHistoryIoTRequest.getTrashName())

@@ -1,4 +1,4 @@
-package com.gotrash.api.v1.transformer;
+package com.gotrash.api.v1.transformer.trashhistory;
 
 import com.gotrash.api.v1.model.trashhistory.TrashHistoryManual;
 import com.gotrash.api.v1.request.trashhistory.TrashHistoryManualRequest;

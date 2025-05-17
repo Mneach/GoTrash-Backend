@@ -23,6 +23,8 @@ public class WasteBankResponse {
   private Double longitude;
   private String address;
   private String imageUrl;
+  private String phoneNumber;
+  private String operationalHours;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private List<WasteBankWarehouseResponse> wasteBankWarehouses;

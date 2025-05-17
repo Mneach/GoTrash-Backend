@@ -1,11 +1,9 @@
 package com.gotrash.service;
 
-import com.gotrash.api.v1.model.Citizen;
 import com.gotrash.api.v1.model.trashhistory.TrashHistory;
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.model.streak.Streak;
-import com.gotrash.api.v1.transformer.CitizenTransformer;
-import com.gotrash.api.v1.transformer.TrashHistoryTransformer;
+import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryTransformer;
 import com.gotrash.entity.CitizenEntity;
 import com.gotrash.entity.TrashHistoryEntity;
 import com.gotrash.repository.CitizenRepository;
@@ -16,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 

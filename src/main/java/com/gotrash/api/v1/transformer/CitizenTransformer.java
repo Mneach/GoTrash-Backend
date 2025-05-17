@@ -6,6 +6,7 @@ import com.gotrash.api.v1.model.trashhistory.TrashHistory;
 import com.gotrash.api.v1.request.CitizenRequest;
 import com.gotrash.api.v1.request.auth.RegisterCitizenRequest;
 import com.gotrash.api.v1.response.CitizenResponse;
+import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryTransformer;
 import com.gotrash.entity.CitizenEntity;
 
 import java.util.List;

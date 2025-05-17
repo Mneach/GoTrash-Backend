@@ -2,7 +2,6 @@ package com.gotrash.service;
 
 import com.gotrash.api.v1.model.Shipment;
 import com.gotrash.api.v1.model.WasteBankWarehouse;
-import com.gotrash.api.v1.transformer.WasteBankTransformer;
 import com.gotrash.api.v1.transformer.WasteBankWarehouseTransformer;
 import com.gotrash.entity.TrashCategoryEntity;
 import com.gotrash.entity.WasteBankEntity;

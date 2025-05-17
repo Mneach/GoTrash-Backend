@@ -69,6 +69,8 @@ CREATE TABLE gotrash.waste_banks (
   longitude DOUBLE PRECISION NOT NULL,
   address TEXT NOT NULL,
   image_url TEXT NOT NULL,
+  phone_number TEXT NOT NULL,
+  operational_hours TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_waste_bank_user FOREIGN KEY (user_id)
@@ -134,7 +136,7 @@ CREATE TABLE gotrash.trash_histories (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_trash_history_user FOREIGN KEY (user_id)
-    REFERENCES gotrash.users(user_id),
+    REFERENCES gotrash.citizens(user_id),
   CONSTRAINT fk_trash_history_trash FOREIGN KEY (trash_id)
     REFERENCES gotrash.trashes(trash_id),
   CONSTRAINT fk_trash_history_bin FOREIGN KEY (trash_bin_id)

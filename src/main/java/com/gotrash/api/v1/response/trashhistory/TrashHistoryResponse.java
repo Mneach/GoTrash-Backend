@@ -1,8 +1,11 @@
-package com.gotrash.api.v1.response;
+package com.gotrash.api.v1.response.trashhistory;
 
 import com.gotrash.api.v1.model.Trash;
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.request.TrashBinRequest;
+import com.gotrash.api.v1.response.TrashBinResponse;
+import com.gotrash.api.v1.response.TrashResponse;
+import com.gotrash.api.v1.response.UserResponse;
 import com.gotrash.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

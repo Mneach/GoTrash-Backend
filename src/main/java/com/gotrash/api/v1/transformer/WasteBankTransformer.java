@@ -22,6 +22,8 @@ public class WasteBankTransformer {
         .latitude(wasteBankRequest.getLatitude())
         .longitude(wasteBankRequest.getLongitude())
         .address(wasteBankRequest.getAddress())
+        .phoneNumber(wasteBankRequest.getPhoneNumber())
+        .operationalHours(wasteBankRequest.getOperationalHours())
         .build();
   }
 
@@ -34,6 +36,8 @@ public class WasteBankTransformer {
         .latitude(wasteBankRequest.getLatitude())
         .longitude(wasteBankRequest.getLongitude())
         .address(wasteBankRequest.getAddress())
+        .phoneNumber(wasteBankRequest.getPhoneNumber())
+        .operationalHours(wasteBankRequest.getOperationalHours())
         .build();
   }
 
@@ -46,6 +50,8 @@ public class WasteBankTransformer {
         .latitude(registerWasteBankRequest.getLatitude())
         .longitude(registerWasteBankRequest.getLongitude())
         .address(registerWasteBankRequest.getAddress())
+        .phoneNumber(registerWasteBankRequest.getPhoneNumber())
+        .operationalHours(registerWasteBankRequest.getOperationalHours())
         .build();
   }
 
@@ -60,6 +66,8 @@ public class WasteBankTransformer {
         .longitude(wasteBankEntity.getLongitude())
         .address(wasteBankEntity.getAddress())
         .imageUrl(wasteBankEntity.getImageUrl())
+        .phoneNumber(wasteBankEntity.getPhoneNumber())
+        .operationalHours(wasteBankEntity.getOperationalHours())
         .createdAt(wasteBankEntity.getCreatedAt())
         .updatedAt(wasteBankEntity.getUpdatedAt())
         .build();
@@ -74,6 +82,8 @@ public class WasteBankTransformer {
         .longitude(wasteBank.getLongitude())
         .address(wasteBank.getAddress())
         .imageUrl(wasteBank.getImageUrl())
+        .phoneNumber(wasteBank.getPhoneNumber())
+        .operationalHours(wasteBank.getOperationalHours())
         .build();
   }
 
@@ -87,6 +97,8 @@ public class WasteBankTransformer {
         .longitude(wasteBank.getLongitude())
         .address(wasteBank.getAddress())
         .imageUrl(wasteBank.getImageUrl())
+        .phoneNumber(wasteBank.getPhoneNumber())
+        .operationalHours(wasteBank.getOperationalHours())
         .createdAt(wasteBank.getCreatedAt())
         .updatedAt(wasteBank.getUpdatedAt())
         .build();
@@ -102,6 +114,8 @@ public class WasteBankTransformer {
         .longitude(wasteBank.getLongitude())
         .address(wasteBank.getAddress())
         .imageUrl(wasteBank.getImageUrl())
+        .phoneNumber(wasteBank.getPhoneNumber())
+        .operationalHours(wasteBank.getOperationalHours())
         .wasteBankWarehouses(
             wasteBankWarehouses.stream()
                 .map(WasteBankWarehouseTransformer::transformModelToResponse)

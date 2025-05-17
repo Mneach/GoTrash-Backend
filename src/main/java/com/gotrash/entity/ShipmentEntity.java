@@ -31,7 +31,7 @@ public class ShipmentEntity {
   private WasteBankEntity wasteBank;
 
   @NotNull
-  @OneToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "trash_category_id", nullable = false)
   private TrashCategoryEntity trashCategory;
 
