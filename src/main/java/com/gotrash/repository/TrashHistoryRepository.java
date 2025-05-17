@@ -17,7 +17,6 @@ import java.util.UUID;
 @Repository
 public interface TrashHistoryRepository extends JpaRepository<TrashHistoryEntity, UUID> {
     List<TrashHistoryEntity> findAllByUser_UserId(UUID userId);
-    List<TrashHistoryEntity> findAllByUser_UserIdAndCreatedAtBetween(UUID citizenId, LocalDateTime startDate, LocalDateTime endDate);
 
     Optional<TrashHistoryEntity> findByBleId(BigInteger bleId);
 

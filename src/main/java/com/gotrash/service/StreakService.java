@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -63,38 +63,69 @@ public class StreakService {
     citizenRepository.save(citizenEntity);
   }
 
-  public Streak getStreak(String citizenId) {
-    CitizenEntity citizenEntity = citizenRepository.findById(UUID.fromString(citizenId))
+  public List<Streak> getDailyStreaks(String citizenId) {
+    UUID citizenUUID = UUID.fromString(citizenId);
+
+    CitizenEntity citizenEntity = citizenRepository.findById(citizenUUID)
         .orElseThrow(() -> new EntityNotFoundException("Citizen not found"));
 
-    Citizen citizen = CitizenTransformer.transformEntityToModel(citizenEntity);
+    // Step 1: Get all trash history
+    List<TrashHistoryEntity> allTrashHistory = trashHistoryRepository.findAllByUser_UserId(citizenUUID);
 
-    // Calculate startDate based on lastTrashDate and currentStreak
-    LocalDate endDate = citizenEntity.getLastTrashDate();
-    if (endDate == null) {
-      throw new IllegalStateException("Citizen has no trash activity yet");
+    if (allTrashHistory.isEmpty()) {
+      return Collections.emptyList();
     }
 
-    LocalDate startDate = endDate.minusDays(citizen.getCurrentStreak() - 1);
+    // Step 2: Group by date
+    Map<LocalDate, List<TrashHistoryEntity>> trashGroupedByDate = allTrashHistory.stream()
+        .collect(Collectors.groupingBy(e -> e.getCreatedAt().toLocalDate()));
 
-    LocalDateTime startDateTime = startDate.atStartOfDay();
-    LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
+    // Step 3: Get range from first date to last date in history
+    LocalDate firstDate = allTrashHistory.stream()
+        .map(e -> e.getCreatedAt().toLocalDate())
+        .min(LocalDate::compareTo)
+        .orElseThrow();
 
+    LocalDate lastDate = allTrashHistory.stream()
+        .map(e -> e.getCreatedAt().toLocalDate())
+        .max(LocalDate::compareTo)
+        .orElseThrow();
 
-    // Get all trash in that range
-    List<TrashHistoryEntity> trashHistoryEntities = trashHistoryRepository.findAllByUser_UserIdAndCreatedAtBetween(
-        UUID.fromString(citizenId), startDateTime, endDateTime
-    );
+    // Step 4: Build streaks per day, backwards
+    List<Streak> streaks = new ArrayList<>();
+    boolean brokenStreak = false;
+    LocalDate currentDate = lastDate;
 
-    List<TrashHistory> trashHistories = trashHistoryEntities.stream()
-        .map(TrashHistoryTransformer::transformEntityToModel)
-        .toList();
+    while (!currentDate.isBefore(firstDate)) {
+      List<TrashHistoryEntity> trashOnDate = trashGroupedByDate.getOrDefault(currentDate, Collections.emptyList());
 
-    return Streak.builder()
-        .startDate(startDate)
-        .endDate(endDate)
-        .totalStreak(citizen.getCurrentStreak())
-        .trashHistories(trashHistories)
-        .build();
+      int totalStreak = 0;
+      List<TrashHistory> transformed = trashOnDate.stream()
+          .map(TrashHistoryTransformer::transformEntityToModel)
+          .toList();
+
+      if (!brokenStreak) {
+        if (!trashOnDate.isEmpty()) {
+          totalStreak = 1;
+        } else {
+          brokenStreak = true;
+        }
+      }
+
+      // Prepend to keep chronological order
+      streaks.add(0, Streak.builder()
+          .startDate(currentDate)
+          .endDate(currentDate)
+          .totalStreak(totalStreak)
+          .trashHistories(transformed)
+          .build());
+
+      currentDate = currentDate.minusDays(1);
+    }
+
+    return streaks;
   }
+
+
+
 }
