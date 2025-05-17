@@ -214,17 +214,17 @@ CREATE TABLE gotrash.notifications (
 -- 15. SHIPMENTS TABLE
 CREATE TABLE gotrash.shipments (
     shipment_id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    waste_bank_id UUID NOT NULL,
+    waste_bank_user_id UUID NOT NULL,
     trash_category_id UUID NOT NULL,
     weight NUMERIC (19, 2) NOT NULL,
-    destination_company_id UUID,
+    destination_company_user_id UUID,
     price NUMERIC (20, 6) NOT NULL,
     status VARCHAR(50),
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
 
     CONSTRAINT fk_shipment_wastebank
-        FOREIGN KEY (waste_bank_id)
+        FOREIGN KEY (waste_bank_user_id)
         REFERENCES gotrash.waste_banks(user_id),
 
     CONSTRAINT fk_shipment_trashcategory
@@ -232,7 +232,7 @@ CREATE TABLE gotrash.shipments (
         REFERENCES gotrash.trash_categories(trash_category_id),
 
     CONSTRAINT fk_shipment_company
-        FOREIGN KEY (destination_company_id)
+        FOREIGN KEY (destination_company_user_id)
         REFERENCES gotrash.companies(user_id)
 );
 
