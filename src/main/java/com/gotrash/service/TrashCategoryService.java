@@ -68,6 +68,7 @@ public class TrashCategoryService {
             .orElseThrow(() -> new EntityNotFoundException("Trash Category with ID " + trashCategory.getTrashCategoryId() + " not found"));
 
         trashCategoryEntity.setName(trashCategory.getName() != null ? trashCategory.getName() : trashCategoryEntity.getName());
+        trashCategoryEntity.setPrice(trashCategory.getPrice() != null ? trashCategory.getPrice() : trashCategoryEntity.getPrice());
         trashCategoryEntity.setUpdatedAt(LocalDateTime.now());
 
         if (imageFile != null && !imageFile.isEmpty()) {

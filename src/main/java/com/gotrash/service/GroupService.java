@@ -17,6 +17,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import javax.swing.text.html.Option;
 
 @Service
 @RequiredArgsConstructor
@@ -122,7 +123,7 @@ public class GroupService {
   }
 
   public List<Group> getGroupsFilterByUserId(String userId) {
-    List<GroupEntity> groupEntities = groupRepository.findAllByOwner_UserId(UUID.fromString(userId));
+    List<GroupEntity> groupEntities = groupRepository.findGroupsByUserId(UUID.fromString(userId));
 
     return groupEntities.stream()
         .map(GroupTransformer::transformEntityToModel)
@@ -135,17 +136,15 @@ public class GroupService {
     GroupEntity groupEntity = groupRepository.findById(UUID.fromString(group.getGroupId()))
         .orElseThrow(() -> new EntityNotFoundException("Group With ID " + group.getGroupId() + " Not Found"));
 
-    if (group.getOwner() != null && group.getOwner().getUserId() != null) {
-      group.setOwner(citizenService.getCitizenByUserId(group.getOwner().getUserId()));
-    }
+    CitizenEntity citizenEntity = citizenRepository.findById(UUID.fromString(group.getOwner().getUserId()))
+        .orElseThrow(() -> new RuntimeException("Citizen not found"));
 
-    if (group.getReward() != null && group.getReward().getRewardId() != null) {
-      group.setReward(rewardService.getRewardByRewardId(group.getReward().getRewardId()));
-    }
+    RewardEntity rewardEntity = rewardRepository.findById(UUID.fromString(group.getReward().getRewardId()))
+        .orElseThrow(() -> new RuntimeException("Reward not found"));
 
     groupEntity.setName(group.getName());
-    groupEntity.setReward(RewardTransformer.transformModelToEntity(group.getReward()));
-    groupEntity.setOwner(CitizenTransformer.transformModelToEntity(group.getOwner()));
+    groupEntity.setReward(rewardEntity);
+    groupEntity.setOwner(citizenEntity);
     groupEntity.setCoin(group.getCoin());
 
     return GroupTransformer.transformEntityToModel(

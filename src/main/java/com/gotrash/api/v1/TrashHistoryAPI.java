@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -55,6 +56,19 @@ public class TrashHistoryAPI {
     public ApiResponse<TrashHistoryResponse> storeTrashFromIoT(@PathVariable("ble_id") BigInteger bleId) {
         TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(trashHistoryService.getTrashHistoryByTrashHistoryBleId(bleId));
         return new ApiResponse<>(HttpStatus.CREATED.value(), trashHistoryResponse);
+    }
+
+    @GetMapping("/trash-histories/user/{user_id}/notify")
+    @Operation(summary = "API to notify trash history to user ")
+    public ApiResponse<TrashHistoryResponse> notifyUser(@PathVariable("user_id") String userId) {
+        TrashHistory trashHistory = trashHistoryService.notifyTrashHistoryToUser(userId);
+
+        if (Objects.equals(trashHistory.getTrashHistoryId(), "-1")) {
+            return new ApiResponse<>(HttpStatus.OK.value(), TrashHistoryResponse.builder().trashHistoryId("-1").build());
+        }
+
+        TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(trashHistory);
+        return new ApiResponse<>(HttpStatus.OK.value(), trashHistoryResponse);
     }
 
     @PostMapping("/trash-histories/iot")
