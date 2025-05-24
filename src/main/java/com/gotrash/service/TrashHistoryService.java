@@ -115,18 +115,8 @@ public class TrashHistoryService {
         return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntityOptional.get());
     }
 
-    public TrashHistory getTrashHistoryByTrashHistoryBleId(BigInteger bleId) {
-        Optional<TrashHistoryEntity> trashHistoryEntityOptional = trashHistoryRepository.findByBleId(bleId);
-
-        if (trashHistoryEntityOptional.isEmpty()) {
-            throw new EntityNotFoundException("Trash History with Ble ID " + bleId + " Not Found");
-        }
-
-        return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntityOptional.get());
-    }
-
     public List<TrashHistory> getTrashHistoryByUserId(String userId) {
-        List<TrashHistoryEntity> trashHistoryEntities = trashHistoryRepository.findAllByUser_UserId(UUID.fromString(userId));
+        List<TrashHistoryEntity> trashHistoryEntities = trashHistoryRepository.findAllByCitizen_UserId(UUID.fromString(userId));
 
         return trashHistoryEntities
                 .stream()

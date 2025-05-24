@@ -68,7 +68,7 @@ public class StreakService {
         .orElseThrow(() -> new EntityNotFoundException("Citizen not found"));
 
     // Step 1: Get all trash history
-    List<TrashHistoryEntity> allTrashHistory = trashHistoryRepository.findAllByUser_UserId(citizenUUID);
+    List<TrashHistoryEntity> allTrashHistory = trashHistoryRepository.findAllByCitizen_UserId(citizenUUID);
 
     if (allTrashHistory.isEmpty()) {
       return Collections.emptyList();

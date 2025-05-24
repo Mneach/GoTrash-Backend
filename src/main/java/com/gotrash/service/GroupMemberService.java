@@ -25,7 +25,7 @@ public class GroupMemberService {
   }
 
   public GroupMember update(GroupMember groupMember) {
-    Optional<GroupMemberEntity> groupMemberEntityOptional = groupMemberRepository.findByUser_UserIdAndGroup_GroupId(
+    Optional<GroupMemberEntity> groupMemberEntityOptional = groupMemberRepository.findByCitizen_UserIdAndGroup_GroupId(
         UUID.fromString(groupMember.getCitizen().getUserId()),
         UUID.fromString(groupMember.getGroup().getGroupId())
     );

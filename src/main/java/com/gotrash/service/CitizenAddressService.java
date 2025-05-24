@@ -57,7 +57,7 @@ public class CitizenAddressService {
   @Transactional
   public CitizenAddress update(CitizenAddress citizenAddress) {
 
-    CitizenAddressEntity citizenAddressEntity = citizenAddressRepository.findByIdAndCitizen_UserId(
+    CitizenAddressEntity citizenAddressEntity = citizenAddressRepository.findByCitizenAddressIdAndCitizen_UserId(
         UUID.fromString(citizenAddress.getCitizenAddressId()),UUID.fromString(citizenAddress.getCitizen().getUserId())
     ).orElseThrow(() -> new EntityNotFoundException("Address not found with ID: " + citizenAddress.getCitizenAddressId() + " for citizen: " + citizenAddress.getCitizen().getUserId()));
 
@@ -79,7 +79,7 @@ public class CitizenAddressService {
   @Transactional
   public CitizenAddress getCitizenAddressByCitizenIdAndAddressId(String citizenAddressId, String citizenId) {
 
-    CitizenAddressEntity citizenAddressEntity = citizenAddressRepository.findByIdAndCitizen_UserId(
+    CitizenAddressEntity citizenAddressEntity = citizenAddressRepository.findByCitizenAddressIdAndCitizen_UserId(
             UUID.fromString(citizenAddressId),UUID.fromString(citizenId)
     ).orElseThrow(() -> new EntityNotFoundException("Address not found with ID: " + citizenAddressId + " for citizen: " + citizenId));
 
@@ -90,7 +90,7 @@ public class CitizenAddressService {
 
   public void delete(String citizenId, String citizenAddressId) {
 
-    CitizenAddressEntity citizenAddressEntity = citizenAddressRepository.findByIdAndCitizen_UserId(
+    CitizenAddressEntity citizenAddressEntity = citizenAddressRepository.findByCitizenAddressIdAndCitizen_UserId(
         UUID.fromString(citizenAddressId),UUID.fromString(citizenId)
     ).orElseThrow(() -> new EntityNotFoundException("Address not found with ID: " + citizenAddressId + " for citizen: " + citizenId));
 

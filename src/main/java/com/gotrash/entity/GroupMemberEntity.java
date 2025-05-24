@@ -28,7 +28,7 @@ import java.util.UUID;
     name = "group_members",
     schema = "gotrash",
     uniqueConstraints = @UniqueConstraint(
-        columnNames = {"group_id", "user_id"}
+        columnNames = {"group_id", "citizen_id"}
     )
 )
 @Data

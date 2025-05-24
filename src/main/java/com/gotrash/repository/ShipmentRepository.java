@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface ShipmentRepository extends JpaRepository<ShipmentEntity, UUID> {
-  List<ShipmentEntity> findAllByUser_UserId(UUID userId);
+  List<ShipmentEntity> findAllByCitizen_UserId(UUID userId);
 }

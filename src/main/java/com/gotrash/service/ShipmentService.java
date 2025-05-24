@@ -59,7 +59,7 @@ public class ShipmentService {
   }
 
   public List<Shipment> getShipmentByUserId(String userId) {
-    List<ShipmentEntity> shipmentEntities = shipmentRepository.findAllByUser_UserId(UUID.fromString(userId));
+    List<ShipmentEntity> shipmentEntities = shipmentRepository.findAllByCitizen_UserId(UUID.fromString(userId));
 
     return shipmentEntities.stream()
         .map(ShipmentTransformer::transformEntityToModel)

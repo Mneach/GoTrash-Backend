@@ -16,12 +16,7 @@ import java.util.UUID;
 
 @Repository
 public interface TrashHistoryRepository extends JpaRepository<TrashHistoryEntity, UUID> {
-    List<TrashHistoryEntity> findAllByUser_UserId(UUID userId);
-
-    Optional<TrashHistoryEntity> findByBleId(BigInteger bleId);
-
-    @Query(value = "SELECT COUNT (1) FROM gotrash.trash_histories", nativeQuery = true)
-    long getTotalUser();
+    List<TrashHistoryEntity> findAllByCitizen_UserId(UUID userId);
 
     @Query("SELECT th FROM TrashHistoryEntity th WHERE th.trashBin.wasteBank.userId = :wasteBankId")
     List<TrashHistoryEntity> findAllByWasteBankId(@Param("wasteBankId") UUID wasteBankId);

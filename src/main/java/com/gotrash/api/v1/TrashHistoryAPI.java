@@ -47,13 +47,6 @@ public class TrashHistoryAPI {
         TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(trashHistoryService.storeTrashManually(trashHistoryManual));
         return new ApiResponse<>(HttpStatus.CREATED.value(), trashHistoryResponse);
     }
-
-    @GetMapping("/trash-histories/iot/{ble_id}")
-    @Operation(summary = "API to get trash histories by trash history ble_id")
-    public ApiResponse<TrashHistoryResponse> storeTrashFromIoT(@PathVariable("ble_id") BigInteger bleId) {
-        TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(trashHistoryService.getTrashHistoryByTrashHistoryBleId(bleId));
-        return new ApiResponse<>(HttpStatus.CREATED.value(), trashHistoryResponse);
-    }
   
     @GetMapping("/trash-histories")
     @Operation(summary = "API to get all trash history data")

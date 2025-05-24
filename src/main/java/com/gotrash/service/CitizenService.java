@@ -156,18 +156,6 @@ public class CitizenService {
     );
   }
 
-  public Citizen findCitizenByBleId(BigInteger bleId) {
-    Optional<CitizenEntity> citizenEntityOptional = citizenRepository.findByBleId(bleId);
-
-    if (citizenEntityOptional.isEmpty()) {
-      throw new BadRequestException("User Not Found");
-    }
-
-    return CitizenTransformer.transformEntityToModel(
-        citizenEntityOptional.get()
-    );
-  }
-
   public boolean isPhoneNumberAlreadyExists(String phoneNumber) {
     Optional<CitizenEntity> citizenEntityOptional = citizenRepository.findByPhoneNumber(phoneNumber);
 

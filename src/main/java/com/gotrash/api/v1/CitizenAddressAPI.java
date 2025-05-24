@@ -32,7 +32,7 @@ public class CitizenAddressAPI {
   @PostMapping("/citizens/{citizen_id}/addresses")
   @Operation(summary = "API to create a new citizen address")
   public ApiResponse<CitizenAddressResponse> save(
-      @PathVariable("citizenId") String citizenId,
+      @PathVariable("citizen_id") String citizenId,
       @RequestBody CitizenAddressRequest citizenAddressRequest
   ) {
     CitizenAddress citizenAddress = CitizenAddressTransformer.transformRequestToModel(
@@ -46,7 +46,7 @@ public class CitizenAddressAPI {
     return new ApiResponse<>(HttpStatus.CREATED.value(), citizenAddressResponse);
   }
 
-  @PostMapping("/citizens/{citizen_id}/addresses")
+  @GetMapping("/citizens/{citizen_id}/addresses")
   @Operation(summary = "API to get all citizen addresss by citizen id")
   public ApiResponse<List<CitizenAddressResponse>> getAllCitizenAddressByCitizenId(
       @PathVariable("citizen_id") String citizenId
@@ -61,7 +61,7 @@ public class CitizenAddressAPI {
     return new ApiResponse<>(HttpStatus.OK.value(), citizenAddressResponses);
   }
 
-  @PostMapping("/citizens/{citizen_id}/addresses/{citizen_address_id}")
+  @GetMapping("/citizens/{citizen_id}/addresses/{citizen_address_id}")
   @Operation(summary = "API to get citizen address by citizen_id and citizen_address_id")
   public ApiResponse<CitizenAddressResponse> getCitizenAddressByCitizenIdAndAddressId(
       @PathVariable("citizen_id") String citizenId,
@@ -71,7 +71,7 @@ public class CitizenAddressAPI {
     CitizenAddressResponse citizenAddressResponses = CitizenAddressTransformer.transformModelToResponse(
         citizenAddressService.getCitizenAddressByCitizenIdAndAddressId(citizenAddressId, citizenId)
     );
-    
+
     return new ApiResponse<>(HttpStatus.OK.value(), citizenAddressResponses);
   }
 
@@ -82,7 +82,7 @@ public class CitizenAddressAPI {
       @PathVariable("citizen_address_id") String citizenAddressId,
       @RequestBody CitizenAddressRequest citizenAddressRequest
   ){
-    
+
     CitizenAddress citizenAddress = CitizenAddressTransformer.transformRequestToModel(
         citizenId, citizenAddressId, citizenAddressRequest
     );
