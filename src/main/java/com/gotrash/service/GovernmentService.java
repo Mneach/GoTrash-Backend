@@ -56,6 +56,14 @@ public class GovernmentService {
         .toList();
   }
 
+  public List<Government> getAllGovernmentByRegion(String region) {
+    List<GovernmentEntity> governmentEntities = governmentRepository.findAllByRegion(region);
+
+    return governmentEntities.stream()
+        .map(GovernmentTransformer::transformEntityToModel)
+        .toList();
+  }
+
   public Government getGovernmentByUserId(String userId) {
     Optional<GovernmentEntity> trashBinEntityOptional = governmentRepository.findByUser_UserId(UUID.fromString(userId));
 

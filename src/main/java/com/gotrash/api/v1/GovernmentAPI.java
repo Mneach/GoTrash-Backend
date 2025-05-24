@@ -39,6 +39,16 @@ public class GovernmentAPI {
     return new ApiResponse<>(HttpStatus.OK.value(), governmentResponses);
   }
 
+  @GetMapping("/governments/region/{region_name}")
+  @Operation(summary = "API to get all government data")
+  public ApiResponse<List<GovernmentResponse>> getAllGovernmentByRegion(@PathVariable("region_name") String region) {
+    List<Government> governments = governmentService.getAllGovernmentByRegion(region);
+    List<GovernmentResponse> governmentResponses = governments.stream()
+        .map(GovernmentTransformer::transformModelToResponse)
+        .toList();
+    return new ApiResponse<>(HttpStatus.OK.value(), governmentResponses);
+  }
+
   @GetMapping("/governments/me")
   @Operation(summary = "API to get current government user")
   public ApiResponse<GovernmentResponse> getMe() {
