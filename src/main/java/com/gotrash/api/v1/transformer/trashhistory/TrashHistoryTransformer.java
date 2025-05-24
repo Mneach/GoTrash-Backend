@@ -1,10 +1,8 @@
 package com.gotrash.api.v1.transformer.trashhistory;
 
-import com.gotrash.api.v1.model.Citizen;
-import com.gotrash.api.v1.model.Trash;
-import com.gotrash.api.v1.model.TrashBin;
+import com.gotrash.api.v1.model.*;
+import com.gotrash.api.v1.model.pendingtrashhistory.PendingTrashHistory;
 import com.gotrash.api.v1.model.trashhistory.TrashHistory;
-import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.request.trashhistory.TrashHistoryRequest;
 import com.gotrash.api.v1.response.trashhistory.TrashHistoryResponse;
 import com.gotrash.api.v1.transformer.TrashBinTransformer;
@@ -84,5 +82,14 @@ public class TrashHistoryTransformer {
                 .createdAt(trashHistory.getCreatedAt())
                 .updatedAt(trashHistory.getUpdatedAt())
                 .build();
+    }
+
+    public static TrashHistory transformPendingTrashHistoryToTrashHistory(PendingTrashHistory pendingTrashHistory, Citizen citizen) {
+        return TrashHistory.builder()
+            .trash(pendingTrashHistory.getTrash())
+            .citizen(citizen)
+            .weight(pendingTrashHistory.getWeight())
+            .trashBin(pendingTrashHistory.getTrashBin())
+            .build();
     }
 }

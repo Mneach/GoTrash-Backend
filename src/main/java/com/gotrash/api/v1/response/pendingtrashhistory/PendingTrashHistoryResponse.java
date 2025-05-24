@@ -1,4 +1,4 @@
-package com.gotrash.api.v1.response.trashhistory;
+package com.gotrash.api.v1.response.pendingtrashhistory;
 
 import com.gotrash.api.v1.response.CitizenResponse;
 import com.gotrash.api.v1.response.TrashBinResponse;
@@ -16,9 +16,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TrashHistoryWasteBankResponse {
-  private String trashHistoryId;
-  private CitizenResponse citizen;
+public class PendingTrashHistoryResponse {
+  private String pendingTrashHistoryId;
   private TrashResponse trash;
   private TrashBinResponse trashBin;
   private BigDecimal weight;

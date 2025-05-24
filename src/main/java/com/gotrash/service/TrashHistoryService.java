@@ -40,7 +40,6 @@ public class TrashHistoryService {
         trashHistory.setCitizen(citizen);
         trashHistory.setTrash(trash);
         trashHistory.setTrashBin(trashBin);
-        trashHistory.setBleId(BigInteger.valueOf(trashHistoryRepository.getTotalUser() + 1));
 
         TrashHistoryEntity trashHistoryEntity = trashHistoryRepository.save(
                 TrashHistoryTransformer.transformModelToEntity(trashHistory)
@@ -89,7 +88,6 @@ public class TrashHistoryService {
             .citizen(citizen)
             .trash(trash)
             .trashBin(trashBin)
-            .bleId(BigInteger.valueOf(trashHistoryRepository.getTotalUser() + 1))
             .weight(trashHistoryManual.getWeight())
             .build();
 
@@ -150,7 +148,6 @@ public class TrashHistoryService {
         trashHistory.setCitizen(citizen);
         trashHistory.setTrash(trash);
         trashHistory.setTrashBin(trashBin);
-        trashHistory.setBleId(BigInteger.valueOf(trashHistoryRepository.getTotalUser() + 1));
 
         TrashHistoryEntity trashHistoryEntity = trashHistoryRepository.save(
                 TrashHistoryTransformer.transformModelToEntity(trashHistory)

@@ -21,7 +21,6 @@ public class TrashHistoryWasteBankTransformer {
         .totalCoin(
             CalculatorUtil.calculateCoin(trashHistory.getWeight(), trashHistory.getTrash().getCoin())
         )
-        .bleId(trashHistory.getBleId())
         .createdAt(trashHistory.getCreatedAt())
         .updatedAt(trashHistory.getUpdatedAt())
         .build();
@@ -35,7 +34,6 @@ public class TrashHistoryWasteBankTransformer {
         .trashBin(TrashBinTransformer.transformModelToResponse(trashHistoryWasteBank.getTrashBin()))
         .weight(trashHistoryWasteBank.getWeight())
         .totalCoin(trashHistoryWasteBank.getTotalCoin())
-        .bleId(trashHistoryWasteBank.getBleId())
         .createdAt(trashHistoryWasteBank.getCreatedAt())
         .updatedAt(trashHistoryWasteBank.getUpdatedAt())
         .build();
