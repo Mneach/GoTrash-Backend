@@ -84,10 +84,15 @@ public class TrashBinService {
             throw new EntityNotFoundException("Trash Bin with ID " + trashBin.getTrashBinId() + " Not Found");
         }
 
-        WasteBankEntity wasteBankEntity = wasteBankRepository.findById(UUID.fromString(trashBin.getWasteBank().getUserId()))
-            .orElseThrow(() -> new EntityNotFoundException("WasteBank Data With ID "+ trashBin.getWasteBank().getUserId() +" Not Found"));
-
         TrashBinEntity trashBinEntity = TrashBinTransformer.transformModelToEntity(trashBin);
+
+        if (trashBin.getWasteBank().getUserId() != null) {
+            WasteBankEntity wasteBankEntity = wasteBankRepository.findById(UUID.fromString(trashBin.getWasteBank().getUserId()))
+                .orElseThrow(() -> new EntityNotFoundException("WasteBank Data With ID "+ trashBin.getWasteBank().getUserId() +" Not Found"));
+
+            trashBinEntity.setWasteBank(trashBin.getWasteBank().getUserId() != null ? wasteBankEntity : trashBinEntity.getWasteBank());
+        }
+
         trashBinEntity.setName(trashBin.getName() != null ? trashBin.getName() : trashBinEntity.getName());
         trashBinEntity.setAddress(trashBin.getAddress() != null ? trashBin.getAddress() : trashBinEntity.getAddress());
         trashBinEntity.setLatitude(trashBin.getLatitude() != null ? trashBin.getLatitude() : trashBinEntity.getLatitude());
