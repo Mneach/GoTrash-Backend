@@ -41,9 +41,6 @@ public class CitizenEntity {
   private UserEntity user;
 
   @NotNull
-  private BigInteger bleId;
-
-  @NotNull
   private String name;
 
   @NotNull

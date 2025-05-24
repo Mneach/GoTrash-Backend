@@ -44,14 +44,13 @@ public class GroupService {
     groupEntity.setName(group.getName());
     groupEntity.setCoin(group.getCoin());
     groupEntity.setOwner(citizenEntity);
-    groupEntity.setReward(rewardEntity);
 
     // Save GroupEntity
     groupEntity = groupRepository.save(groupEntity);
 
     // Save GroupMemberEntity
     GroupMemberEntity groupMemberEntity = new GroupMemberEntity();
-    groupMemberEntity.setUser(citizenEntity);
+    groupMemberEntity.setCitizen(citizenEntity);
     groupMemberEntity.setGroup(groupEntity);
     groupMemberRepository.save(groupMemberEntity);
 
@@ -68,11 +67,11 @@ public class GroupService {
     GroupEntity groupEntity = groupRepository.findById(UUID.fromString(groupMember.getGroup().getGroupId()))
         .orElseThrow(() -> new EntityNotFoundException("Group not found"));
 
-    CitizenEntity citizenEntity = citizenRepository.findById(UUID.fromString(groupMember.getUser().getUserId()))
+    CitizenEntity citizenEntity = citizenRepository.findById(UUID.fromString(groupMember.getCitizen().getUserId()))
         .orElseThrow(() -> new RuntimeException("Citizen not found"));
 
     boolean isAlreadyMember = groupEntity.getGroupMembers().stream()
-        .anyMatch(groupMemberEntity -> groupMemberEntity.getUser().getUserId().equals(UUID.fromString(groupMember.getUser().getUserId())));;
+        .anyMatch(groupMemberEntity -> groupMemberEntity.getCitizen().getUserId().equals(UUID.fromString(groupMember.getCitizen().getUserId())));;
 
     if (isAlreadyMember) {
       throw new BadRequestException("User is already a member of the group.");
@@ -80,7 +79,7 @@ public class GroupService {
 
     // Save GroupMemberEntity
     GroupMemberEntity groupMemberEntity = new GroupMemberEntity();
-    groupMemberEntity.setUser(citizenEntity);
+    groupMemberEntity.setCitizen(citizenEntity);
     groupMemberEntity.setGroup(groupEntity);
     groupMemberRepository.save(groupMemberEntity);
   }
@@ -89,10 +88,10 @@ public class GroupService {
   public void removeMember(GroupMember groupMember) {
     GroupEntity groupEntity = groupRepository.findById(UUID.fromString(groupMember.getGroup().getGroupId()))
         .orElseThrow(() -> new EntityNotFoundException("Group not found"));
-    Citizen citizen = citizenService.getCitizenByUserId(groupMember.getUser().getUserId());
+    Citizen citizen = citizenService.getCitizenByUserId(groupMember.getCitizen().getUserId());
 
     GroupMemberEntity memberToRemove = groupEntity.getGroupMembers().stream()
-        .filter(member -> member.getUser().getUserId().equals(UUID.fromString(citizen.getUserId())))
+        .filter(member -> member.getCitizen().getUserId().equals(UUID.fromString(citizen.getUserId())))
         .findFirst()
         .orElseThrow(() -> new EntityNotFoundException("Group member not found"));
 
@@ -135,17 +134,14 @@ public class GroupService {
     GroupEntity groupEntity = groupRepository.findById(UUID.fromString(group.getGroupId()))
         .orElseThrow(() -> new EntityNotFoundException("Group With ID " + group.getGroupId() + " Not Found"));
 
-    if (group.getOwner() != null && group.getOwner().getUserId() != null) {
-      group.setOwner(citizenService.getCitizenByUserId(group.getOwner().getUserId()));
-    }
+    CitizenEntity citizenEntity = citizenRepository.findById(UUID.fromString(group.getOwner().getUserId()))
+        .orElseThrow(() -> new RuntimeException("Citizen not found"));
 
-    if (group.getReward() != null && group.getReward().getRewardId() != null) {
-      group.setReward(rewardService.getRewardByRewardId(group.getReward().getRewardId()));
-    }
+    RewardEntity rewardEntity = rewardRepository.findById(UUID.fromString(group.getReward().getRewardId()))
+        .orElseThrow(() -> new RuntimeException("Reward not found"));
 
     groupEntity.setName(group.getName());
-    groupEntity.setReward(RewardTransformer.transformModelToEntity(group.getReward()));
-    groupEntity.setOwner(CitizenTransformer.transformModelToEntity(group.getOwner()));
+    groupEntity.setOwner(citizenEntity);
     groupEntity.setCoin(group.getCoin());
 
     return GroupTransformer.transformEntityToModel(

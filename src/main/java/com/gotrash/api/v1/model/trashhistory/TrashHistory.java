@@ -1,5 +1,6 @@
 package com.gotrash.api.v1.model.trashhistory;
 
+import com.gotrash.api.v1.model.Citizen;
 import com.gotrash.api.v1.model.Trash;
 import com.gotrash.api.v1.model.TrashBin;
 import com.gotrash.api.v1.model.User;
@@ -20,7 +21,7 @@ import java.time.LocalDateTime;
 @Builder
 public class TrashHistory {
     private String trashHistoryId;
-    private User citizen;
+    private Citizen citizen;
     private Trash trash;
     private TrashBin trashBin;
     private BigDecimal weight;

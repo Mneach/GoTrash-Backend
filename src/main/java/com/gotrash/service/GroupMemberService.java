@@ -26,12 +26,12 @@ public class GroupMemberService {
 
   public GroupMember update(GroupMember groupMember) {
     Optional<GroupMemberEntity> groupMemberEntityOptional = groupMemberRepository.findByUser_UserIdAndGroup_GroupId(
-        UUID.fromString(groupMember.getUser().getUserId()),
+        UUID.fromString(groupMember.getCitizen().getUserId()),
         UUID.fromString(groupMember.getGroup().getGroupId())
     );
 
     if (groupMemberEntityOptional.isEmpty()) {
-      throw new EntityNotFoundException("Group Member with user_id " + groupMember.getUser().getUserId() + " and group_id " + groupMember.getGroup().getGroupId() + " Not Found");
+      throw new EntityNotFoundException("Group Member with user_id " + groupMember.getCitizen().getUserId() + " and group_id " + groupMember.getGroup().getGroupId() + " Not Found");
     }
 
     return GroupMemberTransformer.transformEntityToModel(

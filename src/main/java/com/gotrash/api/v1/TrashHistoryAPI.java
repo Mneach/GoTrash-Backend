@@ -3,16 +3,13 @@ package com.gotrash.api.v1;
 import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.response.MessageResponse;
 import com.gotrash.api.v1.model.trashhistory.TrashHistory;
-import com.gotrash.api.v1.model.trashhistory.TrashHistoryIoT;
 import com.gotrash.api.v1.model.trashhistory.TrashHistoryManual;
 import com.gotrash.api.v1.model.trashhistory.TrashHistoryWasteBank;
-import com.gotrash.api.v1.request.trashhistory.TrashHistoryIoTRequest;
 import com.gotrash.api.v1.request.trashhistory.TrashHistoryManualRequest;
 import com.gotrash.api.v1.request.trashhistory.TrashHistoryRequest;
 import com.gotrash.api.v1.response.trashhistory.TrashHistoryIoTResponse;
 import com.gotrash.api.v1.response.trashhistory.TrashHistoryResponse;
 import com.gotrash.api.v1.response.trashhistory.TrashHistoryWasteBankResponse;
-import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryIoTTransformer;
 import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryManualTransformer;
 import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryTransformer;
 import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryWasteBankTransformer;
@@ -55,15 +52,6 @@ public class TrashHistoryAPI {
     public ApiResponse<TrashHistoryResponse> storeTrashFromIoT(@PathVariable("ble_id") BigInteger bleId) {
         TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(trashHistoryService.getTrashHistoryByTrashHistoryBleId(bleId));
         return new ApiResponse<>(HttpStatus.CREATED.value(), trashHistoryResponse);
-    }
-
-    @PostMapping("/trash-histories/iot")
-    @Operation(summary = "API to create a new trash history from IoT")
-    public ApiResponse<TrashHistoryIoTResponse> storeTrashFromIoT(@RequestBody TrashHistoryIoTRequest trashHistoryIoTRequest) {
-        TrashHistoryIoT trashHistoryIoT = TrashHistoryIoTTransformer.transformRequestToModel(trashHistoryIoTRequest);
-        TrashHistory trashHistory = trashHistoryService.storeTrashFromIoT(trashHistoryIoT);
-        TrashHistoryIoTResponse trashHistoryIoTResponse = new TrashHistoryIoTResponse(trashHistory.getBleId());
-        return new ApiResponse<>(HttpStatus.CREATED.value(), trashHistoryIoTResponse);
     }
 
     @GetMapping("/trash-histories")

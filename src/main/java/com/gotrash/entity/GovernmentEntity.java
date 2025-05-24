@@ -42,6 +42,9 @@ public class GovernmentEntity {
   @NotNull
   private String name;
 
+  @NotNull
+  private String region;
+
   @CreationTimestamp
   @Column(updatable = false)
   private LocalDateTime createdAt;

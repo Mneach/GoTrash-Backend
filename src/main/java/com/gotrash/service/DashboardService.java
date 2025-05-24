@@ -1,10 +1,7 @@
 package com.gotrash.service;
 
-import com.gotrash.api.v1.model.dashboard.WasteBankMoneySummary;
 import com.gotrash.api.v1.model.dashboard.WasteBankTrashCategorySummary;
 import com.gotrash.api.v1.model.dashboard.WasteBankTrashSummary;
-import com.gotrash.constant.ShipmentStatus;
-import com.gotrash.repository.ShipmentRepository;
 import com.gotrash.repository.WasteBankRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,10 +14,6 @@ import java.util.UUID;
 public class DashboardService {
 
   private final WasteBankRepository wasteBankRepository;
-
-  public WasteBankMoneySummary getTotalMoneyByWasteBankId(String wasteBankId) {
-    return wasteBankRepository.sumWasteBankMoneyByWasteBankId(UUID.fromString(wasteBankId), ShipmentStatus.SUDAH_SAMPAI_TUJUAN);
-  }
 
   public WasteBankTrashSummary getTotalTrashByWasteBankId(String wasteBankId) {
     return wasteBankRepository.sumTrashWeightByWasteBankId(UUID.fromString(wasteBankId));

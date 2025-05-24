@@ -1,7 +1,6 @@
 package com.gotrash.api.v1;
 
 import com.gotrash.api.response.ApiResponse;
-import com.gotrash.api.v1.model.dashboard.WasteBankMoneySummary;
 import com.gotrash.api.v1.model.dashboard.WasteBankTrashCategorySummary;
 import com.gotrash.api.v1.model.dashboard.WasteBankTrashSummary;
 import com.gotrash.service.DashboardService;
@@ -23,13 +22,6 @@ import java.util.List;
 public class DashboardAPI {
 
   private final DashboardService dashboardService;
-
-  @GetMapping("/dashboards/waste-banks/{waste_bank_id}/total-money")
-  @Operation(summary = "Get total money by waste_bank_id")
-  public ApiResponse<WasteBankMoneySummary> getTotalMoneyByWasteBankId(@PathVariable("waste_bank_id") String wasteBankId) {
-    WasteBankMoneySummary wasteBankMoneySummary = dashboardService.getTotalMoneyByWasteBankId(wasteBankId);
-    return new ApiResponse<>(HttpStatus.OK.value(), wasteBankMoneySummary);
-  }
 
   @GetMapping("/dashboards/waste-banks/{waste_bank_id}/total-trash")
   @Operation(summary = "Get total trash by waste_bank_id")

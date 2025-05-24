@@ -37,10 +37,6 @@ public class GroupEntity {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID groupId;
 
-  @OneToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "reward_id", nullable = false)
-  private RewardEntity reward;
-
   @NotNull
   private String name;
 
@@ -48,7 +44,7 @@ public class GroupEntity {
   private BigInteger coin;
 
   @ManyToOne
-  @JoinColumn(name = "user_id")
+  @JoinColumn(name = "owner_id")
   private CitizenEntity owner;
 
   @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)

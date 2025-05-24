@@ -2,12 +2,9 @@ package com.gotrash.service;
 
 import com.gotrash.api.v1.model.*;
 import com.gotrash.api.v1.model.trashhistory.TrashHistory;
-import com.gotrash.api.v1.model.trashhistory.TrashHistoryIoT;
 import com.gotrash.api.v1.model.trashhistory.TrashHistoryManual;
 import com.gotrash.api.v1.model.trashhistory.TrashHistoryWasteBank;
-import com.gotrash.api.v1.transformer.TrashBinTransformer;
 import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryTransformer;
-import com.gotrash.api.v1.transformer.TrashTransformer;
 import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryWasteBankTransformer;
 import com.gotrash.entity.TrashHistoryEntity;
 import com.gotrash.entity.id.WasteBankWarehouseId;
@@ -29,19 +26,18 @@ public class TrashHistoryService {
 
     private final TrashHistoryRepository trashHistoryRepository;
     private final WasteBankWarehouseService wasteBankWarehouseService;
-    private final UserService userService;
+    private final CitizenService citizenService;
     private final TrashService trashService;
     private final TrashBinService trashBinService;
     private final StreakService streakService;
-    private final CitizenService citizenService;
 
     @Transactional
     public TrashHistory save(TrashHistory trashHistory) {
-        User user = userService.getUserByUserId(trashHistory.getCitizen().getUserId());
+        Citizen citizen = citizenService.getCitizenByUserId(trashHistory.getCitizen().getUserId());
         Trash trash = trashService.getTrashByTrashId(trashHistory.getTrash().getTrashId());
         TrashBin trashBin = trashBinService.getTrashBinByTrashBinId(trashHistory.getTrashBin().getTrashBinId());
 
-        trashHistory.setCitizen(user);
+        trashHistory.setCitizen(citizen);
         trashHistory.setTrash(trash);
         trashHistory.setTrashBin(trashBin);
         trashHistory.setBleId(BigInteger.valueOf(trashHistoryRepository.getTotalUser() + 1));
@@ -53,9 +49,9 @@ public class TrashHistoryService {
         BigInteger totalCoin = CalculatorUtil.calculateCoin(trashHistory.getWeight(), trash.getCoin());
         BigInteger totalRating = CalculatorUtil.calculateRating(trashHistory.getWeight(), trashHistory.getTrash().getRating());
 
-        streakService.updateCitizenStreak(user);
-        citizenService.addCoin(user.getUserId(), totalCoin);
-        citizenService.addRating(user.getUserId(), totalRating);
+        streakService.updateCitizenStreak(citizen);
+        citizenService.addCoin(citizen.getUserId(), totalCoin);
+        citizenService.addRating(citizen.getUserId(), totalRating);
 
         // Add the data into waste bank warehouse
         wasteBankWarehouseService.addTrashToWasteBankWarehouse(
@@ -89,7 +85,7 @@ public class TrashHistoryService {
         TrashBin trashBin = trashBinService.getTrashBinByTrashBinId(trashHistoryManual.getTrashBinId());
 
         TrashHistory trashHistory = TrashHistory.builder()
-            .citizen(citizen.getUser())
+            .citizen(citizen)
             .trash(trash)
             .trashBin(trashBin)
             .bleId(BigInteger.valueOf(trashHistoryRepository.getTotalUser() + 1))
@@ -103,35 +99,7 @@ public class TrashHistoryService {
         BigInteger totalCoin = CalculatorUtil.calculateCoin(trashHistory.getWeight(), trash.getCoin());
         BigInteger totalRating = CalculatorUtil.calculateRating(trashHistory.getWeight(), trashHistory.getTrash().getRating());
 
-        streakService.updateCitizenStreak(citizen.getUser());
-        citizenService.addCoin(citizen.getUser().getUserId(), totalCoin);
-        citizenService.addRating(citizen.getUser().getUserId(), totalRating);
-
-        return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity, totalCoin);
-    }
-
-    @Transactional
-    public TrashHistory storeTrashFromIoT(TrashHistoryIoT trashHistoryIoT) {
-        Citizen citizen = citizenService.findCitizenByBleId(trashHistoryIoT.getBleId());
-        Trash trash = trashService.getTrashByTrashName(trashHistoryIoT.getTrashName());
-        TrashBin trashBin = trashBinService.getTrashBinByTrashBinId(trashHistoryIoT.getTrashBinId());
-
-        TrashHistory trashHistory = TrashHistory.builder()
-            .citizen(citizen.getUser())
-            .trash(trash)
-            .trashBin(trashBin)
-            .bleId(BigInteger.valueOf(trashHistoryRepository.getTotalUser() + 1))
-            .weight(trashHistoryIoT.getWeight())
-            .build();
-
-        TrashHistoryEntity trashHistoryEntity = trashHistoryRepository.save(
-            TrashHistoryTransformer.transformModelToEntity(trashHistory)
-        );
-
-        BigInteger totalCoin = CalculatorUtil.calculateCoin(trashHistoryIoT.getWeight(), trash.getCoin());
-        BigInteger totalRating = CalculatorUtil.calculateRating(trashHistoryIoT.getWeight(), trash.getRating());
-
-        streakService.updateCitizenStreak(citizen.getUser());
+        streakService.updateCitizenStreak(citizen);
         citizenService.addCoin(citizen.getUser().getUserId(), totalCoin);
         citizenService.addRating(citizen.getUser().getUserId(), totalRating);
 
@@ -174,11 +142,11 @@ public class TrashHistoryService {
             throw new EntityNotFoundException("Trash History with ID " + trashHistory.getTrashHistoryId() + " Not Found");
         }
 
-        User user = userService.getUserByUserId(trashHistory.getCitizen().getUserId());
+        Citizen citizen = citizenService.getCitizenByUserId(trashHistory.getCitizen().getUserId());
         Trash trash = trashService.getTrashByTrashId(trashHistory.getTrash().getTrashId());
         TrashBin trashBin = trashBinService.getTrashBinByTrashBinId(trashHistory.getTrashBin().getTrashBinId());
 
-        trashHistory.setCitizen(user);
+        trashHistory.setCitizen(citizen);
         trashHistory.setTrash(trash);
         trashHistory.setTrashBin(trashBin);
         trashHistory.setBleId(BigInteger.valueOf(trashHistoryRepository.getTotalUser() + 1));
@@ -212,7 +180,7 @@ public class TrashHistoryService {
             .toList();
 
         List<UUID> citizenIds = trashHistoryEntities.stream()
-            .map(trashHistoryEntity -> trashHistoryEntity.getUser().getUserId())
+            .map(trashHistoryEntity -> trashHistoryEntity.getCitizen().getUserId())
             .toList();
 
         List<Citizen> citizens = citizenService.getCitizensByIds(citizenIds);

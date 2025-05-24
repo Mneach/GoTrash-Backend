@@ -43,8 +43,8 @@ public class GroupMemberEntity {
   private UUID groupMemberId;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "user_id", nullable = false)
-  private CitizenEntity user;
+  @JoinColumn(name = "citizen_id", nullable = false)
+  private CitizenEntity citizen;
 
   @ManyToOne
   @JoinColumn(name = "group_id", nullable = false)

@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class GroupMemberRequest {
   private String groupMemberId;
-  private String userId;
+  private String citizenId;
   private String groupId;
 }

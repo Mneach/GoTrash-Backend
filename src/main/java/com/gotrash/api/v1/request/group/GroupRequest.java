@@ -13,7 +13,7 @@ import java.math.BigInteger;
 @Builder
 public class GroupRequest {
     private String rewardId;
-    private String userId;
+    private String citizenId;
     private String name;
     private BigInteger coin;
 }

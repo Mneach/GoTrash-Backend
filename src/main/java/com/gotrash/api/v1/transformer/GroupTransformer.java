@@ -22,7 +22,6 @@ public class GroupTransformer {
 
     return Group.builder()
         .groupId(groupEntity.getGroupId().toString())
-        .reward(RewardTransformer.transformEntityToModel(groupEntity.getReward()))
         .name(groupEntity.getName())
         .coin(groupEntity.getCoin())
         .owner(CitizenTransformer.transformEntityToModel(groupEntity.getOwner()))
@@ -35,7 +34,6 @@ public class GroupTransformer {
   public static GroupEntity transformModelToEntity(Group group) {
     return GroupEntity.builder()
         .groupId(group.getGroupId() != null ? UUID.fromString(group.getGroupId()) : null)
-        .reward(RewardTransformer.transformModelToEntity(group.getReward()))
         .owner(CitizenTransformer.transformModelToEntity(group.getOwner()))
         .name(group.getName())
         .coin(group.getCoin())
@@ -45,8 +43,7 @@ public class GroupTransformer {
   public static Group transformRequestToModel(String groupId, GroupRequest groupRequest) {
     return Group.builder()
         .groupId(groupId)
-        .reward(Reward.builder().rewardId(groupRequest.getRewardId()).build())
-        .owner(Citizen.builder().userId(groupRequest.getUserId()).build())
+        .owner(Citizen.builder().userId(groupRequest.getCitizenId()).build())
         .name(groupRequest.getName())
         .coin(groupRequest.getCoin())
         .build();
@@ -54,8 +51,7 @@ public class GroupTransformer {
 
   public static Group transformRequestToModel(GroupRequest groupRequest) {
     return Group.builder()
-        .reward(Reward.builder().rewardId(groupRequest.getRewardId()).build())
-        .owner(Citizen.builder().userId(groupRequest.getUserId()).build())
+        .owner(Citizen.builder().userId(groupRequest.getCitizenId()).build())
         .name(groupRequest.getName())
         .coin(groupRequest.getCoin())
         .build();
@@ -65,7 +61,6 @@ public class GroupTransformer {
 
     return GroupResponse.builder()
         .groupId(group.getGroupId())
-        .reward(RewardTransformer.transformModelToResponse(group.getReward()))
         .name(group.getName())
         .coin(group.getCoin())
         .owner(CitizenTransformer.transformModelToResponse(group.getOwner()))

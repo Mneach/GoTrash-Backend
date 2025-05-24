@@ -12,14 +12,12 @@ public class TrashCategoryTransformer {
     public static TrashCategory transformRequestToModel(String trashCategoryId, TrashCategoryRequest trashCategoryRequest) {
         return TrashCategory.builder()
             .trashCategoryId(trashCategoryId)
-            .price(trashCategoryRequest.getPrice())
             .name(trashCategoryRequest.getName())
             .build();
     }
 
     public static TrashCategory transformRequestToModel(TrashCategoryRequest trashCategoryRequest) {
         return TrashCategory.builder()
-            .price(trashCategoryRequest.getPrice())
             .name(trashCategoryRequest.getName())
             .build();
     }
@@ -28,7 +26,6 @@ public class TrashCategoryTransformer {
         return TrashCategory.builder()
             .trashCategoryId(trashCategoryEntity.getTrashCategoryId().toString())
             .name(trashCategoryEntity.getName())
-            .price(trashCategoryEntity.getPrice())
             .imageUrl(trashCategoryEntity.getImageUrl())
             .createdAt(trashCategoryEntity.getCreatedAt())
             .updatedAt(trashCategoryEntity.getUpdatedAt())
@@ -39,7 +36,6 @@ public class TrashCategoryTransformer {
         return TrashCategoryEntity.builder()
             .trashCategoryId(trashCategory.getTrashCategoryId() != null ? UUID.fromString(trashCategory.getTrashCategoryId()) : null)
             .name(trashCategory.getName())
-            .price(trashCategory.getPrice())
             .imageUrl(trashCategory.getImageUrl())
             .createdAt(trashCategory.getCreatedAt())
             .updatedAt(trashCategory.getUpdatedAt())
@@ -50,7 +46,6 @@ public class TrashCategoryTransformer {
         return TrashCategoryResponse.builder()
             .trashCategoryId(trashCategory.getTrashCategoryId())
             .name(trashCategory.getName())
-            .price(trashCategory.getPrice())
             .imageUrl(trashCategory.getImageUrl())
             .createdAt(trashCategory.getCreatedAt())
             .updatedAt(trashCategory.getUpdatedAt())

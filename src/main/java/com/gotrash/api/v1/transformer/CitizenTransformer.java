@@ -18,7 +18,6 @@ public class CitizenTransformer {
       return CitizenEntity.builder()
           .userId(citizen.getUserId() != null ? UUID.fromString(citizen.getUserId()) : null)
           .user(citizen.getUser() != null ? UserTransformer.transformModelToEntity(citizen.getUser()) : null)
-          .bleId(citizen.getBleId())
           .name(citizen.getName())
           .phoneNumber(citizen.getPhoneNumber())
           .imageUrl(citizen.getImageUrl())
@@ -35,7 +34,6 @@ public class CitizenTransformer {
     public static Citizen transformEntityToModel(CitizenEntity citizenEntity) {
       return Citizen.builder()
           .userId(citizenEntity.getUserId().toString())
-          .bleId(citizenEntity.getBleId())
           .user(UserTransformer.transformEntityToModel(citizenEntity.getUser()))
           .email(citizenEntity.getUser().getEmail())
           .role(citizenEntity.getUser().getRole())
@@ -98,7 +96,6 @@ public class CitizenTransformer {
   public static CitizenResponse transformModelToResponse(Citizen citizen) {
     return CitizenResponse.builder()
         .userId(citizen.getUserId())
-        .bleId(citizen.getBleId())
         .name(citizen.getName())
         .email(citizen.getEmail())
         .role(citizen.getRole())
@@ -120,7 +117,6 @@ public class CitizenTransformer {
                                                            List<Group> groups) {
       return CitizenResponse.builder()
           .userId(citizen.getUserId())
-          .bleId(citizen.getBleId())
           .name(citizen.getName())
           .email(citizen.getEmail())
           .role(citizen.getRole())

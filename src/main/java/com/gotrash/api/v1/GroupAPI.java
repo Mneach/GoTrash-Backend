@@ -76,7 +76,7 @@ public class GroupAPI {
   ) {
     GroupMember groupMember = GroupMemberTransformer.transformRequestToModel(groupMemberRequest, groupId);
     groupService.addMember(groupMember);
-    String message = "Succcessfully Add Member With Group ID " + groupMember.getGroup().getGroupId() + " And Member Id " + groupMember.getUser().getUserId();
+    String message = "Succcessfully Add Member With Group ID " + groupMember.getGroup().getGroupId() + " And Member Id " + groupMember.getCitizen().getUserId();
     MessageResponse messageResponse = new MessageResponse(message);
     return new ApiResponse<>(HttpStatus.CREATED.value(), messageResponse);
   }
