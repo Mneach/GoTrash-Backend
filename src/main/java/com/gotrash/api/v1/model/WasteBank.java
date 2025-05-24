@@ -24,6 +24,7 @@ public class WasteBank {
   private String address;
   private String imageUrl;
   private String phoneNumber;
+  private String region;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

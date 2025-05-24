@@ -58,6 +58,14 @@ public class WasteBankService {
         .toList();
   }
 
+  public List<WasteBank> getAllWasteBankByRegion(String region) {
+    List<WasteBankEntity> wasteBankEntities = wasteBankRepository.findAllByRegion(region);
+
+    return wasteBankEntities.stream()
+        .map(WasteBankTransformer::transformEntityToModel)
+        .toList();
+  }
+
   public WasteBank getWasteBankByUserId(String userId) {
     Optional<WasteBankEntity> trashBinEntityOptional = wasteBankRepository.findByUser_UserId(UUID.fromString(userId));
 
@@ -94,6 +102,7 @@ public class WasteBankService {
     wasteBankEntity.setLatitude(wasteBank.getLatitude() != null ? wasteBank.getLatitude() : wasteBankEntity.getLatitude());
     wasteBankEntity.setLongitude(wasteBank.getLongitude() != null ? wasteBank.getLongitude() : wasteBankEntity.getLongitude());
     wasteBankEntity.setImageUrl(wasteBank.getImageUrl() != null ? wasteBank.getImageUrl() : wasteBankEntity.getImageUrl());
+    wasteBankEntity.setRegion(wasteBank.getRegion() != null ? wasteBank.getRegion() : wasteBankEntity.getRegion());
     wasteBankEntity.setUpdatedAt(LocalDateTime.now());
 
     if (imageFile != null && !imageFile.isEmpty()) {

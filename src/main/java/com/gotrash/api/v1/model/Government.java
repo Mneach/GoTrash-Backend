@@ -21,5 +21,6 @@ public class Government {
   private UserRole role;
   private String name;
   private LocalDateTime createdAt;
+  private String region;
   private LocalDateTime updatedAt;
 }

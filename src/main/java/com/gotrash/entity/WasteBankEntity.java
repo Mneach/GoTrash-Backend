@@ -61,6 +61,9 @@ public class WasteBankEntity {
   @NotNull
   private BigInteger coin;
 
+  @NotNull
+  private String region;
+
   @CreationTimestamp
   @Column(updatable = false)
   private LocalDateTime createdAt;

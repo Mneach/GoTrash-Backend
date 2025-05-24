@@ -16,6 +16,7 @@ import java.util.UUID;
 public interface WasteBankRepository extends JpaRepository<WasteBankEntity, UUID> {
   Optional<WasteBankEntity> findByUser_UserId(UUID userId);
 
+  List<WasteBankEntity> findAllByRegion(String region);
 
   @Query(
       value = """

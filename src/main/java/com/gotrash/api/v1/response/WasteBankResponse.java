@@ -27,5 +27,6 @@ public class WasteBankResponse {
   private String operationalHours;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
+  private String region;
   private List<WasteBankWarehouseResponse> wasteBankWarehouses;
 }
