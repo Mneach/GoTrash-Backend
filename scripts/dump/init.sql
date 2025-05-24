@@ -36,7 +36,6 @@ CREATE TABLE gotrash.users (
 -- 2. CITIZENS TABLE
 CREATE TABLE gotrash.citizens (
   user_id UUID PRIMARY KEY,
-  ble_id NUMERIC NOT NULL,
   name TEXT NOT NULL,
   phone_number VARCHAR(20) NOT NULL,
   image_url TEXT,
@@ -132,7 +131,6 @@ CREATE TABLE gotrash.trash_histories (
   trash_id UUID NOT NULL,
   trash_bin_id UUID NOT NULL,
   weight NUMERIC (19, 2) NOT NULL,
-  ble_id NUMERIC NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_trash_history_user FOREIGN KEY (user_id)
@@ -187,7 +185,7 @@ CREATE TABLE gotrash.user_groups (
 );
 
 -- 13. EXCHANGES TABLE
-CREATE TABLE gotrash.exchanges (
+CREATE TABLE gotrash.shipments (
   exchange_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL,
   reward_id UUID NOT NULL,
@@ -211,31 +209,6 @@ CREATE TABLE gotrash.notifications (
     REFERENCES gotrash.users(user_id)
 );
 
--- 15. SHIPMENTS TABLE
-CREATE TABLE gotrash.shipments (
-    shipment_id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    waste_bank_user_id UUID NOT NULL,
-    trash_category_id UUID NOT NULL,
-    weight NUMERIC (19, 2) NOT NULL,
-    destination_company_user_id UUID,
-    price NUMERIC (20, 6) NOT NULL,
-    status VARCHAR(50),
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
-
-    CONSTRAINT fk_shipment_wastebank
-        FOREIGN KEY (waste_bank_user_id)
-        REFERENCES gotrash.waste_banks(user_id),
-
-    CONSTRAINT fk_shipment_trashcategory
-        FOREIGN KEY (trash_category_id)
-        REFERENCES gotrash.trash_categories(trash_category_id),
-
-    CONSTRAINT fk_shipment_company
-        FOREIGN KEY (destination_company_user_id)
-        REFERENCES gotrash.companies(user_id)
-);
-
 -- 16. WASTE BANK WAREHOUSE TABLE
 CREATE TABLE gotrash.waste_bank_warehouses (
     waste_bank_id UUID NOT NULL,
@@ -255,6 +228,7 @@ CREATE TABLE gotrash.waste_bank_warehouses (
         REFERENCES gotrash.trash_categories(trash_category_id)
 );
 
+-- 16. CITIZEN ADDRESSES TABLE
 CREATE TABLE citizen_addresses (
     citizen_address_id UUID PRIMARY KEY,
     citizen_id UUID NOT NULL,
@@ -269,3 +243,16 @@ CREATE TABLE citizen_addresses (
         REFERENCES gotrash.citizens(user_id),
 );
 
+-- 17. TRASH_HISTORIES TABLE
+CREATE TABLE gotrash.pending_trash_histories (
+  pending_trash_history_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  trash_id UUID NOT NULL,
+  trash_bin_id UUID NOT NULL,
+  weight NUMERIC (19, 2) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_pending_trash_history_trash FOREIGN KEY (trash_id)
+    REFERENCES gotrash.trashes(trash_id),
+  CONSTRAINT fk_pending_trash_history_bin FOREIGN KEY (trash_bin_id)
+    REFERENCES gotrash.trash_bins(trash_bin_id)
+);

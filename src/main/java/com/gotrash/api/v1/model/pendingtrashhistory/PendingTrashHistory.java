@@ -1,9 +1,8 @@
-package com.gotrash.api.v1.model.trashhistory;
+package com.gotrash.api.v1.model.pendingtrashhistory;
 
-import com.gotrash.api.v1.model.Citizen;
 import com.gotrash.api.v1.model.Trash;
 import com.gotrash.api.v1.model.TrashBin;
-import com.gotrash.api.v1.model.User;
+import com.gotrash.constant.PendingTrashHistoryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,13 +16,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TrashHistoryWasteBank {
-    private String trashHistoryId;
-    private Citizen citizen;
+public class PendingTrashHistory {
+    private String pendingTrashHistoryId;
     private Trash trash;
     private TrashBin trashBin;
     private BigDecimal weight;
     private BigInteger totalCoin;
+    private PendingTrashHistoryStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
