@@ -28,7 +28,7 @@ public class TrashHistoryEntity {
   private UUID trashHistoryId;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "user_id", nullable = false)
+  @JoinColumn(name = "citizen_id", nullable = false)
   private CitizenEntity citizen;
 
   @OneToOne(fetch = FetchType.EAGER)
