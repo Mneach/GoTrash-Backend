@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,5 +29,6 @@ public class WasteBankResponse {
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private String region;
+  private BigInteger coin;
   private List<WasteBankWarehouseResponse> wasteBankWarehouses;
 }

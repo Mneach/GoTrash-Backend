@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Data
@@ -26,4 +27,5 @@ public class RegisterWasteBankRequest {
   private String address;
   private String phoneNumber;
   private String region;
+  private BigInteger coin;
 }

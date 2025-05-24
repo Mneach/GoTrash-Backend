@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Data
@@ -25,6 +26,7 @@ public class WasteBank {
   private String imageUrl;
   private String phoneNumber;
   private String region;
+  private BigInteger coin;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

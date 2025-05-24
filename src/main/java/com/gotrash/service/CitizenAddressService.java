@@ -5,7 +5,9 @@ import com.gotrash.api.v1.model.CitizenAddress;
 import com.gotrash.api.v1.transformer.CitizenAddressTransformer;
 import com.gotrash.api.v1.transformer.CitizenTransformer;
 import com.gotrash.entity.CitizenAddressEntity;
+import com.gotrash.entity.CitizenEntity;
 import com.gotrash.repository.CitizenAddressRepository;
+import com.gotrash.repository.CitizenRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,17 +23,16 @@ public class CitizenAddressService {
 
   private final CitizenAddressRepository citizenAddressRepository;
   private final CitizenService citizenService;
+  private final CitizenRepository citizenRepository;
 
   @Transactional
   public CitizenAddress save(CitizenAddress citizenAddress) {
-    Citizen citizen = citizenService.getCitizenByUserId(
-        citizenAddress.getCitizen().getUserId()
-    );
-
-    citizenAddress.setCitizen(citizen);
-
     CitizenAddressEntity citizenAddressEntity = CitizenAddressTransformer.transformModelToEntity(citizenAddress);
 
+    CitizenEntity citizenEntity = citizenRepository.findByUser_UserId(UUID.fromString(citizenAddress.getCitizen().getUserId()))
+        .orElseThrow(() -> new EntityNotFoundException("Citizen not found with user ID: " + citizenAddress.getCitizen().getUserId()));
+
+    citizenAddressEntity.setCitizen(citizenEntity);
     return CitizenAddressTransformer.transformEntityToModel(
         citizenAddressRepository.save(citizenAddressEntity)
     );
@@ -39,10 +40,6 @@ public class CitizenAddressService {
 
   @Transactional
   public List<CitizenAddress> getAllAddressesByCitizenId(String citizenId) {
-
-    if (!citizenService.isCitizenExists(citizenId)) {
-      throw new EntityNotFoundException("Citizen not found with ID: " + citizenId);
-    }
 
     List<CitizenAddressEntity> citizenAddressEntities = citizenAddressRepository.findAllByCitizen_UserId(
         UUID.fromString(citizenId)
@@ -61,11 +58,6 @@ public class CitizenAddressService {
         UUID.fromString(citizenAddress.getCitizenAddressId()),UUID.fromString(citizenAddress.getCitizen().getUserId())
     ).orElseThrow(() -> new EntityNotFoundException("Address not found with ID: " + citizenAddress.getCitizenAddressId() + " for citizen: " + citizenAddress.getCitizen().getUserId()));
 
-    Citizen citizen = citizenService.getCitizenByUserId(
-        citizenAddress.getCitizen().getUserId()
-    );
-
-    citizenAddressEntity.setCitizen(CitizenTransformer.transformModelToEntity(citizen));
     citizenAddressEntity.setAddress(citizenAddress.getAddress() != null ? citizenAddress.getAddress() : citizenAddressEntity.getAddress());
     citizenAddressEntity.setLabel(citizenAddress.getLabel() != null ? citizenAddress.getLabel() : citizenAddressEntity.getLabel());
     citizenAddressEntity.setNote(citizenAddress.getNote() != null ? citizenAddress.getNote() : citizenAddressEntity.getNote());

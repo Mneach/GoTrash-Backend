@@ -7,8 +7,10 @@ import com.gotrash.api.v1.model.WasteBank;
 import com.gotrash.api.v1.transformer.*;
 import com.gotrash.entity.NotificationEntity;
 import com.gotrash.entity.RewardEntity;
+import com.gotrash.entity.WasteBankEntity;
 import com.gotrash.helper.FileUploadHelper;
 import com.gotrash.repository.RewardRepository;
+import com.gotrash.repository.WasteBankRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,17 +26,19 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RewardService {
     private final RewardRepository rewardRepository;
-    private final WasteBankService wasteBankService;
+    private final WasteBankRepository wasteBankRepository;
     private final RewardCategoryService rewardCategoryService;
     private final FileUploadHelper fileUploadHelper;
 
     @Transactional
     public Reward save(Reward reward, MultipartFile imageFile) {
-        RewardCategory trashCategory = rewardCategoryService.getRewardCategoryByRewardCategoryId(
+        WasteBankEntity wasteBankEntity = wasteBankRepository.findByUser_UserId(UUID.fromString(reward.getWasteBank().getUserId()))
+            .orElseThrow(() -> new EntityNotFoundException("Waste Bank with user id : " + reward.getWasteBank().getUser() + " Not Found"));
+
+        RewardCategory rewardCategory = rewardCategoryService.getRewardCategoryByRewardCategoryId(
                 reward.getRewardCategory().getRewardCategoryId()
         );
-
-        WasteBank wasteBank = wasteBankService.getWasteBankByUserId(reward.getWasteBank().getUserId());
+        reward.setRewardCategory(rewardCategory);
 
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
@@ -46,11 +50,9 @@ public class RewardService {
             }
         }
 
-        reward.setRewardCategory(trashCategory);
-        reward.setWasteBank(wasteBank);
-
-        RewardEntity trashEntity = RewardTransformer.transformModelToEntity(reward);
-        return RewardTransformer.transformEntityToModel(rewardRepository.save(trashEntity));
+        RewardEntity rewardEntity = RewardTransformer.transformModelToEntity(reward);
+        rewardEntity.setWasteBank(wasteBankEntity);
+        return RewardTransformer.transformEntityToModel(rewardRepository.save(rewardEntity));
     }
 
     public List<Reward> getRewards() {
@@ -93,8 +95,9 @@ public class RewardService {
         }
 
         if (reward.getWasteBank().getUserId() != null) {
-            WasteBank wasteBank = wasteBankService.getWasteBankByUserId(reward.getWasteBank().getUserId());
-            rewardEntity.setWasteBank(WasteBankTransformer.transformModelToEntity(wasteBank));
+            WasteBankEntity wasteBankEntity = wasteBankRepository.findByUser_UserId(UUID.fromString(reward.getWasteBank().getUserId()))
+                .orElseThrow(() -> new EntityNotFoundException("Waste Bank with user id : " + reward.getWasteBank().getUser() + " Not Found"));
+            rewardEntity.setWasteBank(wasteBankEntity);
         }
 
         rewardEntity.setName(reward.getName() != null ? reward.getName() : rewardEntity.getName());

@@ -17,7 +17,7 @@ public class CitizenAddressTransformer {
 
   public static CitizenAddressEntity transformModelToEntity(CitizenAddress citizenAddress) {
     return CitizenAddressEntity.builder()
-        .citizenAddressId(UUID.fromString(citizenAddress.getCitizenAddressId()))
+        .citizenAddressId(citizenAddress.getCitizenAddressId() != null ? UUID.fromString(citizenAddress.getCitizenAddressId()) : null)
         .citizen(CitizenTransformer.transformModelToEntity(citizenAddress.getCitizen()))
         .label(citizenAddress.getLabel())
         .address(citizenAddress.getAddress())

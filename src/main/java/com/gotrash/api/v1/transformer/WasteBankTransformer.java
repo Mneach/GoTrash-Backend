@@ -24,6 +24,7 @@ public class WasteBankTransformer {
         .address(wasteBankRequest.getAddress())
         .phoneNumber(wasteBankRequest.getPhoneNumber())
         .region(wasteBankRequest.getRegion())
+        .coin(wasteBankRequest.getCoin())
         .build();
   }
 
@@ -38,6 +39,7 @@ public class WasteBankTransformer {
         .address(wasteBankRequest.getAddress())
         .phoneNumber(wasteBankRequest.getPhoneNumber())
         .region(wasteBankRequest.getRegion())
+        .coin(wasteBankRequest.getCoin())
         .build();
   }
 
@@ -52,6 +54,7 @@ public class WasteBankTransformer {
         .address(registerWasteBankRequest.getAddress())
         .phoneNumber(registerWasteBankRequest.getPhoneNumber())
         .region(registerWasteBankRequest.getRegion())
+        .coin(registerWasteBankRequest.getCoin())
         .build();
   }
 
@@ -68,6 +71,7 @@ public class WasteBankTransformer {
         .imageUrl(wasteBankEntity.getImageUrl())
         .phoneNumber(wasteBankEntity.getPhoneNumber())
         .region(wasteBankEntity.getRegion())
+        .coin(wasteBankEntity.getCoin())
         .createdAt(wasteBankEntity.getCreatedAt())
         .updatedAt(wasteBankEntity.getUpdatedAt())
         .build();
@@ -84,6 +88,7 @@ public class WasteBankTransformer {
         .imageUrl(wasteBank.getImageUrl())
         .phoneNumber(wasteBank.getPhoneNumber())
         .region(wasteBank.getRegion())
+        .coin(wasteBank.getCoin())
         .build();
   }
 
@@ -99,6 +104,7 @@ public class WasteBankTransformer {
         .imageUrl(wasteBank.getImageUrl())
         .phoneNumber(wasteBank.getPhoneNumber())
         .region(wasteBank.getRegion())
+        .coin(wasteBank.getCoin())
         .createdAt(wasteBank.getCreatedAt())
         .updatedAt(wasteBank.getUpdatedAt())
         .build();
@@ -116,6 +122,7 @@ public class WasteBankTransformer {
         .imageUrl(wasteBank.getImageUrl())
         .phoneNumber(wasteBank.getPhoneNumber())
         .region(wasteBank.getRegion())
+        .coin(wasteBank.getCoin())
         .wasteBankWarehouses(
             wasteBankWarehouses.stream()
                 .map(WasteBankWarehouseTransformer::transformModelToResponse)

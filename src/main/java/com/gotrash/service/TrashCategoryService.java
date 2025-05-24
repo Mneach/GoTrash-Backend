@@ -35,6 +35,8 @@ public class TrashCategoryService {
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
             }
+        } else {
+            trashCategoryEntity.setImageUrl("https://i.fbcd.co/products/resized/resized-750-500/de18ae7d25cea00a569f391100ae56d990105791a99a2d42f35d84477a869d68.jpg");
         }
 
         return TrashCategoryTransformer.transformEntityToModel(

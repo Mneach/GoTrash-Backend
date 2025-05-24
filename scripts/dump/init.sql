@@ -71,6 +71,7 @@ CREATE TABLE gotrash.waste_banks (
   image_url TEXT NOT NULL,
   phone_number TEXT NOT NULL,
   region TEXT NOT NULL,
+  coin NUMERIC NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_waste_bank_user FOREIGN KEY (user_id)

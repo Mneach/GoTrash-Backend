@@ -33,7 +33,7 @@ public class PendingTrashHistoryService {
   @Transactional
   public void save(PendingTrashHistory pendingTrashHistory) {
 
-    Trash trash = trashService.getTrashByTrashId(pendingTrashHistory.getTrash().getTrashId());
+    Trash trash = trashService.getTrashByTrashName(pendingTrashHistory.getTrash().getName());
     TrashBin trashBin = trashBinService.getTrashBinByTrashBinId(pendingTrashHistory.getTrashBin().getTrashBinId());
 
     pendingTrashHistory.setTrash(trash);

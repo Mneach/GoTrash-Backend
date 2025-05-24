@@ -103,6 +103,7 @@ public class WasteBankService {
     wasteBankEntity.setLongitude(wasteBank.getLongitude() != null ? wasteBank.getLongitude() : wasteBankEntity.getLongitude());
     wasteBankEntity.setImageUrl(wasteBank.getImageUrl() != null ? wasteBank.getImageUrl() : wasteBankEntity.getImageUrl());
     wasteBankEntity.setRegion(wasteBank.getRegion() != null ? wasteBank.getRegion() : wasteBankEntity.getRegion());
+    wasteBankEntity.setCoin(wasteBank.getCoin() != null ? wasteBank.getCoin() : wasteBankEntity.getCoin());
     wasteBankEntity.setUpdatedAt(LocalDateTime.now());
 
     if (imageFile != null && !imageFile.isEmpty()) {

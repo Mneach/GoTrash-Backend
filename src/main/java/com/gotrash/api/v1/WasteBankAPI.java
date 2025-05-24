@@ -94,7 +94,7 @@ public class WasteBankAPI {
   @PatchMapping(value = "/waste-banks/{user_id}", consumes = {"multipart/form-data"})
   @Operation(summary = "API to update waste bank")
   public ApiResponse<WasteBankResponse> update(@PathVariable("user_id") String userId,
-                                               @RequestBody WasteBankRequest wasteBankRequest) {
+                                               @ModelAttribute  WasteBankRequest wasteBankRequest) {
     WasteBank wasteBank = WasteBankTransformer.transformRequestToModel(userId, wasteBankRequest);
     wasteBank = wasteBankService.update(wasteBank, wasteBankRequest.getImageFile());
     List<WasteBankWarehouse> wasteBankWarehouses = wasteBankWarehouseService.getWasteBankWarehousesByWasteBankId(wasteBank.getUserId());
