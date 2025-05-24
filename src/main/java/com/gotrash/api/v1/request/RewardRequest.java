@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 public class RewardRequest {
     private String rewardCategoryId;
+    private String wasteBankId;
     private String name;
     private BigInteger coin;
     private Integer stock;
