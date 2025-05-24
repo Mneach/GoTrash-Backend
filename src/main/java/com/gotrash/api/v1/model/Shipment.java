@@ -1,7 +1,5 @@
-package com.gotrash.api.v1.response;
+package com.gotrash.api.v1.model;
 
-import com.gotrash.api.v1.model.Reward;
-import com.gotrash.api.v1.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,10 +11,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ExchangeResponse {
-  private String exchangeId;
-  private UserResponse user;
-  private RewardResponse reward;
+public class Shipment {
+  private String shipmentId;
+  private Citizen citizen;
+  private CitizenAddress citizenAddress;
+  private Reward reward;
   private String status;
   private String description;
   private LocalDateTime createdAt;

@@ -11,9 +11,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ExchangeRequest {
-  private String userId;
+public class ShipmentRequest {
+  private String citizenId;
   private String rewardId;
+  private String citizenAddressId;
   private String status;
   private String description;
   private LocalDateTime createdAt;

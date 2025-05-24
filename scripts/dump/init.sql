@@ -17,10 +17,10 @@ CREATE SCHEMA IF NOT EXISTS "gotrash";
 -- 10. rewards
 -- 11. groups
 -- 12. user_groups
--- 13. exchanges
+-- 13. shipments
 -- 14. notifications
--- 15. shipments
--- 16. waste_bank_warehouses
+-- 15. waste_bank_warehouses
+-- 16. pending_trash_histories
 
 -- 1. USERS TABLE
 CREATE TABLE gotrash.users (
@@ -54,6 +54,7 @@ CREATE TABLE gotrash.citizens (
 CREATE TABLE gotrash.governments (
   user_id UUID PRIMARY KEY,
   name TEXT NOT NULL UNIQUE,
+  region TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_government_user FOREIGN KEY (user_id)
@@ -69,21 +70,10 @@ CREATE TABLE gotrash.waste_banks (
   address TEXT NOT NULL,
   image_url TEXT NOT NULL,
   phone_number TEXT NOT NULL,
-  operational_hours TEXT NOT NULL,
+  region TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_waste_bank_user FOREIGN KEY (user_id)
-    REFERENCES gotrash.users(user_id)
-);
-
--- 5. COMPANIES TABLE
-CREATE TABLE gotrash.companies (
-  user_id UUID PRIMARY KEY,
-  name TEXT NOT NULL UNIQUE,
-  address TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_company_user FOREIGN KEY (user_id)
     REFERENCES gotrash.users(user_id)
 );
 
@@ -127,13 +117,13 @@ CREATE TABLE gotrash.trash_bins (
 -- 9. TRASH_HISTORIES TABLE
 CREATE TABLE gotrash.trash_histories (
   trash_history_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID NOT NULL,
+  citizen_id UUID NOT NULL,
   trash_id UUID NOT NULL,
   trash_bin_id UUID NOT NULL,
   weight NUMERIC (19, 2) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_trash_history_user FOREIGN KEY (user_id)
+  CONSTRAINT fk_trash_history_user FOREIGN KEY (citizen_id)
     REFERENCES gotrash.citizens(user_id),
   CONSTRAINT fk_trash_history_trash FOREIGN KEY (trash_id)
     REFERENCES gotrash.trashes(trash_id),
@@ -153,6 +143,7 @@ CREATE TABLE gotrash.reward_categories (
 CREATE TABLE gotrash.rewards (
     reward_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     reward_category_id UUID NOT NULL,
+    waste_bank_id UUID NOT NULL,
     name VARCHAR(255) NOT NULL,
     coin NUMERIC NOT NULL,
     stock INTEGER NOT NULL,
@@ -161,17 +152,22 @@ CREATE TABLE gotrash.rewards (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_reward_category FOREIGN KEY (reward_category_id)
-        REFERENCES gotrash.reward_categories(reward_category_id)
+        REFERENCES gotrash.reward_categories(reward_category_id),
+    CONSTRAINT fk_reward_waste_bank FOREIGN KEY (waste_bank_id)
+        REFERENCES gotrash.waste_banks(user_id)
 );
 
 -- 11. GROUPS TABLE
 CREATE TABLE gotrash.groups (
   group_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  reward_id UUID NOT NULL,
+  owner_id UUID NOT NULL,
+  name TEXT NOT NULL,
+  coin NUMERIC NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_group_reward FOREIGN KEY (reward_id)
-    REFERENCES gotrash.rewards(reward_id)
+
+  CONSTRAINT fk_group_user FOREIGN KEY (owner_id)
+    REFERENCES gotrash.users(user_id)
 );
 
 -- 12. USER_GROUPS TABLE
@@ -184,16 +180,35 @@ CREATE TABLE gotrash.user_groups (
     REFERENCES gotrash.users(user_id)
 );
 
--- 13. EXCHANGES TABLE
+-- 16. CITIZEN ADDRESSES TABLE
+CREATE TABLE gotrash.citizen_addresses (
+    citizen_address_id UUID PRIMARY KEY,
+    citizen_id UUID NOT NULL,
+    label VARCHAR(255) NOT NULL,
+    address TEXT NOT NULL,
+    note TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_citizen_address_citizen
+        FOREIGN KEY (citizen_id)
+        REFERENCES gotrash.citizens(user_id)
+);
+
+-- 13. SHIPMENTS TABLE
 CREATE TABLE gotrash.shipments (
-  exchange_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  shipment_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL,
   reward_id UUID NOT NULL,
+  citizen_address_id UUID NOT NULL,
+  status TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_exchange_user FOREIGN KEY (user_id)
+  CONSTRAINT fk_shipment_user FOREIGN KEY (user_id)
     REFERENCES gotrash.users(user_id),
-  CONSTRAINT fk_exchange_reward FOREIGN KEY (reward_id)
+  CONSTRAINT fk_shipment_user_address FOREIGN KEY (citizen_address_id)
+    REFERENCES gotrash.citizen_addresses(citizen_address_id),
+  CONSTRAINT fk_shipment_reward FOREIGN KEY (reward_id)
     REFERENCES gotrash.rewards(reward_id)
 );
 
@@ -228,22 +243,7 @@ CREATE TABLE gotrash.waste_bank_warehouses (
         REFERENCES gotrash.trash_categories(trash_category_id)
 );
 
--- 16. CITIZEN ADDRESSES TABLE
-CREATE TABLE citizen_addresses (
-    citizen_address_id UUID PRIMARY KEY,
-    citizen_id UUID NOT NULL,
-    label VARCHAR(255) NOT NULL,
-    address TEXT NOT NULL,
-    note TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_citizen_address_citizen
-        FOREIGN KEY (citizen_id)
-        REFERENCES gotrash.citizens(user_id),
-);
-
--- 17. TRASH_HISTORIES TABLE
+-- 17. PENDING TRASH_HISTORIES TABLE
 CREATE TABLE gotrash.pending_trash_histories (
   pending_trash_history_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   trash_id UUID NOT NULL,

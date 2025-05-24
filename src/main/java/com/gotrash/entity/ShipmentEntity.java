@@ -21,21 +21,25 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "exchanges", schema = "gotrash")
+@Table(name = "shipments", schema = "gotrash")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ExchangeEntity {
+public class ShipmentEntity {
 
   @Id
   @Column(updatable = false, nullable = false, columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.UUID)
-  private UUID exchangeId;
+  private UUID shipmentId;
 
   @OneToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "user_id", nullable = false)
-  private UserEntity user;
+  @JoinColumn(name = "citizen_id", nullable = false)
+  private CitizenEntity citizen;
+
+  @OneToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "citizen_address_id", nullable = false)
+  private CitizenAddressEntity citizenAddress;
 
   @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "reward_id", nullable = false)
