@@ -3,10 +3,8 @@ package com.gotrash.service;
 import com.gotrash.api.v1.model.Notification;
 import com.gotrash.api.v1.model.Reward;
 import com.gotrash.api.v1.model.RewardCategory;
-import com.gotrash.api.v1.transformer.CitizenTransformer;
-import com.gotrash.api.v1.transformer.NotificationTransformer;
-import com.gotrash.api.v1.transformer.RewardCategoryTransformer;
-import com.gotrash.api.v1.transformer.RewardTransformer;
+import com.gotrash.api.v1.model.WasteBank;
+import com.gotrash.api.v1.transformer.*;
 import com.gotrash.entity.NotificationEntity;
 import com.gotrash.entity.RewardEntity;
 import com.gotrash.helper.FileUploadHelper;
@@ -26,6 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RewardService {
     private final RewardRepository rewardRepository;
+    private final WasteBankService wasteBankService;
     private final RewardCategoryService rewardCategoryService;
     private final FileUploadHelper fileUploadHelper;
 
@@ -34,6 +33,8 @@ public class RewardService {
         RewardCategory trashCategory = rewardCategoryService.getRewardCategoryByRewardCategoryId(
                 reward.getRewardCategory().getRewardCategoryId()
         );
+
+        WasteBank wasteBank = wasteBankService.getWasteBankByUserId(reward.getWasteBank().getUserId());
 
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
@@ -46,12 +47,22 @@ public class RewardService {
         }
 
         reward.setRewardCategory(trashCategory);
+        reward.setWasteBank(wasteBank);
+
         RewardEntity trashEntity = RewardTransformer.transformModelToEntity(reward);
         return RewardTransformer.transformEntityToModel(rewardRepository.save(trashEntity));
     }
 
     public List<Reward> getRewards() {
         List<RewardEntity> rewardEntities = rewardRepository.findAll();
+
+        return rewardEntities.stream()
+            .map(RewardTransformer::transformEntityToModel)
+            .toList();
+    }
+
+    public List<Reward> getAllRewardByWasteBankId(String wasteBankId) {
+        List<RewardEntity> rewardEntities = rewardRepository.findAllByWasteBank_UserId(UUID.fromString(wasteBankId));
 
         return rewardEntities.stream()
             .map(RewardTransformer::transformEntityToModel)
@@ -74,13 +85,18 @@ public class RewardService {
         RewardEntity rewardEntity = rewardRepository.findById(UUID.fromString(reward.getRewardId()))
             .orElseThrow(() -> new EntityNotFoundException("Waste Bank with ID " + reward.getRewardId() + " not found"));
 
-        RewardCategory rewardCategory = rewardCategoryService.getRewardCategoryByRewardCategoryId(
+        if (reward.getRewardCategory().getRewardCategoryId() != null) {
+            RewardCategory rewardCategory = rewardCategoryService.getRewardCategoryByRewardCategoryId(
                 reward.getRewardCategory().getRewardCategoryId()
-        );
+            );
+            rewardEntity.setRewardCategory(RewardCategoryTransformer.transformModelToEntity(rewardCategory));
+        }
 
-        reward.setRewardCategory(rewardCategory);
+        if (reward.getWasteBank().getUserId() != null) {
+            WasteBank wasteBank = wasteBankService.getWasteBankByUserId(reward.getWasteBank().getUserId());
+            rewardEntity.setWasteBank(WasteBankTransformer.transformModelToEntity(wasteBank));
+        }
 
-        rewardEntity.setRewardCategory(reward.getRewardCategory() != null ? RewardCategoryTransformer.transformModelToEntity(rewardCategory) : rewardEntity.getRewardCategory());
         rewardEntity.setName(reward.getName() != null ? reward.getName() : rewardEntity.getName());
         rewardEntity.setCoin(reward.getCoin() != null ? reward.getCoin() : rewardEntity.getCoin());
         rewardEntity.setStock(reward.getStock() != null ? reward.getStock() : rewardEntity.getStock());

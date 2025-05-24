@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface CitizenAddressRepository extends JpaRepository<CitizenAddressEntity, UUID> {
 
-  Optional<CitizenAddressEntity> findByIdAndCitizenId(UUID citizenAddressId, UUID citizenId);
+  Optional<CitizenAddressEntity> findByIdAndCitizen_UserId(UUID citizenAddressId, UUID citizenId);
 
-  List<CitizenAddressEntity> findAllByCitizenId(UUID citizenId);
+  List<CitizenAddressEntity> findAllByCitizen_UserId(UUID citizenId);
 }

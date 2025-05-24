@@ -44,7 +44,7 @@ public class CitizenAddressService {
       throw new EntityNotFoundException("Citizen not found with ID: " + citizenId);
     }
 
-    List<CitizenAddressEntity> citizenAddressEntities = citizenAddressRepository.findAllByCitizenId(
+    List<CitizenAddressEntity> citizenAddressEntities = citizenAddressRepository.findAllByCitizen_UserId(
         UUID.fromString(citizenId)
     );
 
@@ -57,7 +57,7 @@ public class CitizenAddressService {
   @Transactional
   public CitizenAddress update(CitizenAddress citizenAddress) {
 
-    CitizenAddressEntity citizenAddressEntity = citizenAddressRepository.findByIdAndCitizenId(
+    CitizenAddressEntity citizenAddressEntity = citizenAddressRepository.findByIdAndCitizen_UserId(
         UUID.fromString(citizenAddress.getCitizenAddressId()),UUID.fromString(citizenAddress.getCitizen().getUserId())
     ).orElseThrow(() -> new EntityNotFoundException("Address not found with ID: " + citizenAddress.getCitizenAddressId() + " for citizen: " + citizenAddress.getCitizen().getUserId()));
 
@@ -79,7 +79,7 @@ public class CitizenAddressService {
   @Transactional
   public CitizenAddress getCitizenAddressByCitizenIdAndAddressId(String citizenAddressId, String citizenId) {
 
-    CitizenAddressEntity citizenAddressEntity = citizenAddressRepository.findByIdAndCitizenId(
+    CitizenAddressEntity citizenAddressEntity = citizenAddressRepository.findByIdAndCitizen_UserId(
             UUID.fromString(citizenAddressId),UUID.fromString(citizenId)
     ).orElseThrow(() -> new EntityNotFoundException("Address not found with ID: " + citizenAddressId + " for citizen: " + citizenId));
 
@@ -90,7 +90,7 @@ public class CitizenAddressService {
 
   public void delete(String citizenId, String citizenAddressId) {
 
-    CitizenAddressEntity citizenAddressEntity = citizenAddressRepository.findByIdAndCitizenId(
+    CitizenAddressEntity citizenAddressEntity = citizenAddressRepository.findByIdAndCitizen_UserId(
         UUID.fromString(citizenAddressId),UUID.fromString(citizenId)
     ).orElseThrow(() -> new EntityNotFoundException("Address not found with ID: " + citizenAddressId + " for citizen: " + citizenId));
 

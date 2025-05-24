@@ -2,6 +2,7 @@ package com.gotrash.api.v1.transformer;
 
 import com.gotrash.api.v1.model.Reward;
 import com.gotrash.api.v1.model.RewardCategory;
+import com.gotrash.api.v1.model.WasteBank;
 import com.gotrash.api.v1.request.RewardRequest;
 import com.gotrash.api.v1.response.RewardResponse;
 import com.gotrash.entity.RewardEntity;
@@ -18,6 +19,7 @@ public class RewardTransformer {
                 .stock(rewardEntity.getStock())
                 .description(rewardEntity.getDescription())
                 .imageUrl(rewardEntity.getImageUrl())
+                .wasteBank(WasteBankTransformer.transformEntityToModel(rewardEntity.getWasteBank()))
                 .createdAt(rewardEntity.getCreatedAt())
                 .updatedAt(rewardEntity.getUpdatedAt())
                 .build();
@@ -27,6 +29,7 @@ public class RewardTransformer {
         return RewardEntity.builder()
                 .rewardId(reward.getRewardId() != null ? UUID.fromString(reward.getRewardId()) : null)
                 .rewardCategory(RewardCategoryTransformer.transformModelToEntity(reward.getRewardCategory()))
+                .wasteBank(WasteBankTransformer.transformModelToEntity(reward.getWasteBank()))
                 .name(reward.getName())
                 .coin(reward.getCoin())
                 .stock(reward.getStock())
@@ -39,6 +42,7 @@ public class RewardTransformer {
         return Reward.builder()
             .rewardId(rewardId)
             .rewardCategory(RewardCategory.builder().rewardCategoryId(rewardRequest.getRewardCategoryId()).build())
+            .wasteBank(WasteBank.builder().userId(rewardRequest.getWasteBankId()).build())
             .name(rewardRequest.getName())
             .coin(rewardRequest.getCoin())
             .stock(rewardRequest.getStock())
@@ -49,6 +53,7 @@ public class RewardTransformer {
     public static Reward transformRequestToModel(RewardRequest rewardRequest) {
         return Reward.builder()
                 .rewardCategory(RewardCategory.builder().rewardCategoryId(rewardRequest.getRewardCategoryId()).build())
+                .wasteBank(WasteBank.builder().userId(rewardRequest.getWasteBankId()).build())
                 .name(rewardRequest.getName())
                 .coin(rewardRequest.getCoin())
                 .stock(rewardRequest.getStock())
@@ -60,6 +65,7 @@ public class RewardTransformer {
         return RewardResponse.builder()
                 .rewardId(reward.getRewardId())
                 .rewardCategory(RewardCategoryTransformer.transformModelToResponse(reward.getRewardCategory()))
+                .wasteBank(WasteBankTransformer.transformModelToResponse(reward.getWasteBank()))
                 .name(reward.getName())
                 .coin(reward.getCoin())
                 .stock(reward.getStock())

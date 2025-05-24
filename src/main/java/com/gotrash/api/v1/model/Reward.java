@@ -21,6 +21,7 @@ import java.util.UUID;
 public class Reward {
     private String rewardId;
     private RewardCategory rewardCategory;
+    private WasteBank wasteBank;
     private String name;
     private BigInteger coin;
     private Integer stock;
