@@ -17,6 +17,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import javax.swing.text.html.Option;
 
 @Service
 @RequiredArgsConstructor
@@ -121,7 +122,7 @@ public class GroupService {
   }
 
   public List<Group> getGroupsFilterByUserId(String userId) {
-    List<GroupEntity> groupEntities = groupRepository.findAllByOwner_UserId(UUID.fromString(userId));
+    List<GroupEntity> groupEntities = groupRepository.findGroupsByUserId(UUID.fromString(userId));
 
     return groupEntities.stream()
         .map(GroupTransformer::transformEntityToModel)

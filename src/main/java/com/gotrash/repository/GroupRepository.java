@@ -14,4 +14,7 @@ import java.util.UUID;
 public interface GroupRepository extends JpaRepository<GroupEntity, UUID> {
 
   List<GroupEntity> findAllByOwner_UserId(UUID userId);
+
+  @Query("SELECT gm.group FROM GroupMemberEntity gm WHERE gm.user.userId = :userId")
+  List<GroupEntity> findGroupsByUserId(UUID userId);
 }

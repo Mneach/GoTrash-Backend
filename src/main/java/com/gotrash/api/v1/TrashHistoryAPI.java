@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,7 +54,7 @@ public class TrashHistoryAPI {
         TrashHistoryResponse trashHistoryResponse = TrashHistoryTransformer.transformModelToResponse(trashHistoryService.getTrashHistoryByTrashHistoryBleId(bleId));
         return new ApiResponse<>(HttpStatus.CREATED.value(), trashHistoryResponse);
     }
-
+  
     @GetMapping("/trash-histories")
     @Operation(summary = "API to get all trash history data")
     public ApiResponse<List<TrashHistoryResponse>> getTrashHistories() {
