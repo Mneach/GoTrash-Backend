@@ -3,18 +3,15 @@ package com.gotrash.api.v1;
 import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.v1.model.Auth;
 import com.gotrash.api.v1.model.Citizen;
-import com.gotrash.api.v1.model.Company;
 import com.gotrash.api.v1.model.Government;
 import com.gotrash.api.v1.model.WasteBank;
 import com.gotrash.api.v1.request.auth.AuthRequest;
 import com.gotrash.api.v1.request.auth.RegisterCitizenRequest;
-import com.gotrash.api.v1.request.auth.RegisterCompanyRequest;
 import com.gotrash.api.v1.request.auth.RegisterGovernmentRequest;
 import com.gotrash.api.v1.request.auth.RegisterWasteBankRequest;
 import com.gotrash.api.v1.response.AuthResponse;
 import com.gotrash.api.v1.transformer.AuthTransformer;
 import com.gotrash.api.v1.transformer.CitizenTransformer;
-import com.gotrash.api.v1.transformer.CompanyTransformer;
 import com.gotrash.api.v1.transformer.GovernmentTransformer;
 import com.gotrash.api.v1.transformer.WasteBankTransformer;
 import com.gotrash.service.AuthService;
@@ -26,7 +23,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -67,15 +63,6 @@ public class AuthAPI {
   public ApiResponse<AuthResponse> registerGovernment(@RequestBody RegisterGovernmentRequest registerGovernmentRequest) {
     Government government = GovernmentTransformer.transformRequestToModel(registerGovernmentRequest);
     AuthResponse authResponse = authService.registerGovernment(government);
-
-    return new ApiResponse<>(HttpStatus.OK.value(), authResponse);
-  }
-
-  @PostMapping("auth/register/company")
-  @Operation(summary = "API for register a new company")
-  public ApiResponse<AuthResponse> registerCompany(@RequestBody RegisterCompanyRequest registerCompanyRequest) {
-    Company company = CompanyTransformer.transformRequestToModel(registerCompanyRequest);
-    AuthResponse authResponse = authService.registerCompany(company);
 
     return new ApiResponse<>(HttpStatus.OK.value(), authResponse);
   }

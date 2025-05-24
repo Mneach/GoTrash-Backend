@@ -3,6 +3,7 @@ package com.gotrash.api.v1.response.trashhistory;
 import com.gotrash.api.v1.model.Trash;
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.request.TrashBinRequest;
+import com.gotrash.api.v1.response.CitizenResponse;
 import com.gotrash.api.v1.response.TrashBinResponse;
 import com.gotrash.api.v1.response.TrashResponse;
 import com.gotrash.api.v1.response.UserResponse;
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
 @Builder
 public class TrashHistoryResponse {
   private String trashHistoryId;
-  private UserResponse citizen;
+  private CitizenResponse citizen;
   private TrashResponse trash;
   private TrashBinResponse trashBin;
   private BigDecimal weight;

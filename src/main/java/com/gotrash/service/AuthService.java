@@ -2,7 +2,6 @@ package com.gotrash.service;
 
 import com.gotrash.api.v1.model.Auth;
 import com.gotrash.api.v1.model.Citizen;
-import com.gotrash.api.v1.model.Company;
 import com.gotrash.api.v1.model.Government;
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.model.WasteBank;
@@ -28,7 +27,6 @@ public class AuthService {
   private final WasteBankService wasteBankService;
   private final GovernmentService governmentService;
   private final CitizenService citizenService;
-  private final CompanyService companyService;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
   private final FileUploadHelper fileUploadHelper;
@@ -52,7 +50,6 @@ public class AuthService {
     citizen.setLongestStreak(0);
     citizen.setRating(BigInteger.valueOf(0));
     citizen.setCoin(BigInteger.valueOf(0));
-    citizen.setBleId(BigInteger.valueOf(totalUser + 1));
 
     citizen = citizenService.save(citizen);
     String jwtToken = jwtService.generateToken(citizen.getUser());
@@ -72,8 +69,6 @@ public class AuthService {
       throw new BadRequestException("Phone Number is already in use.");
     }
 
-    Long totalUser = userService.countTotalUser();
-
     if (imageFile != null) {
       try {
         String filePath = fileUploadHelper.uploadFile("citizens", citizen.getEmail(), imageFile, null);
@@ -90,7 +85,6 @@ public class AuthService {
     citizen.setLongestStreak(0);
     citizen.setRating(BigInteger.valueOf(0));
     citizen.setCoin(BigInteger.valueOf(0));
-    citizen.setBleId(BigInteger.valueOf(totalUser + 1));
 
     citizen = citizenService.save(citizen);
     String jwtToken = jwtService.generateToken(citizen.getUser());
@@ -142,22 +136,6 @@ public class AuthService {
     return AuthResponse.builder()
         .token(jwtToken)
         .role(government.getRole())
-        .build();
-  }
-
-  @Transactional
-  public AuthResponse registerCompany(Company company) {
-
-    if (userService.isEmailAlreadyExists(company.getEmail())) {
-      throw new BadRequestException("Email is already in use.");
-    }
-
-    company = companyService.save(company);
-    String jwtToken = jwtService.generateToken(company.getUser());
-
-    return AuthResponse.builder()
-        .token(jwtToken)
-        .role(company.getRole())
         .build();
   }
 

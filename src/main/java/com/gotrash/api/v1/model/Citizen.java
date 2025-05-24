@@ -19,7 +19,6 @@ import java.util.UUID;
 public class Citizen {
   private String userId;
   private User user;
-  private BigInteger bleId;
   private String email;
   private String password;
   private UserRole role;

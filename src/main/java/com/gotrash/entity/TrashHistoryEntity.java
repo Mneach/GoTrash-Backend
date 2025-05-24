@@ -1,5 +1,6 @@
 package com.gotrash.entity;
 
+import com.gotrash.api.v1.model.Citizen;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class TrashHistoryEntity {
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id", nullable = false)
-  private UserEntity user;
+  private CitizenEntity citizen;
 
   @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "trash_id", nullable = false)
@@ -41,10 +42,6 @@ public class TrashHistoryEntity {
   @NotNull
   @Column(precision = 19, scale = 2)
   private BigDecimal weight;
-
-  @NotNull
-  @Column
-  private BigInteger bleId;
 
   @CreationTimestamp
   @Column(updatable = false)

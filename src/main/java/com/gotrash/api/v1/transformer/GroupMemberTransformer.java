@@ -15,34 +15,34 @@ public class GroupMemberTransformer {
   public static GroupMember transformEntityToModel(GroupMemberEntity groupMemberEntity) {
     return GroupMember.builder()
         .groupMemberId(groupMemberEntity.getGroupMemberId().toString())
-        .user(CitizenTransformer.transformEntityToModel(groupMemberEntity.getUser()))
+        .citizen(CitizenTransformer.transformEntityToModel(groupMemberEntity.getCitizen()))
         .build();
   }
 
   public static GroupMemberEntity transformModelToEntity(GroupMember groupMember) {
     return GroupMemberEntity.builder()
         .groupMemberId(groupMember.getGroupMemberId() != null ? UUID.fromString(groupMember.getGroupMemberId()) : null)
-        .user(CitizenTransformer.transformModelToEntity(groupMember.getUser()))
+        .citizen(CitizenTransformer.transformModelToEntity(groupMember.getCitizen()))
         .group(GroupTransformer.transformModelToEntity(groupMember.getGroup()))
         .build();
   }
 
   public static GroupMember transformRequestToModel(GroupMemberRequest groupMemberRequest) {
     return GroupMember.builder()
-        .user(Citizen.builder().userId(groupMemberRequest.getUserId()).build())
+        .citizen(Citizen.builder().userId(groupMemberRequest.getCitizenId()).build())
         .build();
   }
 
   public static GroupMember transformRequestToModel(String userId, String groupId) {
     return GroupMember.builder()
-        .user(Citizen.builder().userId(userId).build())
+        .citizen(Citizen.builder().userId(userId).build())
         .group(Group.builder().groupId(groupId).build())
         .build();
   }
 
   public static GroupMember transformRequestToModel(GroupMemberRequest groupMemberRequest, String groupId) {
     return GroupMember.builder()
-        .user(Citizen.builder().userId(groupMemberRequest.getUserId()).build())
+        .citizen(Citizen.builder().userId(groupMemberRequest.getCitizenId()).build())
         .group(Group.builder().groupId(groupId).build())
         .build();
   }
@@ -50,7 +50,7 @@ public class GroupMemberTransformer {
   public static GroupMemberResponse transformModelToResponse(GroupMember groupMember) {
     return GroupMemberResponse.builder()
         .groupMemberId(groupMember.getGroupMemberId())
-        .user(CitizenTransformer.transformModelToResponse(groupMember.getUser()))
+        .citizen(CitizenTransformer.transformModelToResponse(groupMember.getCitizen()))
         .build();
   }
 }

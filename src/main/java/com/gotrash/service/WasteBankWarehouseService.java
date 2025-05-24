@@ -1,6 +1,5 @@
 package com.gotrash.service;
 
-import com.gotrash.api.v1.model.Shipment;
 import com.gotrash.api.v1.model.WasteBankWarehouse;
 import com.gotrash.api.v1.transformer.WasteBankWarehouseTransformer;
 import com.gotrash.entity.TrashCategoryEntity;
@@ -64,24 +63,6 @@ public class WasteBankWarehouseService {
           wasteBankWarehouseRepository.save(wasteBankWarehouseEntity)
       );
     }
-  }
-
-  @Transactional
-  public WasteBankWarehouse decreaseTrashFromWasteBankWarehouse(WasteBankWarehouse wasteBankWarehouse, Shipment shipment) {
-    WasteBankWarehouseEntity wasteBankWarehouseEntity = wasteBankWarehouseRepository.findById(wasteBankWarehouse.getWasteBankWarehouseId())
-        .orElseThrow(() -> new EntityNotFoundException("WasteBankWarehouse not found"));
-
-    if (wasteBankWarehouseEntity.getTotalWeight().compareTo(shipment.getWeight()) < 0) {
-      throw new BadRequestException("Shipment weight cannot be more than total weight in warehouse");
-    }
-
-    wasteBankWarehouseEntity.setTotalWeight(
-        wasteBankWarehouseEntity.getTotalWeight().subtract(shipment.getWeight())
-    );
-
-    return WasteBankWarehouseTransformer.transformEntityToModel(
-        wasteBankWarehouseRepository.save(wasteBankWarehouseEntity)
-    );
   }
 
   @Transactional

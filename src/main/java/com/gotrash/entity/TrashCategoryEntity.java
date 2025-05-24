@@ -34,10 +34,6 @@ public class TrashCategoryEntity {
   private String name;
 
   @NotNull
-  @Column(precision = 20, scale = 6)
-  private BigDecimal price;
-
-  @NotNull
   private String imageUrl;
 
   @CreationTimestamp

@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 public class UserGroup {
   private String userGroupId;
-  private User user;
+  private Citizen citizen;
   private List<Group> groupEntities;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;

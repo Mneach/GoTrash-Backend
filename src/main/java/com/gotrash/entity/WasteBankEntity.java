@@ -20,6 +20,7 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -58,7 +59,7 @@ public class WasteBankEntity {
   private String phoneNumber;
 
   @NotNull
-  private String operationalHours;
+  private BigInteger coin;
 
   @CreationTimestamp
   @Column(updatable = false)

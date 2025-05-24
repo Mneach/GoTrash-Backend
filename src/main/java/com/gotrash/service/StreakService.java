@@ -1,5 +1,6 @@
 package com.gotrash.service;
 
+import com.gotrash.api.v1.model.Citizen;
 import com.gotrash.api.v1.model.trashhistory.TrashHistory;
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.model.streak.Streak;
@@ -25,8 +26,8 @@ public class StreakService {
   private final TrashHistoryRepository trashHistoryRepository;
 
   @Transactional
-  public void updateCitizenStreak(User user) {
-    CitizenEntity citizenEntity = citizenRepository.findById(UUID.fromString(user.getUserId()))
+  public void updateCitizenStreak(Citizen citizen) {
+    CitizenEntity citizenEntity = citizenRepository.findById(UUID.fromString(citizen.getUserId()))
         .orElseThrow(() -> new EntityNotFoundException("Citizen not found"));
 
     LocalDate today = LocalDate.now();

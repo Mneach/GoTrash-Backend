@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 public class GroupMemberResponse {
   private String groupMemberId;
-  private CitizenResponse user;
+  private CitizenResponse citizen;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

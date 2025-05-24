@@ -16,7 +16,6 @@ public class TrashCategory {
     private String trashCategoryId;
     private String name;
     private String imageUrl;
-    private BigDecimal price;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
