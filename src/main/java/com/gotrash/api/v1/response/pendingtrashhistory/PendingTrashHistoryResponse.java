@@ -3,6 +3,7 @@ package com.gotrash.api.v1.response.pendingtrashhistory;
 import com.gotrash.api.v1.response.CitizenResponse;
 import com.gotrash.api.v1.response.TrashBinResponse;
 import com.gotrash.api.v1.response.TrashResponse;
+import com.gotrash.constant.PendingTrashHistoryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class PendingTrashHistoryResponse {
   private TrashBinResponse trashBin;
   private BigDecimal weight;
   private BigInteger totalCoin;
+  private PendingTrashHistoryStatus status;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

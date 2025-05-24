@@ -84,10 +84,10 @@ public class TrashHistoryTransformer {
                 .build();
     }
 
-    public static TrashHistory transformPendingTrashHistoryToTrashHistory(PendingTrashHistory pendingTrashHistory, Citizen citizen) {
+    public static TrashHistory transformPendingTrashHistoryToTrashHistory(PendingTrashHistory pendingTrashHistory, String citizenId) {
         return TrashHistory.builder()
             .trash(pendingTrashHistory.getTrash())
-            .citizen(citizen)
+            .citizen(Citizen.builder().userId(citizenId).build())
             .weight(pendingTrashHistory.getWeight())
             .trashBin(pendingTrashHistory.getTrashBin())
             .build();

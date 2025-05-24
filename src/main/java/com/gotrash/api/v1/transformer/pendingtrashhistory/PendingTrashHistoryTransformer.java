@@ -38,6 +38,7 @@ public class PendingTrashHistoryTransformer {
                 .trash(TrashTransformer.transformEntityToModel(pendingTrashHistoryEntity.getTrash()))
                 .weight(pendingTrashHistoryEntity.getWeight())
                 .trashBin(TrashBinTransformer.transformEntityToModel(pendingTrashHistoryEntity.getTrashBin()))
+                .status(pendingTrashHistoryEntity.getStatus())
                 .createdAt(pendingTrashHistoryEntity.getCreatedAt())
                 .updatedAt(pendingTrashHistoryEntity.getUpdatedAt())
                 .build();
@@ -50,6 +51,7 @@ public class PendingTrashHistoryTransformer {
             .trashBin(TrashBinTransformer.transformEntityToModel(pendingTrashHistoryEntity.getTrashBin()))
             .weight(pendingTrashHistoryEntity.getWeight())
             .totalCoin(totalCoin)
+            .status(pendingTrashHistoryEntity.getStatus())
             .createdAt(pendingTrashHistoryEntity.getCreatedAt())
             .updatedAt(pendingTrashHistoryEntity.getUpdatedAt())
             .build();
@@ -61,6 +63,7 @@ public class PendingTrashHistoryTransformer {
                 .trash(TrashTransformer.transformModelToEntity(pendingTrashHistory.getTrash()))
                 .trashBin(TrashBinTransformer.transformModelToEntity(pendingTrashHistory.getTrashBin()))
                 .weight(pendingTrashHistory.getWeight())
+                .status(pendingTrashHistory.getStatus())
                 .build();
     }
 
