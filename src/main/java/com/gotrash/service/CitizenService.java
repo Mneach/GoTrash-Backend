@@ -177,4 +177,8 @@ public class CitizenService {
 
     return false;
   }
+
+  public boolean isCitizenExists(String citizenId) {
+    return citizenRepository.existsById(UUID.fromString(citizenId));
+  }
 }

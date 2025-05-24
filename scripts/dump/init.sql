@@ -254,3 +254,18 @@ CREATE TABLE gotrash.waste_bank_warehouses (
         FOREIGN KEY (trash_category_id)
         REFERENCES gotrash.trash_categories(trash_category_id)
 );
+
+CREATE TABLE citizen_addresses (
+    citizen_address_id UUID PRIMARY KEY,
+    citizen_id UUID NOT NULL,
+    label VARCHAR(255) NOT NULL,
+    address TEXT NOT NULL,
+    note TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_citizen_address_citizen
+        FOREIGN KEY (citizen_id)
+        REFERENCES gotrash.citizens(user_id),
+);
+
