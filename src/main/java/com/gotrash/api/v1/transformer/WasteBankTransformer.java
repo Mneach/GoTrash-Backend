@@ -23,6 +23,7 @@ public class WasteBankTransformer {
         .longitude(wasteBankRequest.getLongitude())
         .address(wasteBankRequest.getAddress())
         .phoneNumber(wasteBankRequest.getPhoneNumber())
+        .region(wasteBankRequest.getRegion())
         .build();
   }
 
@@ -36,6 +37,7 @@ public class WasteBankTransformer {
         .longitude(wasteBankRequest.getLongitude())
         .address(wasteBankRequest.getAddress())
         .phoneNumber(wasteBankRequest.getPhoneNumber())
+        .region(wasteBankRequest.getRegion())
         .build();
   }
 
@@ -49,6 +51,7 @@ public class WasteBankTransformer {
         .longitude(registerWasteBankRequest.getLongitude())
         .address(registerWasteBankRequest.getAddress())
         .phoneNumber(registerWasteBankRequest.getPhoneNumber())
+        .region(registerWasteBankRequest.getRegion())
         .build();
   }
 
@@ -64,6 +67,7 @@ public class WasteBankTransformer {
         .address(wasteBankEntity.getAddress())
         .imageUrl(wasteBankEntity.getImageUrl())
         .phoneNumber(wasteBankEntity.getPhoneNumber())
+        .region(wasteBankEntity.getRegion())
         .createdAt(wasteBankEntity.getCreatedAt())
         .updatedAt(wasteBankEntity.getUpdatedAt())
         .build();
@@ -79,6 +83,7 @@ public class WasteBankTransformer {
         .address(wasteBank.getAddress())
         .imageUrl(wasteBank.getImageUrl())
         .phoneNumber(wasteBank.getPhoneNumber())
+        .region(wasteBank.getRegion())
         .build();
   }
 
@@ -93,6 +98,7 @@ public class WasteBankTransformer {
         .address(wasteBank.getAddress())
         .imageUrl(wasteBank.getImageUrl())
         .phoneNumber(wasteBank.getPhoneNumber())
+        .region(wasteBank.getRegion())
         .createdAt(wasteBank.getCreatedAt())
         .updatedAt(wasteBank.getUpdatedAt())
         .build();
@@ -109,6 +115,7 @@ public class WasteBankTransformer {
         .address(wasteBank.getAddress())
         .imageUrl(wasteBank.getImageUrl())
         .phoneNumber(wasteBank.getPhoneNumber())
+        .region(wasteBank.getRegion())
         .wasteBankWarehouses(
             wasteBankWarehouses.stream()
                 .map(WasteBankWarehouseTransformer::transformModelToResponse)

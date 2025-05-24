@@ -15,6 +15,7 @@ public class GovernmentTransformer {
         .userId(government.getUserId() != null ? UUID.fromString(government.getUserId()) : null)
         .user(government.getUser() != null ? UserTransformer.transformModelToEntity(government.getUser()) : null)
         .name(government.getName())
+        .region(government.getRegion())
         .createdAt(government.getCreatedAt())
         .updatedAt(government.getUpdatedAt())
         .build();
@@ -27,6 +28,7 @@ public class GovernmentTransformer {
         .name(governmentEntity.getName())
         .email(governmentEntity.getUser().getEmail())
         .role(governmentEntity.getUser().getRole())
+        .region(governmentEntity.getRegion())
         .createdAt(governmentEntity.getCreatedAt())
         .updatedAt(governmentEntity.getUpdatedAt())
         .build();
@@ -38,6 +40,7 @@ public class GovernmentTransformer {
         .password(governmentRequest.getPassword())
         .email(governmentRequest.getEmail())
         .role(governmentRequest.getRole())
+        .region(governmentRequest.getRegion())
         .build();
   }
 
@@ -48,6 +51,7 @@ public class GovernmentTransformer {
         .password(governmentRequest.getPassword())
         .email(governmentRequest.getEmail())
         .role(governmentRequest.getRole())
+        .region(governmentRequest.getRegion())
         .build();
   }
 
@@ -57,6 +61,7 @@ public class GovernmentTransformer {
         .password(registerGovernmentRequest.getPassword())
         .email(registerGovernmentRequest.getEmail())
         .role(registerGovernmentRequest.getRole())
+        .region(registerGovernmentRequest.getRegion())
         .build();
   }
 
@@ -66,6 +71,7 @@ public class GovernmentTransformer {
         .email(government.getEmail())
         .role(government.getRole())
         .name(government.getName())
+        .region(government.getRegion())
         .createdAt(government.getCreatedAt())
         .updatedAt(government.getUpdatedAt())
         .build();

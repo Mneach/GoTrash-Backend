@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TrashHistoryService {
 
-    private final Map<String, List<String>> userNotify;
     private final TrashHistoryRepository trashHistoryRepository;
     private final WasteBankWarehouseService wasteBankWarehouseService;
     private final CitizenService citizenService;
@@ -69,38 +68,9 @@ public class TrashHistoryService {
                 .build()
         );
 
-        // add to user notify
-        if (userNotify.get(user.getUserId()) == null) {
-            userNotify.put(user.getUserId(), new ArrayList<>(
-                Collections.singletonList(trashHistoryEntity.getTrashHistoryId().toString()))
-            );
-        } else {
-            userNotify.get(user.getUserId()).add(trashHistoryEntity.getTrashHistoryId().toString());
-        }
-
         return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity, totalCoin);
     }
 
-    public TrashHistory notifyTrashHistoryToUser(String userId) {
-
-        if (userNotify.containsKey(userId)) {
-            if (!userNotify.get(userId).isEmpty()) {
-                String firstId = userNotify.get(userId).getFirst();
-                userNotify.get(userId).removeFirst();
-                return getTrashHistoryByTrashHistoryId(firstId);
-            } else {
-                return TrashHistory.builder()
-                    .trashHistoryId("-1")
-                    .bleId(BigInteger.valueOf(-1))
-                    .build();
-            }
-        } else {
-            return TrashHistory.builder()
-                .trashHistoryId("-1")
-                .bleId(BigInteger.valueOf(-1))
-                .build();
-        }
-    }
 
     public List<TrashHistory> getTrashHistories() {
         List<TrashHistoryEntity> trashHistoryEntities = trashHistoryRepository.findAll();

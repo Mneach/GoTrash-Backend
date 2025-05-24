@@ -18,6 +18,7 @@ public class GovernmentRequest {
   private UserRole role;
   private String name;
   private String password;
+  private String region;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

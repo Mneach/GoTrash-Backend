@@ -17,6 +17,7 @@ public class GovernmentResponse {
   private String email;
   private UserRole role;
   private String name;
+  private String region;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

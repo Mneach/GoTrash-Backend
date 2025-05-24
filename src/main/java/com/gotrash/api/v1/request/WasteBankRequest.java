@@ -23,6 +23,7 @@ public class WasteBankRequest {
   private MultipartFile imageFile;
   private String address;
   private String phoneNumber;
+  private String region;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

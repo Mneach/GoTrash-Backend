@@ -86,7 +86,8 @@ public class GovernmentService {
     userEntity = userRepository.save(userEntity);
 
     governmentEntity.setUser(userEntity);
-    governmentEntity.setName(government.getName());
+    governmentEntity.setName(government.getName() != null ? government.getName() : governmentEntity.getName());
+    governmentEntity.setRegion(government.getRegion() != null ? government.getRegion() : governmentEntity.getRegion());
     governmentEntity.setUpdatedAt(LocalDateTime.now());
 
     return GovernmentTransformer.transformEntityToModel(
