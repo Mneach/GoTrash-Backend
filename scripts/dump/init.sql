@@ -206,9 +206,9 @@ CREATE TABLE gotrash.shipments (
   quantity NUMERIC NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_shipment_user FOREIGN KEY (citizen_id)
-    REFERENCES gotrash.users(user_id),
-  CONSTRAINT fk_shipment_user_address FOREIGN KEY (citizen_address_id)
+  CONSTRAINT fk_shipment_citizens FOREIGN KEY (citizen_id)
+    REFERENCES gotrash.citizens(user_id),
+  CONSTRAINT fk_shipment_citizen_addresses FOREIGN KEY (citizen_address_id)
     REFERENCES gotrash.citizen_addresses(citizen_address_id),
   CONSTRAINT fk_shipment_reward FOREIGN KEY (reward_id)
     REFERENCES gotrash.rewards(reward_id)
