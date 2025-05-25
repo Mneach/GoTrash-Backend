@@ -69,7 +69,7 @@ public class CitizenAddressService {
   }
 
   @Transactional
-  public CitizenAddress getCitizenAddressByCitizenIdAndAddressId(String citizenAddressId, String citizenId) {
+  public CitizenAddress getCitizenAddressByCitizenIdAndAddressId(String citizenId, String citizenAddressId) {
 
     CitizenAddressEntity citizenAddressEntity = citizenAddressRepository.findByCitizenAddressIdAndCitizen_UserId(
             UUID.fromString(citizenAddressId),UUID.fromString(citizenId)

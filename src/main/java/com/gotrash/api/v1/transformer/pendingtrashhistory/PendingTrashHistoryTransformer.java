@@ -76,6 +76,7 @@ public class PendingTrashHistoryTransformer {
                 .totalCoin(CalculatorUtil.calculateCoin(
                     pendingTrashHistory.getWeight(), pendingTrashHistory.getTrash().getCoin()
                 ))
+                .status(pendingTrashHistory.getStatus())
                 .createdAt(pendingTrashHistory.getCreatedAt())
                 .updatedAt(pendingTrashHistory.getUpdatedAt())
                 .build();

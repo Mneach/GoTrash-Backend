@@ -26,19 +26,14 @@ public class GroupService {
   private final GroupRepository groupRepository;
   private final GroupMemberService groupMemberService;
   private final GroupMemberRepository groupMemberRepository;
-  private final RewardService rewardService;
   private final CitizenService citizenService;
   private final CitizenRepository citizenRepository;
   private final RewardRepository rewardRepository;
 
   @Transactional
   public Group save(Group group) {
-    Reward reward = rewardService.getRewardByRewardId(group.getReward().getRewardId());
     CitizenEntity citizenEntity = citizenRepository.findById(UUID.fromString(group.getOwner().getUserId()))
         .orElseThrow(() -> new RuntimeException("Citizen not found"));
-
-    RewardEntity rewardEntity = rewardRepository.findById(UUID.fromString(reward.getRewardId()))
-        .orElseThrow(() -> new RuntimeException("Reward not found"));
 
     // Build GroupEntity manually
     GroupEntity groupEntity = new GroupEntity();
@@ -137,9 +132,6 @@ public class GroupService {
 
     CitizenEntity citizenEntity = citizenRepository.findById(UUID.fromString(group.getOwner().getUserId()))
         .orElseThrow(() -> new RuntimeException("Citizen not found"));
-
-    RewardEntity rewardEntity = rewardRepository.findById(UUID.fromString(group.getReward().getRewardId()))
-        .orElseThrow(() -> new RuntimeException("Reward not found"));
 
     groupEntity.setName(group.getName());
     groupEntity.setOwner(citizenEntity);

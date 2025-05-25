@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,7 +18,8 @@ public class Shipment {
   private CitizenAddress citizenAddress;
   private Reward reward;
   private String status;
-  private String description;
+  private Integer quantity;
+  private BigInteger totalCoinUsed;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

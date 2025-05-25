@@ -6,9 +6,15 @@ import com.gotrash.api.v1.model.trashhistory.TrashHistoryManual;
 import com.gotrash.api.v1.model.trashhistory.TrashHistoryWasteBank;
 import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryTransformer;
 import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryWasteBankTransformer;
+import com.gotrash.entity.CitizenEntity;
+import com.gotrash.entity.TrashBinEntity;
+import com.gotrash.entity.TrashEntity;
 import com.gotrash.entity.TrashHistoryEntity;
 import com.gotrash.entity.id.WasteBankWarehouseId;
+import com.gotrash.repository.CitizenRepository;
+import com.gotrash.repository.TrashBinRepository;
 import com.gotrash.repository.TrashHistoryRepository;
+import com.gotrash.repository.TrashRepository;
 import com.gotrash.util.CalculatorUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -16,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -27,42 +34,49 @@ public class TrashHistoryService {
     private final TrashHistoryRepository trashHistoryRepository;
     private final WasteBankWarehouseService wasteBankWarehouseService;
     private final CitizenService citizenService;
-    private final TrashService trashService;
-    private final TrashBinService trashBinService;
     private final StreakService streakService;
+    private final CitizenRepository citizenRepository;
+    private final TrashRepository trashRepository;
+    private final TrashBinRepository trashBinRepository;
 
     @Transactional
     public TrashHistory save(TrashHistory trashHistory) {
-        Citizen citizen = citizenService.getCitizenByUserId(trashHistory.getCitizen().getUserId());
-        Trash trash = trashService.getTrashByTrashId(trashHistory.getTrash().getTrashId());
-        TrashBin trashBin = trashBinService.getTrashBinByTrashBinId(trashHistory.getTrashBin().getTrashBinId());
 
-        trashHistory.setCitizen(citizen);
-        trashHistory.setTrash(trash);
-        trashHistory.setTrashBin(trashBin);
+        CitizenEntity citizenEntity = citizenRepository.findByUser_UserId(UUID.fromString(trashHistory.getCitizen().getUserId()))
+            .orElseThrow(() -> new EntityNotFoundException("Citizen not found"));
 
-        TrashHistoryEntity trashHistoryEntity = trashHistoryRepository.save(
-                TrashHistoryTransformer.transformModelToEntity(trashHistory)
-        );
+        TrashEntity trashEntity = trashRepository.findById(UUID.fromString(trashHistory.getTrash().getTrashId()))
+            .orElseThrow(() -> new EntityNotFoundException("Trash not found"));
 
-        BigInteger totalCoin = CalculatorUtil.calculateCoin(trashHistory.getWeight(), trash.getCoin());
+        TrashBinEntity trashBinEntity = trashBinRepository.findById(UUID.fromString(trashHistory.getTrashBin().getTrashBinId()))
+            .orElseThrow(() -> new EntityNotFoundException("TrashBin not found"));
+
+        TrashHistoryEntity trashHistoryEntity = TrashHistoryTransformer.transformModelToEntity(trashHistory);
+        trashHistoryEntity.setCitizen(citizenEntity);
+        trashHistoryEntity.setTrash(trashEntity);
+        trashHistoryEntity.setTrashBin(trashBinEntity);
+        trashHistoryEntity = trashHistoryRepository.save(trashHistoryEntity);
+
+        trashHistory = TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity);
+
+        BigInteger totalCoin = CalculatorUtil.calculateCoin(trashHistory.getWeight(), trashHistory.getTrash().getCoin());
         BigInteger totalRating = CalculatorUtil.calculateRating(trashHistory.getWeight(), trashHistory.getTrash().getRating());
 
-        streakService.updateCitizenStreak(citizen);
-        citizenService.addCoin(citizen.getUserId(), totalCoin);
-        citizenService.addRating(citizen.getUserId(), totalRating);
+        streakService.updateCitizenStreak(trashHistory.getCitizen());
+        citizenService.addCoin(trashHistory.getCitizen().getUserId(), totalCoin);
+        citizenService.addRating(trashHistory.getCitizen().getUserId(), totalRating);
 
         // Add the data into waste bank warehouse
         wasteBankWarehouseService.addTrashToWasteBankWarehouse(
             WasteBankWarehouse.builder()
                 .wasteBankWarehouseId(
                     new WasteBankWarehouseId(
-                        UUID.fromString(trashBin.getWasteBank().getUserId()),
-                        UUID.fromString(trash.getTrashCategory().getTrashCategoryId())
+                        UUID.fromString(trashHistory.getTrashBin().getWasteBank().getUserId()),
+                        UUID.fromString(trashHistory.getTrash().getTrashCategory().getTrashCategoryId())
                     )
                 )
-                .wasteBank(trashBin.getWasteBank())
-                .trashCategory(trash.getTrashCategory())
+                .wasteBank(trashHistory.getTrashBin().getWasteBank())
+                .trashCategory(trashHistory.getTrash().getTrashCategory())
                 .totalWeight(trashHistory.getWeight())
                 .build()
         );
@@ -80,27 +94,46 @@ public class TrashHistoryService {
     }
 
     public TrashHistory storeTrashManually(TrashHistoryManual trashHistoryManual) {
-        Citizen citizen = citizenService.findCitizenByPhoneNumber(trashHistoryManual.getPhoneNumber());
-        Trash trash = trashService.getTrashByTrashId(trashHistoryManual.getTrashId());
-        TrashBin trashBin = trashBinService.getTrashBinByTrashBinId(trashHistoryManual.getTrashBinId());
+        CitizenEntity citizenEntity = citizenRepository.findByPhoneNumber(trashHistoryManual.getPhoneNumber())
+            .orElseThrow(() -> new EntityNotFoundException("Citizen not found"));
 
-        TrashHistory trashHistory = TrashHistory.builder()
-            .citizen(citizen)
-            .trash(trash)
-            .trashBin(trashBin)
+        TrashEntity trashEntity = trashRepository.findById(UUID.fromString(trashHistoryManual.getTrashId()))
+            .orElseThrow(() -> new EntityNotFoundException("Trash not found"));
+
+        TrashBinEntity trashBinEntity = trashBinRepository.findById(UUID.fromString(trashHistoryManual.getTrashBinId()))
+            .orElseThrow(() -> new EntityNotFoundException("TrashBin not found"));
+
+        TrashHistoryEntity trashHistoryEntity = TrashHistoryEntity.builder()
+            .citizen(citizenEntity)
+            .trash(trashEntity)
+            .trashBin(trashBinEntity)
             .weight(trashHistoryManual.getWeight())
             .build();
 
-        TrashHistoryEntity trashHistoryEntity = trashHistoryRepository.save(
-            TrashHistoryTransformer.transformModelToEntity(trashHistory)
-        );
+        trashHistoryEntity = trashHistoryRepository.save(trashHistoryEntity);
+        TrashHistory trashHistory = TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity);
 
-        BigInteger totalCoin = CalculatorUtil.calculateCoin(trashHistory.getWeight(), trash.getCoin());
+        BigInteger totalCoin = CalculatorUtil.calculateCoin(trashHistory.getWeight(), trashHistory.getTrash().getCoin());
         BigInteger totalRating = CalculatorUtil.calculateRating(trashHistory.getWeight(), trashHistory.getTrash().getRating());
 
-        streakService.updateCitizenStreak(citizen);
-        citizenService.addCoin(citizen.getUser().getUserId(), totalCoin);
-        citizenService.addRating(citizen.getUser().getUserId(), totalRating);
+        streakService.updateCitizenStreak(trashHistory.getCitizen());
+        citizenService.addCoin(trashHistory.getCitizen().getUserId(), totalCoin);
+        citizenService.addRating(trashHistory.getCitizen().getUserId(), totalRating);
+
+        // Add the data into waste bank warehouse
+        wasteBankWarehouseService.addTrashToWasteBankWarehouse(
+            WasteBankWarehouse.builder()
+                .wasteBankWarehouseId(
+                    new WasteBankWarehouseId(
+                        UUID.fromString(trashHistory.getTrashBin().getWasteBank().getUserId()),
+                        UUID.fromString(trashHistory.getTrash().getTrashCategory().getTrashCategoryId())
+                    )
+                )
+                .wasteBank(trashHistory.getTrashBin().getWasteBank())
+                .trashCategory(trashHistory.getTrash().getTrashCategory())
+                .totalWeight(trashHistory.getWeight())
+                .build()
+        );
 
         return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity, totalCoin);
     }
@@ -131,17 +164,33 @@ public class TrashHistoryService {
             throw new EntityNotFoundException("Trash History with ID " + trashHistory.getTrashHistoryId() + " Not Found");
         }
 
-        Citizen citizen = citizenService.getCitizenByUserId(trashHistory.getCitizen().getUserId());
-        Trash trash = trashService.getTrashByTrashId(trashHistory.getTrash().getTrashId());
-        TrashBin trashBin = trashBinService.getTrashBinByTrashBinId(trashHistory.getTrashBin().getTrashBinId());
+        TrashHistoryEntity trashHistoryEntity = TrashHistoryTransformer.transformModelToEntity(trashHistory);
 
-        trashHistory.setCitizen(citizen);
-        trashHistory.setTrash(trash);
-        trashHistory.setTrashBin(trashBin);
+        if (trashHistory.getCitizen().getUserId() != null) {
+            CitizenEntity citizenEntity = citizenRepository.findByUser_UserId(UUID.fromString(trashHistory.getCitizen().getUserId()))
+                .orElseThrow(() -> new EntityNotFoundException("Citizen not found"));
 
-        TrashHistoryEntity trashHistoryEntity = trashHistoryRepository.save(
-                TrashHistoryTransformer.transformModelToEntity(trashHistory)
-        );
+            trashHistoryEntity.setCitizen(citizenEntity);
+        }
+
+        if (trashHistory.getTrash().getTrashId() != null) {
+            TrashEntity trashEntity = trashRepository.findById(UUID.fromString(trashHistory.getTrash().getTrashId()))
+                .orElseThrow(() -> new EntityNotFoundException("Trash not found"));
+
+            trashHistoryEntity.setTrash(trashEntity);
+        }
+
+        if (trashHistory.getTrashBin().getTrashBinId() != null) {
+            TrashBinEntity trashBinEntity = trashBinRepository.findById(UUID.fromString(trashHistory.getTrashBin().getTrashBinId()))
+                .orElseThrow(() -> new EntityNotFoundException("TrashBin not found"));
+
+            trashHistoryEntity.setTrashBin(trashBinEntity);
+        }
+
+        trashHistoryEntity.setWeight(trashHistory.getWeight() != null ? trashHistory.getWeight() : trashHistoryEntity.getWeight());
+        trashHistoryEntity.setUpdatedAt(LocalDateTime.now());
+
+        trashHistoryEntity = trashHistoryRepository.save(trashHistoryEntity);
 
         return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity);
     }

@@ -69,7 +69,7 @@ public class CitizenAddressAPI {
   ){
 
     CitizenAddressResponse citizenAddressResponses = CitizenAddressTransformer.transformModelToResponse(
-        citizenAddressService.getCitizenAddressByCitizenIdAndAddressId(citizenAddressId, citizenId)
+        citizenAddressService.getCitizenAddressByCitizenIdAndAddressId(citizenId, citizenAddressId)
     );
 
     return new ApiResponse<>(HttpStatus.OK.value(), citizenAddressResponses);

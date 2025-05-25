@@ -8,6 +8,7 @@ import com.gotrash.api.v1.request.ShipmentRequest;
 import com.gotrash.api.v1.response.ShipmentResponse;
 import com.gotrash.entity.ShipmentEntity;
 
+import java.math.BigInteger;
 import java.util.UUID;
 
 public class ShipmentTransformer {
@@ -18,8 +19,7 @@ public class ShipmentTransformer {
         .citizen(Citizen.builder().userId(shipmentRequest.getCitizenId()).build())
         .reward(Reward.builder().rewardId(shipmentRequest.getRewardId()).build())
         .citizenAddress(CitizenAddress.builder().citizenAddressId(shipmentRequest.getCitizenAddressId()).build())
-        .status(shipmentRequest.getStatus())
-        .description(shipmentRequest.getDescription())
+        .quantity(shipmentRequest.getQuantity())
         .build();
   }
 
@@ -28,8 +28,7 @@ public class ShipmentTransformer {
         .citizen(Citizen.builder().userId(shipmentRequest.getCitizenId()).build())
         .reward(Reward.builder().rewardId(shipmentRequest.getRewardId()).build())
         .citizenAddress(CitizenAddress.builder().citizenAddressId(shipmentRequest.getCitizenAddressId()).build())
-        .status(shipmentRequest.getStatus())
-        .description(shipmentRequest.getDescription())
+        .quantity(shipmentRequest.getQuantity())
         .build();
   }
 
@@ -39,8 +38,11 @@ public class ShipmentTransformer {
         .citizen(CitizenTransformer.transformEntityToModel(shipmentEntity.getCitizen()))
         .reward(RewardTransformer.transformEntityToModel(shipmentEntity.getReward()))
         .citizenAddress(CitizenAddressTransformer.transformEntityToModel(shipmentEntity.getCitizenAddress()))
-        .description(shipmentEntity.getDescription())
         .status(shipmentEntity.getStatus())
+        .quantity(shipmentEntity.getQuantity())
+        .totalCoinUsed(
+            shipmentEntity.getReward().getCoin().multiply(BigInteger.valueOf(shipmentEntity.getQuantity()))
+        )
         .createdAt(shipmentEntity.getCreatedAt())
         .updatedAt(shipmentEntity.getUpdatedAt())
         .build();
@@ -52,8 +54,8 @@ public class ShipmentTransformer {
         .citizen(CitizenTransformer.transformModelToEntity(shipment.getCitizen()))
         .reward(RewardTransformer.transformModelToEntity(shipment.getReward()))
         .citizenAddress(CitizenAddressTransformer.transformModelToEntity(shipment.getCitizenAddress()))
-        .description(shipment.getDescription())
         .status(shipment.getStatus())
+        .quantity(shipment.getQuantity())
         .createdAt(shipment.getCreatedAt())
         .updatedAt(shipment.getUpdatedAt())
         .build();
@@ -65,8 +67,11 @@ public class ShipmentTransformer {
         .citizen(CitizenTransformer.transformModelToResponse(shipment.getCitizen()))
         .reward(RewardTransformer.transformModelToResponse(shipment.getReward()))
         .citizenAddress(CitizenAddressTransformer.transformModelToResponse(shipment.getCitizenAddress()))
-        .description(shipment.getDescription())
         .status(shipment.getStatus())
+        .quantity(shipment.getQuantity())
+        .totalCoinUsed(
+            shipment.getReward().getCoin().multiply(BigInteger.valueOf(shipment.getQuantity()))
+        )
         .createdAt(shipment.getCreatedAt())
         .updatedAt(shipment.getUpdatedAt())
         .build();

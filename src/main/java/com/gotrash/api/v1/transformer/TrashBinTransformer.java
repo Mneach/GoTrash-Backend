@@ -49,7 +49,7 @@ public class TrashBinTransformer {
         return TrashBinEntity.builder()
                 .trashBinId(trashBin.getTrashBinId() != null ? UUID.fromString(trashBin.getTrashBinId()) : null)
                 .name(trashBin.getName())
-                .wasteBank(WasteBankTransformer.transformModelToEntity(trashBin.getWasteBank()))
+                .wasteBank(trashBin.getWasteBank() != null ? WasteBankTransformer.transformModelToEntity(trashBin.getWasteBank()) : null)
                 .latitude(trashBin.getLatitude())
                 .longitude(trashBin.getLongitude())
                 .address(trashBin.getAddress())

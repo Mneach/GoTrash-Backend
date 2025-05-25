@@ -15,8 +15,7 @@ public class ShipmentRequest {
   private String citizenId;
   private String rewardId;
   private String citizenAddressId;
-  private String status;
-  private String description;
+  private Integer quantity;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

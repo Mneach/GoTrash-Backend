@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class AddMemberRequest {
-  private String userId;
+  private String citizenId;
 }

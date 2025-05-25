@@ -19,7 +19,6 @@ import java.util.List;
 @Builder
 public class GroupResponse {
     private String groupId;
-    private RewardResponse reward;
     private CitizenResponse owner;
     private List<GroupMemberResponse> groupMembers;
     private String name;

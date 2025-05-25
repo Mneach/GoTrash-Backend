@@ -199,13 +199,14 @@ CREATE TABLE gotrash.citizen_addresses (
 -- 13. SHIPMENTS TABLE
 CREATE TABLE gotrash.shipments (
   shipment_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID NOT NULL,
+  citizen_id UUID NOT NULL,
   reward_id UUID NOT NULL,
   citizen_address_id UUID NOT NULL,
   status TEXT NOT NULL,
+  quantity NUMERIC NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_shipment_user FOREIGN KEY (user_id)
+  CONSTRAINT fk_shipment_user FOREIGN KEY (citizen_id)
     REFERENCES gotrash.users(user_id),
   CONSTRAINT fk_shipment_user_address FOREIGN KEY (citizen_address_id)
     REFERENCES gotrash.citizen_addresses(citizen_address_id),

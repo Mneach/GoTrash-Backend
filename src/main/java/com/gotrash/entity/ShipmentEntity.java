@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -49,7 +50,7 @@ public class ShipmentEntity {
   private String status;
 
   @NotNull
-  private String description;
+  private Integer quantity;
 
   @CreationTimestamp
   @Column(updatable = false)

@@ -76,6 +76,27 @@ public class ShipmentAPI {
     return new ApiResponse<>(HttpStatus.OK.value(), shipmentResponse);
   }
 
+  @PatchMapping("/shipments/{shipmentId}/delivered")
+  public ApiResponse<ShipmentResponse> markAsDelivered(@PathVariable String shipmentId) {
+    Shipment shipment = shipmentService.markShipmentAsDelivered(shipmentId);
+    ShipmentResponse shipmentResponse = ShipmentTransformer.transformModelToResponse(shipment);
+    return new ApiResponse<>(HttpStatus.OK.value(), shipmentResponse);
+  }
+
+  @PatchMapping("/shipments/{shipmentId}/in-transit")
+  public ApiResponse<ShipmentResponse> markAsInTransit(@PathVariable String shipmentId) {
+    Shipment shipment = shipmentService.markShipmentAsInTransit(shipmentId);
+    ShipmentResponse shipmentResponse = ShipmentTransformer.transformModelToResponse(shipment);
+    return new ApiResponse<>(HttpStatus.OK.value(), shipmentResponse);
+  }
+
+  @PatchMapping("/shipments/{shipmentId}/cancelled")
+  public ApiResponse<ShipmentResponse> markAsCancelled(@PathVariable String shipmentId) {
+    Shipment shipment = shipmentService.markShipmentAsCancelled(shipmentId);
+    ShipmentResponse shipmentResponse = ShipmentTransformer.transformModelToResponse(shipment);
+    return new ApiResponse<>(HttpStatus.OK.value(), shipmentResponse);
+  }
+
   @DeleteMapping("/shipments/{shipment_id}")
   @Operation(summary = "API to delete shipment by shipment id")
   public ApiResponse<MessageResponse> deleteByShipmentId(@PathVariable("shipment_id") String shipmentId) {

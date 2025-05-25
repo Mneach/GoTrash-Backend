@@ -74,10 +74,11 @@ public class PendingTrashHistoryService {
     BigDecimal totalWeight = BigDecimal.valueOf(0);
     BigInteger totalRating = BigInteger.valueOf(0);
 
-    pendingTrashHistoryEntities.forEach(pendingTrashHistoryEntity -> {
-      totalCoin.add(pendingTrashHistoryEntity.getTrash().getCoin());
-      totalWeight.add(pendingTrashHistoryEntity.getWeight());
-      totalRating.add(pendingTrashHistoryEntity.getTrash().getRating());
+    for (PendingTrashHistoryEntity pendingTrashHistoryEntity : pendingTrashHistoryEntities) {
+      totalCoin = totalCoin.add(pendingTrashHistoryEntity.getTrash().getCoin());
+      totalWeight = totalWeight.add(pendingTrashHistoryEntity.getWeight());
+      totalRating = totalRating.add(pendingTrashHistoryEntity.getTrash().getRating());
+
       pendingTrashHistoryEntity.setStatus(PendingTrashHistoryStatus.CLAIMED);
 
       PendingTrashHistory pendingTrashHistory = PendingTrashHistoryTransformer.transformEntityToModel(
@@ -90,7 +91,7 @@ public class PendingTrashHistoryService {
               pendingTrashHistory, citizenId
           )
       );
-    });
+    }
 
     pendingTrashHistoryRepository.saveAll(pendingTrashHistoryEntities);
 

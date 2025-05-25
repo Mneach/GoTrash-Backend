@@ -26,7 +26,7 @@ public class TrashTransformer {
     public static TrashEntity transformModelToEntity(Trash trash) {
         return TrashEntity.builder()
                 .trashId(trash.getTrashId() != null ? UUID.fromString(trash.getTrashId()) : null)
-                .trashCategory(TrashCategoryTransformer.transformModelToEntity(trash.getTrashCategory()))
+                .trashCategory(trash.getTrashCategory() != null ? TrashCategoryTransformer.transformModelToEntity(trash.getTrashCategory()) : null)
                 .coin(trash.getCoin())
                 .rating(trash.getRating())
                 .name(trash.getName())
