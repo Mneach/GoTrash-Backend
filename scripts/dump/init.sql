@@ -269,7 +269,6 @@ CREATE TABLE gotrash.missions (
     target_value NUMERIC NOT NULL,
     trash_category_id UUID,
     reward_coins NUMERIC NOT NULL,
-    active_date DATE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -284,6 +283,7 @@ CREATE TABLE gotrash.daily_mission_progress (
     citizen_id UUID NOT NULL,
     current_progress NUMERIC NOT NULL,
     is_reward_claimed BOOLEAN DEFAULT FALSE,
+    active_date DATE NOT NULL,
 
     CONSTRAINT fk_citizen_daily_mission_citizen FOREIGN KEY (citizen_id)
         REFERENCES gotrash.citizens(user_id),
@@ -303,5 +303,23 @@ CREATE TABLE gotrash.group_mission_progress (
         REFERENCES gotrash.groups(group_id),
     CONSTRAINT fk_group_mission_progress_mission FOREIGN KEY (mission_id)
         REFERENCES gotrash.missions(mission_id)
+);
+
+-- 20. GROUP MEMBER MISSION CONTRIBUTIONS TABLE
+CREATE TABLE gotrash.group_member_mission_contributions (
+    contribution_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    group_mission_progress_id UUID NOT NULL,
+    citizen_id UUID NOT NULL,
+    contribution NUMERIC NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_contribution_group_mission FOREIGN KEY (group_mission_progress_id)
+        REFERENCES gotrash.group_mission_progress(group_mission_progress_id),
+
+    CONSTRAINT fk_contribution_user FOREIGN KEY (user_id)
+        REFERENCES gotrash.citizens(user_id),
+
+    CONSTRAINT uq_user_group_mission UNIQUE (group_mission_progress_id, user_id)
 );
 
