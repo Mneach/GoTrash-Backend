@@ -1,4 +1,4 @@
-package com.gotrash.api.v1.response;
+package com.gotrash.api.v1.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,10 +12,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TrashCategoryResponse {
-  private String trashCategoryId;
-  private String name;
-  private String imageUrl;
+public class GroupMissionContribution {
+  private String contributionId;
+  private GroupMissionProgress groupMissionProgress;
+  private Citizen citizen;
+  private BigDecimal contribution;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

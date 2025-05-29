@@ -18,6 +18,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -54,10 +55,10 @@ public class MissionEntity {
     private TrashCategoryEntity trashCategory;
 
     @Column(nullable = false)
-    private BigDecimal rewardCoins;
+    private BigInteger rewardCoins;
 
     @Column(nullable = false)
-    private LocalDate activeDate;
+    private BigInteger rewardRatings;
 
     @CreationTimestamp
     @Column(updatable = false)
