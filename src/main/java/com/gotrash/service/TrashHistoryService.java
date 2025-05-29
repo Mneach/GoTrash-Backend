@@ -38,6 +38,8 @@ public class TrashHistoryService {
     private final CitizenRepository citizenRepository;
     private final TrashRepository trashRepository;
     private final TrashBinRepository trashBinRepository;
+    private final DailyMissionProgressService dailyMissionProgressService;
+    private final GroupMissionProgressService groupMissionProgressService;
 
     @Transactional
     public TrashHistory save(TrashHistory trashHistory) {
@@ -79,6 +81,18 @@ public class TrashHistoryService {
                 .trashCategory(trashHistory.getTrash().getTrashCategory())
                 .totalWeight(trashHistory.getWeight())
                 .build()
+        );
+
+        dailyMissionProgressService.updateCitizenDailyMissionProgress(
+            citizenEntity.getUserId().toString(),
+            trashEntity.getTrashCategory().getTrashCategoryId().toString(),
+            trashHistory.getWeight()
+        );
+
+        groupMissionProgressService.updateGroupMissionProgress(
+            citizenEntity.getUserId().toString(),
+            trashEntity.getTrashCategory().getTrashCategoryId().toString(),
+            trashHistory.getWeight()
         );
 
         return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity, totalCoin);
@@ -133,6 +147,18 @@ public class TrashHistoryService {
                 .trashCategory(trashHistory.getTrash().getTrashCategory())
                 .totalWeight(trashHistory.getWeight())
                 .build()
+        );
+
+        dailyMissionProgressService.updateCitizenDailyMissionProgress(
+            citizenEntity.getUserId().toString(),
+            trashEntity.getTrashCategory().getTrashCategoryId().toString(),
+            trashHistory.getWeight()
+        );
+
+        groupMissionProgressService.updateGroupMissionProgress(
+            citizenEntity.getUserId().toString(),
+            trashEntity.getTrashCategory().getTrashCategoryId().toString(),
+            trashHistory.getWeight()
         );
 
         return TrashHistoryTransformer.transformEntityToModel(trashHistoryEntity, totalCoin);

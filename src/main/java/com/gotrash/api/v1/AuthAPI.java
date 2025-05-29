@@ -15,6 +15,7 @@ import com.gotrash.api.v1.transformer.CitizenTransformer;
 import com.gotrash.api.v1.transformer.GovernmentTransformer;
 import com.gotrash.api.v1.transformer.WasteBankTransformer;
 import com.gotrash.service.AuthService;
+import com.gotrash.service.DailyMissionProgressService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

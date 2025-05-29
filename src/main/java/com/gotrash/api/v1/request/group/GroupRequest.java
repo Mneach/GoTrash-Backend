@@ -14,5 +14,4 @@ import java.math.BigInteger;
 public class GroupRequest {
     private String citizenId;
     private String name;
-    private BigInteger coin;
 }

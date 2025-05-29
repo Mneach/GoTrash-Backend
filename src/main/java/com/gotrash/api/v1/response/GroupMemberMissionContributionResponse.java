@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TrashCategoryResponse {
-  private String trashCategoryId;
-  private String name;
-  private String imageUrl;
+public class GroupMemberMissionContributionResponse {
+  private String contributionId;
+  private CitizenResponse citizen;
+  private BigDecimal contribution;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

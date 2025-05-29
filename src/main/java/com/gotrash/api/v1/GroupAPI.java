@@ -4,11 +4,15 @@ import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.response.MessageResponse;
 import com.gotrash.api.v1.model.Group;
 import com.gotrash.api.v1.model.GroupMember;
+import com.gotrash.api.v1.model.GroupMemberMissionContribution;
+import com.gotrash.api.v1.model.GroupMissionProgress;
 import com.gotrash.api.v1.request.group.GroupMemberRequest;
 import com.gotrash.api.v1.request.group.GroupRequest;
 import com.gotrash.api.v1.response.GroupResponse;
 import com.gotrash.api.v1.transformer.GroupMemberTransformer;
 import com.gotrash.api.v1.transformer.GroupTransformer;
+import com.gotrash.service.GroupMemberMissionContributionService;
+import com.gotrash.service.GroupMissionProgressService;
 import com.gotrash.service.GroupService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -33,30 +38,79 @@ import java.util.List;
 public class GroupAPI {
 
   private final GroupService groupService;
+  private final GroupMissionProgressService groupMissionProgressService;
+  private final GroupMemberMissionContributionService groupMemberMissionContributionService;
 
   @GetMapping("/groups/{group_id}")
   @Operation(summary = "API to get group by group_id")
   public ApiResponse<GroupResponse> getGroupByUserId(@PathVariable("group_id") String groupId) {
-    GroupResponse groupResponse = GroupTransformer.transformModelToResponse(groupService.getGroupByGroupId(groupId));
+    Group group = groupService.getGroupByGroupId(groupId);
+    GroupMissionProgress groupMissionProgress = groupMissionProgressService.getActiveGroupMissionProgressByGroupId(group.getGroupId());
+
+    GroupResponse groupResponse;
+
+    if (groupMissionProgress == null) {
+      groupResponse = GroupTransformer.transformModelToResponse(group);
+    } else {
+      List<String> memberIds = group.getGroupMembers()
+          .stream()
+          .map(groupMember -> groupMember.getCitizen().getUserId())
+          .toList();
+
+      List<GroupMemberMissionContribution> groupMemberMissionContributions = groupMemberMissionContributionService.getAllMemberActivelyContribute(
+          memberIds, groupMissionProgress.getGroupMissionProgressId()
+      );
+
+      groupResponse = GroupTransformer.transformModelToResponse(
+          group,
+          groupMissionProgress,
+          groupMemberMissionContributions
+      );
+    }
+
+
     return new ApiResponse<>(HttpStatus.OK.value(), groupResponse);
   }
 
   @GetMapping("/groups")
-  @Operation(summary = "API to get all group data")
+  @Operation(summary = "API to get all group data with optional citizen filter")
   public ApiResponse<List<GroupResponse>> getGroups(
       @RequestParam(name = "citizenId", required = false) String citizenId
   ) {
-    List<Group> groups;
-
-    if (citizenId != null) {
-      groups = groupService.getGroupsFilterByUserId(citizenId);
-    } else {
-      groups = groupService.getGroups();
-    }
+    List<Group> groups = (citizenId != null)
+        ? groupService.getGroupsFilterByUserId(citizenId)
+        : groupService.getGroups();
 
     List<GroupResponse> groupResponses = groups.stream()
-        .map(GroupTransformer::transformModelToResponse)
+        .map(group -> {
+          // Get active mission progress for each group
+          GroupMissionProgress groupMissionProgress = groupMissionProgressService.getActiveGroupMissionProgressByGroupId(group.getGroupId());
+
+          GroupResponse groupResponse;
+
+          if (groupMissionProgress == null) {
+            groupResponse = GroupTransformer.transformModelToResponse(group);
+          } else {
+            List<String> memberIds = group.getGroupMembers()
+                .stream()
+                .map(groupMember -> groupMember.getCitizen().getUserId())
+                .toList();
+
+            List<GroupMemberMissionContribution> groupMemberMissionContributions = groupMemberMissionContributionService.getAllMemberActivelyContribute(
+                memberIds, groupMissionProgress.getGroupMissionProgressId()
+            );
+
+            groupResponse = GroupTransformer.transformModelToResponse(
+                group,
+                groupMissionProgress,
+                groupMemberMissionContributions
+            );
+          }
+
+          return groupResponse;
+        })
         .toList();
+
     return new ApiResponse<>(HttpStatus.OK.value(), groupResponses);
   }
 
@@ -64,7 +118,30 @@ public class GroupAPI {
   @Operation(summary = "API to create a new group")
   public ApiResponse<GroupResponse> groupResponse(@RequestBody GroupRequest groupRequest) {
     Group group = GroupTransformer.transformRequestToModel(groupRequest);
-    GroupResponse groupResponse = GroupTransformer.transformModelToResponse(groupService.save(group));
+    group = groupService.save(group);
+    GroupMissionProgress groupMissionProgress = groupMissionProgressService.getActiveGroupMissionProgressByGroupId(group.getGroupId());
+
+    GroupResponse groupResponse;
+
+    if (groupMissionProgress == null) {
+      groupResponse = GroupTransformer.transformModelToResponse(group);
+    } else {
+      List<String> memberIds = group.getGroupMembers()
+          .stream()
+          .map(groupMember -> groupMember.getCitizen().getUserId())
+          .toList();
+
+      List<GroupMemberMissionContribution> groupMemberMissionContributions = groupMemberMissionContributionService.getAllMemberActivelyContribute(
+          memberIds, groupMissionProgress.getGroupMissionProgressId()
+      );
+
+      groupResponse = GroupTransformer.transformModelToResponse(
+          group,
+          groupMissionProgress,
+          groupMemberMissionContributions
+      );
+    }
+
     return new ApiResponse<>(HttpStatus.CREATED.value(), groupResponse);
   }
 
@@ -86,7 +163,31 @@ public class GroupAPI {
   public ApiResponse<GroupResponse> updateGroup(@PathVariable("group_id") String groupId,
                                                    @RequestBody GroupRequest groupRequest) {
     Group group = GroupTransformer.transformRequestToModel(groupId, groupRequest);
-    GroupResponse groupResponse = GroupTransformer.transformModelToResponse(groupService.update(group));
+    group = groupService.update(group);
+
+    GroupMissionProgress groupMissionProgress = groupMissionProgressService.getActiveGroupMissionProgressByGroupId(group.getGroupId());
+
+    GroupResponse groupResponse;
+
+    if (groupMissionProgress == null) {
+      groupResponse = GroupTransformer.transformModelToResponse(group);
+    } else {
+      List<String> memberIds = group.getGroupMembers()
+          .stream()
+          .map(groupMember -> groupMember.getCitizen().getUserId())
+          .toList();
+
+      List<GroupMemberMissionContribution> groupMemberMissionContributions = groupMemberMissionContributionService.getAllMemberActivelyContribute(
+          memberIds, groupMissionProgress.getGroupMissionProgressId()
+      );
+
+      groupResponse = GroupTransformer.transformModelToResponse(
+          group,
+          groupMissionProgress,
+          groupMemberMissionContributions
+      );
+    }
+
 
     return new ApiResponse<>(HttpStatus.OK.value(), groupResponse);
   }

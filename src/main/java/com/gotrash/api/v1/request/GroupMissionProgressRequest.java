@@ -1,5 +1,7 @@
-package com.gotrash.api.v1.response;
+package com.gotrash.api.v1.request;
 
+import com.gotrash.api.v1.model.Group;
+import com.gotrash.api.v1.model.Mission;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,10 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TrashCategoryResponse {
-  private String trashCategoryId;
-  private String name;
-  private String imageUrl;
-  private LocalDateTime createdAt;
-  private LocalDateTime updatedAt;
+public class GroupMissionProgressRequest {
+  private String missionId;
+  private String groupId;
 }

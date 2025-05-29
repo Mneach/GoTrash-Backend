@@ -32,6 +32,7 @@ public class CitizenService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final FileUploadHelper fileUploadHelper;
+  private final DailyMissionProgressService dailyMissionProgressService;
 
   @Transactional
   public Citizen save(Citizen citizen) {
@@ -47,8 +48,16 @@ public class CitizenService {
     CitizenEntity citizenEntity = CitizenTransformer.transformModelToEntity(citizen);
     citizenEntity.setUser(userEntity);
 
+    citizenEntity = citizenRepository.save(citizenEntity);
+
+    Citizen savedCitizen = CitizenTransformer.transformEntityToModel(citizenEntity);
+
+    dailyMissionProgressService.assignDailyMissionToOneCitizen(
+        savedCitizen
+    );
+
     return CitizenTransformer.transformEntityToModel(
-        citizenRepository.save(citizenEntity)
+        citizenEntity
     );
   }
 

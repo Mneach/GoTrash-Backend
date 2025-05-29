@@ -25,7 +25,6 @@ public class Group {
     private Citizen owner;
     private List<GroupMember> groupMembers;
     private String name;
-    private BigInteger coin;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

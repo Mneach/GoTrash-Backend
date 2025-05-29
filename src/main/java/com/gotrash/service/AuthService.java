@@ -27,6 +27,7 @@ public class AuthService {
   private final WasteBankService wasteBankService;
   private final GovernmentService governmentService;
   private final CitizenService citizenService;
+  private final DailyMissionProgressService dailyMissionProgressService;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
   private final FileUploadHelper fileUploadHelper;
@@ -87,6 +88,7 @@ public class AuthService {
     citizen.setCoin(BigInteger.valueOf(0));
 
     citizen = citizenService.save(citizen);
+
     String jwtToken = jwtService.generateToken(citizen.getUser());
 
     return AuthResponse.builder()
