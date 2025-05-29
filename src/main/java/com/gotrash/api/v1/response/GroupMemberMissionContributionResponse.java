@@ -12,9 +12,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GroupMissionContributionResponse {
+public class GroupMemberMissionContributionResponse {
   private String contributionId;
-  private GroupMissionProgressResponse groupMissionProgress;
   private CitizenResponse citizen;
   private BigDecimal contribution;
   private LocalDateTime createdAt;

@@ -23,7 +23,6 @@ public class GroupTransformer {
     return Group.builder()
         .groupId(groupEntity.getGroupId().toString())
         .name(groupEntity.getName())
-        .coin(groupEntity.getCoin())
         .owner(CitizenTransformer.transformEntityToModel(groupEntity.getOwner()))
         .groupMembers(groupMembers)
         .createdAt(groupEntity.getCreatedAt())
@@ -34,9 +33,8 @@ public class GroupTransformer {
   public static GroupEntity transformModelToEntity(Group group) {
     return GroupEntity.builder()
         .groupId(group.getGroupId() != null ? UUID.fromString(group.getGroupId()) : null)
-        .owner(CitizenTransformer.transformModelToEntity(group.getOwner()))
+        .owner(group.getOwner() != null && group.getOwner().getUserId() != null ? CitizenTransformer.transformModelToEntity(group.getOwner()) : null)
         .name(group.getName())
-        .coin(group.getCoin())
         .build();
   }
 
@@ -45,7 +43,6 @@ public class GroupTransformer {
         .groupId(groupId)
         .owner(Citizen.builder().userId(groupRequest.getCitizenId()).build())
         .name(groupRequest.getName())
-        .coin(groupRequest.getCoin())
         .build();
   }
 
@@ -53,7 +50,6 @@ public class GroupTransformer {
     return Group.builder()
         .owner(Citizen.builder().userId(groupRequest.getCitizenId()).build())
         .name(groupRequest.getName())
-        .coin(groupRequest.getCoin())
         .build();
   }
 
@@ -62,13 +58,35 @@ public class GroupTransformer {
     return GroupResponse.builder()
         .groupId(group.getGroupId())
         .name(group.getName())
-        .coin(group.getCoin())
         .owner(CitizenTransformer.transformModelToResponse(group.getOwner()))
         .groupMembers(
             group.getGroupMembers().stream()
                 .map(GroupMemberTransformer::transformModelToResponse)
                 .toList()
         )
+        .groupMissionProgress(null)
+        .createdAt(group.getCreatedAt())
+        .updatedAt(group.getUpdatedAt())
+        .build();
+  }
+
+
+  public static GroupResponse transformModelToResponse(Group group,
+                                                       GroupMissionProgress groupMissionProgress,
+                                                       List<GroupMemberMissionContribution> groupMemberMissionContributions) {
+
+    return GroupResponse.builder()
+        .groupId(group.getGroupId())
+        .name(group.getName())
+        .owner(CitizenTransformer.transformModelToResponse(group.getOwner()))
+        .groupMembers(
+            group.getGroupMembers().stream()
+                .map(GroupMemberTransformer::transformModelToResponse)
+                .toList()
+        )
+        .groupMissionProgress(GroupMissionProgressTransformer.transformModelToResponse(
+            groupMissionProgress, groupMemberMissionContributions
+        ))
         .createdAt(group.getCreatedAt())
         .updatedAt(group.getUpdatedAt())
         .build();

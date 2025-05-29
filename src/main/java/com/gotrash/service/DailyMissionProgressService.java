@@ -42,7 +42,6 @@ public class DailyMissionProgressService {
     MissionEntity missionEntity = missionRepository.findById(UUID.fromString(dailyMissionProgress.getMission().getMissionId()))
         .orElseThrow(() -> new jakarta.persistence.EntityNotFoundException("Mission with id " + dailyMissionProgress.getMission().getMissionId() + " Not Found"));
 
-
     DailyMissionProgressEntity dailyMissionProgressEntity = DailyMissionProgressTransformer.transformModelToEntity(dailyMissionProgress);
     dailyMissionProgressEntity.setMission(missionEntity);
     dailyMissionProgressEntity.setCitizen(citizenEntity);

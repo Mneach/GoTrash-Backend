@@ -30,7 +30,7 @@ public class GroupMemberMissionContributionEntity {
   private UUID contributionId;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(nullable = false)
+  @JoinColumn(name = "group_mission_progress_id", nullable = false)
   @JsonIgnore
   private GroupMissionProgressEntity groupMissionProgress;
 

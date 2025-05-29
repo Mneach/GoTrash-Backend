@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,8 @@ public class GroupService {
   private final GroupMemberRepository groupMemberRepository;
   private final CitizenService citizenService;
   private final CitizenRepository citizenRepository;
-  private final RewardRepository rewardRepository;
+  private final GroupMissionProgressService groupMissionProgressService;
+  private final GroupMemberMissionContributionService groupMemberMissionContributionService;
 
   @Transactional
   public Group save(Group group) {
@@ -38,7 +40,6 @@ public class GroupService {
     // Build GroupEntity manually
     GroupEntity groupEntity = new GroupEntity();
     groupEntity.setName(group.getName());
-    groupEntity.setCoin(group.getCoin());
     groupEntity.setOwner(citizenEntity);
 
     // Save GroupEntity
@@ -77,7 +78,31 @@ public class GroupService {
     GroupMemberEntity groupMemberEntity = new GroupMemberEntity();
     groupMemberEntity.setCitizen(citizenEntity);
     groupMemberEntity.setGroup(groupEntity);
-    groupMemberRepository.save(groupMemberEntity);
+    groupMemberEntity = groupMemberRepository.save(groupMemberEntity);
+
+    String groupId = groupMemberEntity.getGroup().getGroupId().toString();
+
+    GroupMissionProgress groupMissionProgress = groupMissionProgressService.getActiveGroupMissionProgressByGroupId(groupId);
+
+    // if there are active group missions
+    if (groupMissionProgress != null) {
+      String citizenId = citizenEntity.getUserId().toString();
+      String groupMissionProgressId = groupMissionProgress.getGroupMissionProgressId();
+
+      // If the user never contribute to the current active group mission,
+      // then add user to current active group mission contribution.
+      if (!groupMemberMissionContributionService.checkGroupMemberContribution(citizenId, groupMissionProgressId)) {
+        groupMemberMissionContributionService.save(
+            GroupMemberMissionContribution.builder()
+                .citizen(Citizen.builder().userId(citizenId).build())
+                .groupMissionProgress(groupMissionProgress)
+                .contribution(BigDecimal.ZERO)
+                .build()
+        );
+      }
+
+    }
+
   }
 
   @Transactional
@@ -135,7 +160,6 @@ public class GroupService {
 
     groupEntity.setName(group.getName());
     groupEntity.setOwner(citizenEntity);
-    groupEntity.setCoin(group.getCoin());
 
     return GroupTransformer.transformEntityToModel(
         groupRepository.save(groupEntity)

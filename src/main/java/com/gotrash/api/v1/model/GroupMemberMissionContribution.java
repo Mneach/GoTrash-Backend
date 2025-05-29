@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GroupMissionContribution {
+public class GroupMemberMissionContribution {
   private String contributionId;
   private GroupMissionProgress groupMissionProgress;
   private Citizen citizen;

@@ -1,15 +1,15 @@
 package com.gotrash.api.v1.transformer;
 
-import com.gotrash.api.v1.model.GroupMissionContribution;
-import com.gotrash.api.v1.response.GroupMissionContributionResponse;
+import com.gotrash.api.v1.model.GroupMemberMissionContribution;
+import com.gotrash.api.v1.response.GroupMemberMissionContributionResponse;
 import com.gotrash.entity.GroupMemberMissionContributionEntity;
 
 import java.util.UUID;
 
-public class GroupMissionContributionTransformer {
+public class GroupMemberMissionContributionTransformer {
 
-  public static GroupMissionContribution transformEntityToModel(GroupMemberMissionContributionEntity entity) {
-    return GroupMissionContribution.builder()
+  public static GroupMemberMissionContribution transformEntityToModel(GroupMemberMissionContributionEntity entity) {
+    return GroupMemberMissionContribution.builder()
         .contributionId(entity.getContributionId().toString())
         .groupMissionProgress(GroupMissionProgressTransformer.transformEntityToModel(entity.getGroupMissionProgress()))
         .citizen(CitizenTransformer.transformEntityToModel(entity.getCitizen()))
@@ -19,7 +19,7 @@ public class GroupMissionContributionTransformer {
         .build();
   }
 
-  public static GroupMemberMissionContributionEntity transformModelToEntity(GroupMissionContribution model) {
+  public static GroupMemberMissionContributionEntity transformModelToEntity(GroupMemberMissionContribution model) {
     return GroupMemberMissionContributionEntity.builder()
         .contributionId(model.getContributionId() != null ?
             UUID.fromString(model.getContributionId()) : null)
@@ -29,10 +29,9 @@ public class GroupMissionContributionTransformer {
         .build();
   }
 
-  public static GroupMissionContributionResponse transformModelToResponse(GroupMissionContribution model) {
-    return GroupMissionContributionResponse.builder()
+  public static GroupMemberMissionContributionResponse transformModelToResponse(GroupMemberMissionContribution model) {
+    return GroupMemberMissionContributionResponse.builder()
         .contributionId(model.getContributionId())
-        .groupMissionProgress(GroupMissionProgressTransformer.transformModelToResponse(model.getGroupMissionProgress()))
         .citizen(CitizenTransformer.transformModelToResponse(model.getCitizen()))
         .contribution(model.getContribution())
         .createdAt(model.getCreatedAt())

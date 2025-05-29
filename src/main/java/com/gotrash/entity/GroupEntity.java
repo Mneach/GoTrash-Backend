@@ -40,9 +40,6 @@ public class GroupEntity {
   @NotNull
   private String name;
 
-  @NotNull
-  private BigInteger coin;
-
   @ManyToOne
   @JoinColumn(name = "owner_id")
   private CitizenEntity owner;
