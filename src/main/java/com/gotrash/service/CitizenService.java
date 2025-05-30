@@ -153,6 +153,14 @@ public class CitizenService {
     citizenRepository.save(citizenEntity);
   }
 
+  @Transactional
+  public List<Citizen> getCitizenLeaderboard() {
+    return citizenRepository.findTop10ByOrderByRatingDesc()
+        .stream()
+        .map(CitizenTransformer::transformEntityToModel)
+        .toList();
+  }
+
   public Citizen findCitizenByPhoneNumber(String phoneNumber) {
     Optional<CitizenEntity> citizenEntityOptional = citizenRepository.findByPhoneNumber(phoneNumber);
 

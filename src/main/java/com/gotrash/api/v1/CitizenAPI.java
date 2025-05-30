@@ -81,6 +81,18 @@ public class CitizenAPI {
     return new ApiResponse<>(HttpStatus.OK.value(), citizenResponse);
   }
 
+  @GetMapping("/citizens/leaderboard")
+  @Operation(summary = "API to get citizen leaderboard order by rating desc")
+  public ApiResponse<List<CitizenResponse>> getCitizenLeaderboard() {
+
+    List<CitizenResponse> citizenResponses = citizenService.getCitizenLeaderboard()
+        .stream()
+        .map(CitizenTransformer::transformModelToResponse)
+        .toList();
+
+    return new ApiResponse<>(HttpStatus.OK.value(), citizenResponses);
+  }
+
   @PatchMapping(value = "/citizens/{user_id}", consumes = {"multipart/form-data"})
   @Operation(summary = "API to update citizen")
   public ApiResponse<CitizenResponse> update(@PathVariable("user_id") String userId,
