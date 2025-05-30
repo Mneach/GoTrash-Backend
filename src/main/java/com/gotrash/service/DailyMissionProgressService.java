@@ -169,7 +169,7 @@ public class DailyMissionProgressService {
     LocalDate today = DateUtil.getCurrentDate();
 
     // Get all active missions once
-    List<Mission> activeMissions = missionRepository.findAll()
+    List<Mission> activeMissions = missionRepository.findAllByType("DAILY")
         .stream()
         .map(MissionTransformer::transformEntityToModel)
         .toList();
