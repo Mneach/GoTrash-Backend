@@ -3,19 +3,15 @@ package com.gotrash.api.v1;
 import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.v1.model.Auth;
 import com.gotrash.api.v1.model.Citizen;
-import com.gotrash.api.v1.model.Government;
 import com.gotrash.api.v1.model.WasteBank;
 import com.gotrash.api.v1.request.auth.AuthRequest;
 import com.gotrash.api.v1.request.auth.RegisterCitizenRequest;
-import com.gotrash.api.v1.request.auth.RegisterGovernmentRequest;
 import com.gotrash.api.v1.request.auth.RegisterWasteBankRequest;
 import com.gotrash.api.v1.response.AuthResponse;
 import com.gotrash.api.v1.transformer.AuthTransformer;
 import com.gotrash.api.v1.transformer.CitizenTransformer;
-import com.gotrash.api.v1.transformer.GovernmentTransformer;
 import com.gotrash.api.v1.transformer.WasteBankTransformer;
 import com.gotrash.service.AuthService;
-import com.gotrash.service.DailyMissionProgressService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -55,15 +51,6 @@ public class AuthAPI {
   public ApiResponse<AuthResponse> registerWasteBank(@ModelAttribute RegisterWasteBankRequest registerWasteBankRequest) {
     WasteBank wasteBank = WasteBankTransformer.transformRequestToModel(registerWasteBankRequest);
     AuthResponse authResponse = authService.registerWasteBank(wasteBank, registerWasteBankRequest.getImageFile());
-
-    return new ApiResponse<>(HttpStatus.OK.value(), authResponse);
-  }
-
-  @PostMapping("auth/register/government")
-  @Operation(summary = "API for register a new government")
-  public ApiResponse<AuthResponse> registerGovernment(@RequestBody RegisterGovernmentRequest registerGovernmentRequest) {
-    Government government = GovernmentTransformer.transformRequestToModel(registerGovernmentRequest);
-    AuthResponse authResponse = authService.registerGovernment(government);
 
     return new ApiResponse<>(HttpStatus.OK.value(), authResponse);
   }

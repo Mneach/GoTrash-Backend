@@ -2,7 +2,6 @@ package com.gotrash.service;
 
 import com.gotrash.api.v1.model.Auth;
 import com.gotrash.api.v1.model.Citizen;
-import com.gotrash.api.v1.model.Government;
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.model.WasteBank;
 import com.gotrash.api.v1.response.AuthResponse;
@@ -25,9 +24,7 @@ public class AuthService {
 
   private final UserService userService;
   private final WasteBankService wasteBankService;
-  private final GovernmentService governmentService;
   private final CitizenService citizenService;
-  private final DailyMissionProgressService dailyMissionProgressService;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
   private final FileUploadHelper fileUploadHelper;
@@ -122,22 +119,6 @@ public class AuthService {
     return AuthResponse.builder()
         .token(jwtToken)
         .role(wasteBank.getRole())
-        .build();
-  }
-
-  @Transactional
-  public AuthResponse registerGovernment(Government government) {
-
-    if (userService.isEmailAlreadyExists(government.getEmail())) {
-      throw new BadRequestException("Email is already in use.");
-    }
-
-    government = governmentService.save(government);
-    String jwtToken = jwtService.generateToken(government.getUser());
-
-    return AuthResponse.builder()
-        .token(jwtToken)
-        .role(government.getRole())
         .build();
   }
 
