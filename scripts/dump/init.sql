@@ -7,7 +7,6 @@ CREATE SCHEMA IF NOT EXISTS "gotrash";
 -- SCHEMA LIST
 -- 1. users
 -- 2. citizen
--- 3. governments
 -- 4. waste_banks
 -- 5. trash_categories
 -- 6. trashes
@@ -50,18 +49,7 @@ CREATE TABLE gotrash.citizens (
     REFERENCES gotrash.users(user_id)
 );
 
--- 3. GOVERNMENTS TABLE
-CREATE TABLE gotrash.governments (
-  user_id UUID PRIMARY KEY,
-  name TEXT NOT NULL UNIQUE,
-  region TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_government_user FOREIGN KEY (user_id)
-    REFERENCES gotrash.users(user_id)
-);
-
--- 4. WASTE_BANKS TABLE
+-- 3. WASTE_BANKS TABLE
 CREATE TABLE gotrash.waste_banks (
   user_id UUID PRIMARY KEY,
   name TEXT NOT NULL UNIQUE,
@@ -78,7 +66,7 @@ CREATE TABLE gotrash.waste_banks (
     REFERENCES gotrash.users(user_id)
 );
 
--- 6. TRASH_CATEGORIES TABLE
+-- 4. TRASH_CATEGORIES TABLE
 CREATE TABLE gotrash.trash_categories (
     trash_category_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(255) NOT NULL,
@@ -87,7 +75,7 @@ CREATE TABLE gotrash.trash_categories (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 7. TRASHES TABLE
+-- 5. TRASHES TABLE
 CREATE TABLE gotrash.trashes (
     trash_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     trash_category_id UUID NOT NULL,
@@ -100,7 +88,7 @@ CREATE TABLE gotrash.trashes (
         REFERENCES gotrash.trash_categories(trash_category_id)
 );
 
--- 8. TRASH_BINS TABLE
+-- 6. TRASH_BINS TABLE
 CREATE TABLE gotrash.trash_bins (
   trash_bin_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   waste_bank_id UUID NOT NULL,
@@ -115,7 +103,7 @@ CREATE TABLE gotrash.trash_bins (
     REFERENCES gotrash.waste_banks(user_id)
 );
 
--- 9. TRASH_HISTORIES TABLE
+-- 7. TRASH_HISTORIES TABLE
 CREATE TABLE gotrash.trash_histories (
   trash_history_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   citizen_id UUID NOT NULL,
@@ -132,7 +120,7 @@ CREATE TABLE gotrash.trash_histories (
     REFERENCES gotrash.trash_bins(trash_bin_id)
 );
 
--- 10. REWARD_CATEGORIES TABLE
+-- 8. REWARD_CATEGORIES TABLE
 CREATE TABLE gotrash.reward_categories (
     reward_category_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(255) NOT NULL,
@@ -140,7 +128,7 @@ CREATE TABLE gotrash.reward_categories (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 11. REWARDS TABLE
+-- 9. REWARDS TABLE
 CREATE TABLE gotrash.rewards (
     reward_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     reward_category_id UUID NOT NULL,
@@ -158,7 +146,7 @@ CREATE TABLE gotrash.rewards (
         REFERENCES gotrash.waste_banks(user_id)
 );
 
--- 11. GROUPS TABLE
+-- 10. GROUPS TABLE
 CREATE TABLE gotrash.groups (
   group_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   owner_id UUID NOT NULL,
@@ -171,7 +159,7 @@ CREATE TABLE gotrash.groups (
     REFERENCES gotrash.users(user_id)
 );
 
--- 12. USER_GROUPS TABLE
+-- 11. USER_GROUPS TABLE
 CREATE TABLE gotrash.user_groups (
   user_group_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL,
@@ -181,7 +169,7 @@ CREATE TABLE gotrash.user_groups (
     REFERENCES gotrash.users(user_id)
 );
 
--- 16. CITIZEN ADDRESSES TABLE
+-- 12. CITIZEN ADDRESSES TABLE
 CREATE TABLE gotrash.citizen_addresses (
     citizen_address_id UUID PRIMARY KEY,
     citizen_id UUID NOT NULL,
@@ -226,7 +214,7 @@ CREATE TABLE gotrash.notifications (
     REFERENCES gotrash.users(user_id)
 );
 
--- 16. WASTE BANK WAREHOUSE TABLE
+-- 15. WASTE BANK WAREHOUSE TABLE
 CREATE TABLE gotrash.waste_bank_warehouses (
     waste_bank_id UUID NOT NULL,
     trash_category_id UUID NOT NULL,
@@ -245,7 +233,7 @@ CREATE TABLE gotrash.waste_bank_warehouses (
         REFERENCES gotrash.trash_categories(trash_category_id)
 );
 
--- 17. PENDING TRASH_HISTORIES TABLE
+-- 16. PENDING TRASH_HISTORIES TABLE
 CREATE TABLE gotrash.pending_trash_histories (
   pending_trash_history_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   trash_id UUID NOT NULL,
@@ -259,7 +247,7 @@ CREATE TABLE gotrash.pending_trash_histories (
     REFERENCES gotrash.trash_bins(trash_bin_id)
 );
 
--- 18. MISSIONS TABLE
+-- 17. MISSIONS TABLE
 CREATE TABLE gotrash.missions (
     mission_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     type TEXT NOT NULL,
@@ -277,7 +265,7 @@ CREATE TABLE gotrash.missions (
         REFERENCES gotrash.trash_categories(trash_category_id)
 );
 
--- 19. DAILY_MISSION_PROGRESS TABLE
+-- 18. DAILY_MISSION_PROGRESS TABLE
 CREATE TABLE gotrash.daily_mission_progress (
     daily_mission_progress_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     mission_id UUID NOT NULL,
@@ -292,7 +280,7 @@ CREATE TABLE gotrash.daily_mission_progress (
         REFERENCES gotrash.missions(mission_id)
 );
 
--- 20. GROUP_MISSION_PROGRESS TABLE
+-- 19. GROUP_MISSION_PROGRESS TABLE
 CREATE TABLE gotrash.group_mission_progress (
     group_mission_progress_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     mission_id UUID NOT NULL,
