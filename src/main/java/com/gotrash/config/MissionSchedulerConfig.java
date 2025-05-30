@@ -14,10 +14,10 @@ public class MissionSchedulerConfig {
   private DailyMissionProgressService dailyMissionProgressService;
 
   // Run every 20 minutes (for demo purposes)
-  @Scheduled(cron = "0 */20 * * * ?")
-  public void assignDailyMissionsScheduled() {
-    dailyMissionProgressService.assignDailyMissionsToAllCitizens();
-  }
+  //  @Scheduled(cron = "0 */20 * * * ?")
+  //  public void assignDailyMissionsScheduled() {
+  //    dailyMissionProgressService.assignDailyMissionsToAllCitizens();
+  //  }
 
   @Scheduled(cron = "0 0 0 * * ?") // Midnight daily
   public void runDailyAssignment() {
