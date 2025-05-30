@@ -7,19 +7,24 @@ CREATE SCHEMA IF NOT EXISTS "gotrash";
 -- SCHEMA LIST
 -- 1. users
 -- 2. citizen
--- 4. waste_banks
--- 5. trash_categories
--- 6. trashes
+-- 3. waste_banks
+-- 4. trash_categories
+-- 5. trashes
+-- 6. trash_bins
 -- 7. trash_histories
--- 8. trash_bins
--- 9. reward_categories
--- 10. rewards
--- 11. groups
--- 12. user_groups
+-- 8. reward_categories
+-- 9. rewards
+-- 10. groups
+-- 11. user_groups
+-- 12. citizen_addresses
 -- 13. shipments
 -- 14. notifications
 -- 15. waste_bank_warehouses
 -- 16. pending_trash_histories
+-- 17. mission
+-- 18. daily_mission_progress
+-- 19. group_mission_progress
+-- 20. group_member_mission_contributions
 
 -- 1. USERS TABLE
 CREATE TABLE gotrash.users (
