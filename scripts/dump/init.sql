@@ -159,7 +159,6 @@ CREATE TABLE gotrash.groups (
   group_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   owner_id UUID NOT NULL,
   name TEXT NOT NULL,
-  coin NUMERIC NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -325,4 +324,3 @@ CREATE TABLE gotrash.group_member_mission_contributions (
 
     CONSTRAINT uq_user_group_mission UNIQUE (group_mission_progress_id, citizen_id)
 );
-
