@@ -1,7 +1,6 @@
 package com.gotrash.api.v1.transformer;
 
 import com.gotrash.api.v1.model.WasteBank;
-import com.gotrash.api.v1.model.WasteBankWarehouse;
 import com.gotrash.api.v1.request.WasteBankRequest;
 import com.gotrash.api.v1.request.auth.RegisterWasteBankRequest;
 import com.gotrash.api.v1.response.WasteBankResponse;
@@ -110,26 +109,4 @@ public class WasteBankTransformer {
         .build();
   }
 
-  public static WasteBankResponse transformModelToResponse(WasteBank wasteBank, List<WasteBankWarehouse> wasteBankWarehouses) {
-    return WasteBankResponse.builder()
-        .userId(wasteBank.getUserId())
-        .email(wasteBank.getEmail())
-        .role(wasteBank.getRole())
-        .name(wasteBank.getName())
-        .latitude(wasteBank.getLatitude())
-        .longitude(wasteBank.getLongitude())
-        .address(wasteBank.getAddress())
-        .imageUrl(wasteBank.getImageUrl())
-        .phoneNumber(wasteBank.getPhoneNumber())
-        .region(wasteBank.getRegion())
-        .coin(wasteBank.getCoin())
-        .wasteBankWarehouses(
-            wasteBankWarehouses.stream()
-                .map(WasteBankWarehouseTransformer::transformModelToResponse)
-                .toList()
-        )
-        .createdAt(wasteBank.getCreatedAt())
-        .updatedAt(wasteBank.getUpdatedAt())
-        .build();
-  }
 }

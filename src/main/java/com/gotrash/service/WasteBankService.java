@@ -2,11 +2,14 @@ package com.gotrash.service;
 
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.model.WasteBank;
+import com.gotrash.api.v1.model.dashboard.WasteBankTrashCategorySummary;
+import com.gotrash.api.v1.model.dashboard.WasteBankTrashSummary;
 import com.gotrash.api.v1.transformer.CitizenTransformer;
 import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.api.v1.transformer.WasteBankTransformer;
 import com.gotrash.entity.UserEntity;
 import com.gotrash.entity.WasteBankEntity;
+import com.gotrash.exception.rest.BadRequestException;
 import com.gotrash.helper.FileUploadHelper;
 import com.gotrash.repository.UserRepository;
 import com.gotrash.repository.WasteBankRepository;
@@ -90,6 +93,13 @@ public class WasteBankService {
     UserEntity userEntity = userRepository.findById(UUID.fromString(wasteBank.getUserId()))
         .orElseThrow(() -> new EntityNotFoundException("User with ID " + wasteBank.getUserId() + " not found"));
 
+
+    if (wasteBank.getEmail() != null && !wasteBank.getEmail().equals(userEntity.getEmail())) {
+      if (userRepository.findByEmail(wasteBank.getEmail()).isPresent()) {
+        throw new BadRequestException("Email is already used");
+      }
+    }
+
     userEntity.setEmail(wasteBank.getEmail() != null ? wasteBank.getEmail() : userEntity.getEmail());
     userEntity.setRole(wasteBank.getRole() != null ? wasteBank.getRole() : userEntity.getRole());
     userEntity.setPassword(wasteBank.getPassword() != null ? passwordEncoder.encode(wasteBank.getPassword()) : userEntity.getPassword());
@@ -129,5 +139,16 @@ public class WasteBankService {
 
     wasteBankRepository.deleteById(UUID.fromString(wasteBankId));
   }
-  
+
+  public WasteBankTrashSummary getTotalTrashByWasteBankId(String wasteBankId) {
+    return wasteBankRepository.sumTrashWeightByWasteBankId(UUID.fromString(wasteBankId));
+  }
+
+  public List<WasteBankTrashSummary> getTotalTrashGroupByWasteBank() {
+    return wasteBankRepository.sumTrashWeightByGroupByWasteBankId();
+  }
+
+  public List<WasteBankTrashCategorySummary> getTotalTrashByWasteBankIdGroupByTrashCategory(String wasteBankId) {
+    return wasteBankRepository.sumTrashWeightByWasteBankIdGroupedByCategory(UUID.fromString(wasteBankId));
+  }
 }

@@ -7,18 +7,18 @@ import java.math.RoundingMode;
 public class CalculatorUtil {
 
   public static BigInteger calculateCoin(BigDecimal weight, BigInteger baseCoin) {
-    BigDecimal coinPerKg = new BigDecimal(baseCoin);
+    BigDecimal coinPerGram = new BigDecimal(baseCoin);
 
-    return weight.multiply(coinPerKg)
+    return weight.multiply(coinPerGram)
         .setScale(0, RoundingMode.HALF_UP)
         .toBigInteger()
         .max(BigInteger.ONE);
   }
 
   public static BigInteger calculateRating(BigDecimal weight, BigInteger baseRating) {
-    BigDecimal ratingPerKg = new BigDecimal(baseRating);
+    BigDecimal ratingPerGram = new BigDecimal(baseRating);
 
-    return weight.multiply(ratingPerKg)
+    return weight.multiply(ratingPerGram)
         .setScale(0, RoundingMode.HALF_UP)
         .toBigInteger()
         .max(BigInteger.ONE);

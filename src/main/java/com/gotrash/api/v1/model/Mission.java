@@ -21,7 +21,7 @@ public class Mission {
   private String title;
   private String description;
   private BigDecimal targetValue;
-  private TrashCategory trashCategory;
+  private Trash trash;
   private BigInteger rewardCoins;
   private BigInteger rewardRatings;
   private LocalDateTime createdAt;

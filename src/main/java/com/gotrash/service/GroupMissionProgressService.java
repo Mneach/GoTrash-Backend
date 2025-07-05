@@ -142,7 +142,7 @@ public class GroupMissionProgressService {
     groupMissionProgressRepository.save(groupMissionProgressEntity);
   }
 
-  public void updateGroupMissionProgress(String citizenId, String trashCategoryId, BigDecimal trashWeight) {
+  public void updateGroupMissionProgress(String citizenId, String trashId, BigDecimal trashWeight) {
 
     List<GroupEntity> groupEntities = groupRepository.findGroupsByUserId(UUID.fromString(citizenId));
 
@@ -160,9 +160,9 @@ public class GroupMissionProgressService {
             MissionEntity missionEntity = groupMissionProgressEntity.getMission();
 
             BigDecimal contribution = BigDecimal.valueOf(1);
-            if (missionEntity.getTrashCategory() != null && missionEntity.getTrashCategory().getTrashCategoryId() != null) {
-              // Update based on the trash category
-              if (missionEntity.getTrashCategory().getTrashCategoryId().toString().equals(trashCategoryId)) {
+            if (missionEntity.getTrash() != null && missionEntity.getTrash().getTrashId() != null) {
+              // Update based on the trash
+              if (missionEntity.getTrash().toString().equals(trashId)) {
 
                 if (missionEntity.getGoalType().toLowerCase().contains("weight")) {
                   handleWeightMission(groupMissionProgressEntity, trashWeight);

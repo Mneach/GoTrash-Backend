@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -53,7 +54,13 @@ public class SecurityConfig {
       "/swagger-ui.html",
       "/images/*",
       "/images/**",
-      "api/v1/trash-histories/iot"
+      "api/v1/trash-histories/iot",
+      "api/v1/pending-trash-histories",
+      "/api/v1/dashboards/waste-banks/*/total-trash",
+      "/api/v1/dashboards/waste-banks/total-trash",
+      "/api/v1/dashboards/waste-banks/*/total-trash-by-category",
+      "/api/v1/trash-bins/wastebanks/*",
+      "/api/v1/waste-banks"
   };
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -78,11 +85,10 @@ public class SecurityConfig {
     return httpSecurity
         .cors(Customizer.withDefaults())
         .csrf(AbstractHttpConfigurer::disable)
-        .authorizeHttpRequests(req ->
-          req.requestMatchers(WHITE_LIST_URL)
-              .permitAll()
-              .anyRequest()
-              .authenticated()
+        .authorizeHttpRequests(req -> req
+            .requestMatchers(HttpMethod.GET, "/api/v1/waste-banks/*").permitAll() // specific only for get method, we are not allowed for POST and UPDATE method
+            .requestMatchers(WHITE_LIST_URL).permitAll()
+            .anyRequest().authenticated()
         )
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authenticationProvider)

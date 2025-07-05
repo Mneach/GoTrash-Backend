@@ -8,6 +8,7 @@ import com.gotrash.api.v1.response.pendingtrashhistory.ClaimPendingTrashHistoryR
 import com.gotrash.api.v1.response.pendingtrashhistory.PendingTrashHistoryResponse;
 import com.gotrash.api.v1.transformer.pendingtrashhistory.ClaimPendingTrashHistoryTransformer;
 import com.gotrash.api.v1.transformer.pendingtrashhistory.PendingTrashHistoryTransformer;
+import com.gotrash.constant.PendingTrashHistoryStatus;
 import com.gotrash.service.PendingTrashHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,7 +39,7 @@ public class PendingTrashHistoryAPI {
   @GetMapping("/pending-trash-histories/trash-bin/{trash_bin_id}")
   @Operation(summary = "API to get all pending trash history data by trash bin id")
   public ApiResponse<List<PendingTrashHistoryResponse>> getTrashHistories(@PathVariable("trash_bin_id") String trashBinId) {
-    List<PendingTrashHistory> pendingTrashHistories = pendingTrashHistoryService.getPendingTrashHistoryByTrashBinId(trashBinId);
+    List<PendingTrashHistory> pendingTrashHistories = pendingTrashHistoryService.getAllPendingTrashHistory(trashBinId, PendingTrashHistoryStatus.NOT_CLAIMED);
     List<PendingTrashHistoryResponse> pendingTrashHistoryResponses = pendingTrashHistories.stream()
         .map(PendingTrashHistoryTransformer::transformModelToResponse)
         .toList();
@@ -48,7 +49,7 @@ public class PendingTrashHistoryAPI {
 
   @PutMapping("/pending-trash-histories/trash-bin/{trash_bin_id}/claim/{citizen_id}")
   @Operation(summary = "API to get claim pending trash history by trash bin id")
-  public ApiResponse<ClaimPendingTrashHistoryResponse> getTrashHistories(@PathVariable("trash_bin_id") String trashBinId,
+  public ApiResponse<ClaimPendingTrashHistoryResponse> claimPendingTrashHistory(@PathVariable("trash_bin_id") String trashBinId,
                                                                                @PathVariable("citizen_id") String citizenId) {
 
     ClaimPendingTrashHistoryResponse claimPendingTrashHistoryResponse = ClaimPendingTrashHistoryTransformer.transformModelToResponse(

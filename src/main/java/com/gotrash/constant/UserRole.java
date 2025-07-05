@@ -5,5 +5,6 @@ public enum UserRole {
   WASTE_BANK,
   GOVERNMENT,
   COMPANY,
-  GUEST
+  GUEST,
+  ADMIN
 }

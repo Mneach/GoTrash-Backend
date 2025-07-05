@@ -3,7 +3,7 @@ package com.gotrash.api.v1;
 import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.v1.model.dashboard.WasteBankTrashCategorySummary;
 import com.gotrash.api.v1.model.dashboard.WasteBankTrashSummary;
-import com.gotrash.service.DashboardService;
+import com.gotrash.service.WasteBankService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,19 +21,19 @@ import java.util.List;
 @Tag(name = "Dashboard API", description = "API for gotrash dashboard")
 public class DashboardAPI {
 
-  private final DashboardService dashboardService;
+  private final WasteBankService wastebankService;
 
   @GetMapping("/dashboards/waste-banks/{waste_bank_id}/total-trash")
   @Operation(summary = "Get total trash by waste_bank_id")
   public ApiResponse<WasteBankTrashSummary> getTotalTrashByWasteBankId(@PathVariable("waste_bank_id") String wasteBankId) {
-    WasteBankTrashSummary wasteBankTrashSummary = dashboardService.getTotalTrashByWasteBankId(wasteBankId);
+    WasteBankTrashSummary wasteBankTrashSummary = wastebankService.getTotalTrashByWasteBankId(wasteBankId);
     return new ApiResponse<>(HttpStatus.OK.value(), wasteBankTrashSummary);
   }
 
   @GetMapping("/dashboards/waste-banks/total-trash")
   @Operation(summary = "Get total trash group by waste bank")
   public ApiResponse<List<WasteBankTrashSummary>> getTotalTrashGroupByWasteBank() {
-    List<WasteBankTrashSummary> wasteBankTrashSummaries = dashboardService.getTotalTrashGroupByWasteBank();
+    List<WasteBankTrashSummary> wasteBankTrashSummaries = wastebankService.getTotalTrashGroupByWasteBank();
     return new ApiResponse<>(HttpStatus.OK.value(), wasteBankTrashSummaries);
   }
 
@@ -42,7 +42,7 @@ public class DashboardAPI {
   public ApiResponse<List<WasteBankTrashCategorySummary>> getTotalTrashByWasteBankIdGroupByTrashCategory(
       @PathVariable("waste_bank_id") String wasteBankId
   ) {
-    List<WasteBankTrashCategorySummary> wasteBankTrashCategorySummaries = dashboardService.getTotalTrashByWasteBankIdGroupByTrashCategory(
+    List<WasteBankTrashCategorySummary> wasteBankTrashCategorySummaries = wastebankService.getTotalTrashByWasteBankIdGroupByTrashCategory(
         wasteBankId
     );
 

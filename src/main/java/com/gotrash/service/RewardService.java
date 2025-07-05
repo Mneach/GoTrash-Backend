@@ -48,6 +48,8 @@ public class RewardService {
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
             }
+        } else {
+            reward.setImageUrl("https://www.twtf.org.uk/wp-content/uploads/2024/01/dummy-image.jpg");
         }
 
         RewardEntity rewardEntity = RewardTransformer.transformModelToEntity(reward);

@@ -67,6 +67,18 @@ public class ShipmentAPI {
     return new ApiResponse<>(HttpStatus.OK.value(), shipmentResponses);
   }
 
+  @GetMapping("/shipments/wastebanks/{user_id}")
+  @Operation(summary = "API to get shipments by wastebank user id")
+  public ApiResponse<List<ShipmentResponse>> getShipmentByWasteBankId(@PathVariable("user_id") String userId) {
+
+    List<Shipment> shipments = shipmentService.getShipmentByWasteBankId(userId);
+    List<ShipmentResponse> shipmentResponses = shipments.stream()
+        .map(ShipmentTransformer::transformModelToResponse)
+        .toList();
+
+    return new ApiResponse<>(HttpStatus.OK.value(), shipmentResponses);
+  }
+
   @PatchMapping("/shipments/{shipment_id}")
   @Operation(summary = "API to update shipment by shipment id")
   public ApiResponse<ShipmentResponse> updateShipment(@PathVariable("shipment_id") String shipmentId,

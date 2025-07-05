@@ -1,6 +1,5 @@
 package com.gotrash.api.v1.response;
 
-import com.gotrash.api.v1.model.WasteBankWarehouse;
 import com.gotrash.constant.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,5 +29,4 @@ public class WasteBankResponse {
   private LocalDateTime updatedAt;
   private String region;
   private BigInteger coin;
-  private List<WasteBankWarehouseResponse> wasteBankWarehouses;
 }

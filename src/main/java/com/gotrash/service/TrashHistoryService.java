@@ -10,7 +10,6 @@ import com.gotrash.entity.CitizenEntity;
 import com.gotrash.entity.TrashBinEntity;
 import com.gotrash.entity.TrashEntity;
 import com.gotrash.entity.TrashHistoryEntity;
-import com.gotrash.entity.id.WasteBankWarehouseId;
 import com.gotrash.repository.CitizenRepository;
 import com.gotrash.repository.TrashBinRepository;
 import com.gotrash.repository.TrashHistoryRepository;
@@ -32,7 +31,6 @@ import java.util.stream.Collectors;
 public class TrashHistoryService {
 
     private final TrashHistoryRepository trashHistoryRepository;
-    private final WasteBankWarehouseService wasteBankWarehouseService;
     private final CitizenService citizenService;
     private final StreakService streakService;
     private final CitizenRepository citizenRepository;
@@ -68,30 +66,16 @@ public class TrashHistoryService {
         citizenService.addCoin(trashHistory.getCitizen().getUserId(), totalCoin);
         citizenService.addRating(trashHistory.getCitizen().getUserId(), totalRating);
 
-        // Add the data into waste bank warehouse
-        wasteBankWarehouseService.addTrashToWasteBankWarehouse(
-            WasteBankWarehouse.builder()
-                .wasteBankWarehouseId(
-                    new WasteBankWarehouseId(
-                        UUID.fromString(trashHistory.getTrashBin().getWasteBank().getUserId()),
-                        UUID.fromString(trashHistory.getTrash().getTrashCategory().getTrashCategoryId())
-                    )
-                )
-                .wasteBank(trashHistory.getTrashBin().getWasteBank())
-                .trashCategory(trashHistory.getTrash().getTrashCategory())
-                .totalWeight(trashHistory.getWeight())
-                .build()
-        );
 
         dailyMissionProgressService.updateCitizenDailyMissionProgress(
             citizenEntity.getUserId().toString(),
-            trashEntity.getTrashCategory().getTrashCategoryId().toString(),
+            trashEntity.getTrashId().toString(),
             trashHistory.getWeight()
         );
 
         groupMissionProgressService.updateGroupMissionProgress(
             citizenEntity.getUserId().toString(),
-            trashEntity.getTrashCategory().getTrashCategoryId().toString(),
+            trashEntity.getTrashId().toString(),
             trashHistory.getWeight()
         );
 
@@ -133,21 +117,6 @@ public class TrashHistoryService {
         streakService.updateCitizenStreak(trashHistory.getCitizen());
         citizenService.addCoin(trashHistory.getCitizen().getUserId(), totalCoin);
         citizenService.addRating(trashHistory.getCitizen().getUserId(), totalRating);
-
-        // Add the data into waste bank warehouse
-        wasteBankWarehouseService.addTrashToWasteBankWarehouse(
-            WasteBankWarehouse.builder()
-                .wasteBankWarehouseId(
-                    new WasteBankWarehouseId(
-                        UUID.fromString(trashHistory.getTrashBin().getWasteBank().getUserId()),
-                        UUID.fromString(trashHistory.getTrash().getTrashCategory().getTrashCategoryId())
-                    )
-                )
-                .wasteBank(trashHistory.getTrashBin().getWasteBank())
-                .trashCategory(trashHistory.getTrash().getTrashCategory())
-                .totalWeight(trashHistory.getWeight())
-                .build()
-        );
 
         dailyMissionProgressService.updateCitizenDailyMissionProgress(
             citizenEntity.getUserId().toString(),

@@ -1,10 +1,10 @@
 package com.gotrash.api.v1.transformer;
 
 import com.gotrash.api.v1.model.Mission;
+import com.gotrash.api.v1.model.Trash;
 import com.gotrash.api.v1.request.MissionRequest;
 import com.gotrash.api.v1.response.MissionResponse;
 import com.gotrash.api.v1.request.MissionUpdateRequest;
-import com.gotrash.api.v1.model.TrashCategory;
 import com.gotrash.entity.MissionEntity;
 
 import java.util.UUID;
@@ -19,8 +19,8 @@ public class MissionTransformer {
         .title(missionEntity.getTitle())
         .description(missionEntity.getDescription())
         .targetValue(missionEntity.getTargetValue())
-        .trashCategory(
-            missionEntity.getTrashCategory() != null ? TrashCategoryTransformer.transformEntityToModel(missionEntity.getTrashCategory()) : null
+        .trash(
+            missionEntity.getTrash() != null ? TrashTransformer.transformEntityToModel(missionEntity.getTrash()) : null
         )
         .rewardCoins(missionEntity.getRewardCoins())
         .rewardRatings(missionEntity.getRewardRatings())
@@ -37,9 +37,9 @@ public class MissionTransformer {
         .title(mission.getTitle())
         .description(mission.getDescription())
         .targetValue(mission.getTargetValue())
-        .trashCategory(
-            mission.getTrashCategory() != null && mission.getTrashCategory().getTrashCategoryId() != null  ?
-            TrashCategoryTransformer.transformModelToEntity(mission.getTrashCategory()) : null)
+        .trash(
+            mission.getTrash() != null && mission.getTrash().getTrashId() != null  ?
+            TrashTransformer.transformModelToEntity(mission.getTrash()) : null)
         .rewardCoins(mission.getRewardCoins())
         .rewardRatings(mission.getRewardRatings())
         .build();
@@ -62,7 +62,7 @@ public class MissionTransformer {
         .title(missionRequest.getTitle())
         .description(missionRequest.getDescription())
         .targetValue(missionRequest.getTargetValue())
-        .trashCategory(TrashCategory.builder().trashCategoryId(missionRequest.getTrashCategoryId()).build())
+        .trash(Trash.builder().trashId(missionRequest.getTrashId()).build())
         .rewardCoins(missionRequest.getRewardCoins())
         .rewardRatings(missionRequest.getRewardRatings())
         .build();
@@ -76,8 +76,8 @@ public class MissionTransformer {
         .title(mission.getTitle())
         .description(mission.getDescription())
         .targetValue(mission.getTargetValue())
-        .trashCategory(
-            mission.getTrashCategory() != null ? TrashCategoryTransformer.transformModelToResponse(mission.getTrashCategory()) : null
+        .trash(
+            mission.getTrash() != null ? TrashTransformer.transformModelToResponse(mission.getTrash()) : null
         )
         .rewardCoins(mission.getRewardCoins())
         .rewardRatings(mission.getRewardRatings())

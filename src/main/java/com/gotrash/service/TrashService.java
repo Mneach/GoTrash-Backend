@@ -75,6 +75,10 @@ public class TrashService {
             throw new EntityNotFoundException("Trash with ID " + trash.getTrashId() + " Not Found");
         }
 
+        if (trashRepository.findByName(trash.getName()).isPresent()) {
+            throw new BadRequestException("Trash with name " + trash.getName() + " is already exists");
+        }
+
         TrashCategory trashCategory = trashCategoryService.getTrashCategoryByTrashCategoryId(
                 trash.getTrashCategory().getTrashCategoryId()
         );

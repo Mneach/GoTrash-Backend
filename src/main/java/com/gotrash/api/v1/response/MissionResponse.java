@@ -22,7 +22,7 @@ public class MissionResponse {
   private String title;
   private String description;
   private BigDecimal targetValue;
-  private TrashCategoryResponse trashCategory;
+  private TrashResponse trash;
   private BigInteger rewardCoins;
   private BigInteger rewardRatings;
   private LocalDateTime createdAt;

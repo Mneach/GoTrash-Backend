@@ -41,6 +41,8 @@ public class TrashBinService {
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
             }
+        } else {
+            trashBin.setImageUrl("https://www.twtf.org.uk/wp-content/uploads/2024/01/dummy-image.jpg");
         }
 
         TrashBinEntity trashBinEntity = TrashBinTransformer.transformModelToEntity(trashBin);
@@ -69,7 +71,7 @@ public class TrashBinService {
         return TrashBinTransformer.transformEntityToModel(trashBinEntityOptional.get());
     }
 
-    public List<TrashBin> getTrashBinFilterByWasteBankId(String wasteBankId) {
+    public List<TrashBin> getTrashBinByWasteBankId(String wasteBankId) {
             List<TrashBinEntity> trashBinEntities = trashBinRepository.findAllByWasteBank_UserId(UUID.fromString(wasteBankId));
 
         return trashBinEntities.stream()

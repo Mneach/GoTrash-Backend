@@ -1,7 +1,8 @@
 package com.gotrash.service;
 
 
-import com.gotrash.api.v1.model.Citizen;
+import com.gotrash.api.v1.model.Notification;
+import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.model.pendingtrashhistory.ClaimPendingTrashHistory;
 import com.gotrash.api.v1.model.pendingtrashhistory.PendingTrashHistory;
 import com.gotrash.api.v1.model.Trash;
@@ -9,12 +10,9 @@ import com.gotrash.api.v1.model.TrashBin;
 import com.gotrash.api.v1.transformer.pendingtrashhistory.PendingTrashHistoryTransformer;
 import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryTransformer;
 import com.gotrash.constant.PendingTrashHistoryStatus;
-import com.gotrash.entity.CitizenAddressEntity;
-import com.gotrash.entity.CitizenEntity;
 import com.gotrash.entity.PendingTrashHistoryEntity;
-import com.gotrash.repository.CitizenRepository;
 import com.gotrash.repository.PendingTrashHistoryRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.gotrash.util.CalculatorUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,8 +30,7 @@ public class PendingTrashHistoryService {
   private final TrashService trashService;
   private final TrashBinService trashBinService;
   private final TrashHistoryService trashHistoryService;
-  private final CitizenService citizenService;
-  private final CitizenRepository citizenRepository;
+  private final NotificationService notificationService;
 
   @Transactional
   public void save(PendingTrashHistory pendingTrashHistory) {
@@ -49,11 +46,11 @@ public class PendingTrashHistoryService {
   }
 
   @Transactional
-  public List<PendingTrashHistory> getPendingTrashHistoryByTrashBinId(String trashBinId) {
+  public List<PendingTrashHistory> getAllPendingTrashHistory(String trashBinId, PendingTrashHistoryStatus status) {
 
     List<PendingTrashHistoryEntity> pendingTrashHistoryEntities = pendingTrashHistoryRepository.findAllByTrashBin_TrashBinIdAndStatus(
         UUID.fromString(trashBinId),
-        PendingTrashHistoryStatus.NOT_CLAIMED
+        status
     );
 
     return pendingTrashHistoryEntities
@@ -75,9 +72,19 @@ public class PendingTrashHistoryService {
     BigInteger totalRating = BigInteger.valueOf(0);
 
     for (PendingTrashHistoryEntity pendingTrashHistoryEntity : pendingTrashHistoryEntities) {
-      totalCoin = totalCoin.add(pendingTrashHistoryEntity.getTrash().getCoin());
+      totalCoin = totalCoin.add(
+          CalculatorUtil.calculateCoin(
+              pendingTrashHistoryEntity.getWeight(),
+              pendingTrashHistoryEntity.getTrash().getCoin()
+          )
+      );
       totalWeight = totalWeight.add(pendingTrashHistoryEntity.getWeight());
-      totalRating = totalRating.add(pendingTrashHistoryEntity.getTrash().getRating());
+      totalRating = totalRating.add(
+          CalculatorUtil.calculateRating(
+              pendingTrashHistoryEntity.getWeight(),
+              pendingTrashHistoryEntity.getTrash().getRating()
+          )
+      );
 
       pendingTrashHistoryEntity.setStatus(PendingTrashHistoryStatus.CLAIMED);
 
@@ -92,6 +99,15 @@ public class PendingTrashHistoryService {
           )
       );
     }
+
+    // Send Notification
+    Notification notification = Notification.builder()
+        .user(User.builder().userId(citizenId).build())
+        .title("Trash Reward Successfully Claimed")
+        .description("Your trash history has been claimed. You earned " + totalCoin + " coins, " + totalRating + " ratings, and contributed " + totalWeight + " grams of trash")
+        .build();
+
+    notificationService.save(notification);
 
     pendingTrashHistoryRepository.saveAll(pendingTrashHistoryEntities);
 

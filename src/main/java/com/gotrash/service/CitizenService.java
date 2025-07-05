@@ -101,6 +101,14 @@ public class CitizenService {
     UserEntity userEntity = userRepository.findById(UUID.fromString(citizen.getUserId()))
         .orElseThrow(() -> new EntityNotFoundException("User with ID " + citizen.getUserId() + " not found"));
 
+    if (citizen.getEmail() != null && !citizen.getEmail().equals(userEntity.getEmail())) {
+
+      if (userRepository.findByEmail(citizen.getEmail()).isPresent()) {
+        throw new BadRequestException("Email is already used");
+      }
+
+    }
+
     userEntity.setEmail(citizen.getEmail() != null ? citizen.getEmail() : userEntity.getEmail());
     userEntity.setRole(citizen.getRole() != null ? citizen.getRole() : userEntity.getRole());
     userEntity.setPassword(citizen.getPassword() != null ? passwordEncoder.encode(citizen.getPassword()) : userEntity.getPassword());

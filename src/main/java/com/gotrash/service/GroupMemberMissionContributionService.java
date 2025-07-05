@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -66,22 +67,16 @@ public class GroupMemberMissionContributionService {
         citizenId, groupMissionProgressId
     ).orElseThrow(() -> new EntityNotFoundException("Group Member Mission Contribution Not Found"));
 
-    if (
-        groupMemberMissionContributionEntity.getGroupMissionProgress().getMission().getTargetValue().compareTo(
-            groupMemberMissionContributionEntity.getGroupMissionProgress().getCurrentProgress()
-        ) < 0
-    ) {
-      groupMemberMissionContributionEntity.setContribution(
-          groupMemberMissionContributionEntity.getContribution().add(
-              groupMemberMissionContribution.getContribution()
-          )
-      );
+    BigDecimal newContribution = groupMemberMissionContribution.getContribution();
 
-      groupMemberContributionRepository.save(
-          groupMemberMissionContributionEntity
-      );
-    }
+    // Update contribution only with allowed amount
+    groupMemberMissionContributionEntity.setContribution(
+        groupMemberMissionContributionEntity.getContribution().add(newContribution)
+    );
 
+    groupMemberContributionRepository.save(
+        groupMemberMissionContributionEntity
+    );
   }
 
   @Transactional
