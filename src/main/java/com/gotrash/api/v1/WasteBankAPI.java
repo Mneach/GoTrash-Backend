@@ -39,16 +39,6 @@ public class WasteBankAPI {
     return new ApiResponse<>(HttpStatus.OK.value(), wasteBankResponses);
   }
 
-  @GetMapping(value = "/waste-banks/region/{region_name}")
-  @Operation(summary = "API to get all waste bank data by region")
-  public ApiResponse<List<WasteBankResponse>> getAllWasteBankByRegion(@PathVariable("region_name") String region) {
-    List<WasteBank> wasteBanks = wasteBankService.getAllWasteBankByRegion(region);
-    List<WasteBankResponse> wasteBankResponses = wasteBanks.stream()
-        .map(WasteBankTransformer::transformModelToResponse)
-        .toList();
-    return new ApiResponse<>(HttpStatus.OK.value(), wasteBankResponses);
-  }
-
   @GetMapping("/waste-banks/me")
   @Operation(summary = "API to get current waste bank user")
   public ApiResponse<WasteBankResponse> getMe() {
