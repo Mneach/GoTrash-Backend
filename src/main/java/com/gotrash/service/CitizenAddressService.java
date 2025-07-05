@@ -22,7 +22,6 @@ import java.util.UUID;
 public class CitizenAddressService {
 
   private final CitizenAddressRepository citizenAddressRepository;
-  private final CitizenService citizenService;
   private final CitizenRepository citizenRepository;
 
   @Transactional

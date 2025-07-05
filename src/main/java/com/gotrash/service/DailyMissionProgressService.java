@@ -114,7 +114,7 @@ public class DailyMissionProgressService {
   }
 
   @Transactional
-  public List<DailyMissionProgress> getAllActiveDailyMissionProgressByCitizenId(String citizenId) {
+  public List<DailyMissionProgress> getActiveDailyMissionProgressByCitizenId(String citizenId) {
     LocalDate today = DateUtil.getCurrentDate();
 
     List<DailyMissionProgressEntity> dailyMissionProgressEntities = dailyMissionProgressRepository.findByCitizenIdAndActiveDate(

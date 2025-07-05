@@ -3,13 +3,16 @@ package com.gotrash.api.v1;
 import com.gotrash.api.response.ApiResponse;
 import com.gotrash.api.v1.model.Auth;
 import com.gotrash.api.v1.model.Citizen;
+import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.model.WasteBank;
+import com.gotrash.api.v1.request.UserRequest;
 import com.gotrash.api.v1.request.auth.AuthRequest;
 import com.gotrash.api.v1.request.auth.RegisterCitizenRequest;
 import com.gotrash.api.v1.request.auth.RegisterWasteBankRequest;
 import com.gotrash.api.v1.response.AuthResponse;
 import com.gotrash.api.v1.transformer.AuthTransformer;
 import com.gotrash.api.v1.transformer.CitizenTransformer;
+import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.api.v1.transformer.WasteBankTransformer;
 import com.gotrash.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,6 +54,15 @@ public class AuthAPI {
   public ApiResponse<AuthResponse> registerWasteBank(@ModelAttribute RegisterWasteBankRequest registerWasteBankRequest) {
     WasteBank wasteBank = WasteBankTransformer.transformRequestToModel(registerWasteBankRequest);
     AuthResponse authResponse = authService.registerWasteBank(wasteBank, registerWasteBankRequest.getImageFile());
+
+    return new ApiResponse<>(HttpStatus.OK.value(), authResponse);
+  }
+
+  @PostMapping(value = "auth/register/waste-bank")
+  @Operation(summary = "API for register a new waste bank")
+  public ApiResponse<AuthResponse> registerAdmin(@ModelAttribute UserRequest userRequest) {
+    User user = UserTransformer.transformRequestToModel(userRequest);
+    AuthResponse authResponse = authService.registerAdmin(user);
 
     return new ApiResponse<>(HttpStatus.OK.value(), authResponse);
   }

@@ -25,6 +25,7 @@ public class AuthService {
   private final UserService userService;
   private final WasteBankService wasteBankService;
   private final CitizenService citizenService;
+  private final AdminService adminService;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
   private final FileUploadHelper fileUploadHelper;
@@ -91,6 +92,21 @@ public class AuthService {
     return AuthResponse.builder()
         .token(jwtToken)
         .role(citizen.getRole())
+        .build();
+  }
+
+  @Transactional
+  public AuthResponse registerAdmin(User user) {
+    if (userService.isEmailAlreadyExists(user.getEmail())) {
+      throw new BadRequestException("Email is already in use.");
+    }
+
+    user = adminService.save(user);
+    String jwtToken = jwtService.generateToken(user);
+
+    return AuthResponse.builder()
+        .token(jwtToken)
+        .role(user.getRole())
         .build();
   }
 

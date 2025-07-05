@@ -48,7 +48,7 @@ public class PendingTrashHistoryAPI {
 
   @PutMapping("/pending-trash-histories/trash-bin/{trash_bin_id}/claim/{citizen_id}")
   @Operation(summary = "API to get claim pending trash history by trash bin id")
-  public ApiResponse<ClaimPendingTrashHistoryResponse> getTrashHistories(@PathVariable("trash_bin_id") String trashBinId,
+  public ApiResponse<ClaimPendingTrashHistoryResponse> claimPendingTrashHistory(@PathVariable("trash_bin_id") String trashBinId,
                                                                                @PathVariable("citizen_id") String citizenId) {
 
     ClaimPendingTrashHistoryResponse claimPendingTrashHistoryResponse = ClaimPendingTrashHistoryTransformer.transformModelToResponse(

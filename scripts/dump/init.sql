@@ -32,7 +32,6 @@ CREATE TABLE gotrash.users (
     password VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     role TEXT NOT NULL CHECK (role IN ('CITIZEN', 'WASTE_BANK', 'GOVERNMENT','COMPANY','GUEST')),
-    version BIGINT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -49,7 +48,6 @@ CREATE TABLE gotrash.citizens (
   current_streak INT default 0,
   longest_streak INT default 0,
   last_trash_date DATE,
-  version BIGINT DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_citizen_user FOREIGN KEY (user_id)
@@ -67,7 +65,6 @@ CREATE TABLE gotrash.waste_banks (
   phone_number TEXT NOT NULL,
   region TEXT NOT NULL,
   coin NUMERIC NOT NULL,
-  version BIGINT DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_waste_bank_user FOREIGN KEY (user_id)
@@ -159,6 +156,7 @@ CREATE TABLE gotrash.groups (
   group_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   owner_id UUID NOT NULL,
   name TEXT NOT NULL,
+  coin NUMERIC NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -166,21 +164,19 @@ CREATE TABLE gotrash.groups (
     REFERENCES gotrash.users(user_id)
 );
 
--- 11. GROUP_MEMBERS TABLE
-CREATE TABLE gotrash.group_members (
-    group_member_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    citizen_id UUID NOT NULL,
-    group_id UUID NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_group_member_citizen FOREIGN KEY (citizen_id) REFERENCES gotrash.citizens (user_id),
-    CONSTRAINT fk_group_member_group FOREIGN KEY (group_id) REFERENCES gotrash.groups (group_id)
+-- 11. USER_GROUPS TABLE
+CREATE TABLE gotrash.user_groups (
+  user_group_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_user_group_user FOREIGN KEY (user_id)
+    REFERENCES gotrash.users(user_id)
 );
 
 -- 12. CITIZEN ADDRESSES TABLE
 CREATE TABLE gotrash.citizen_addresses (
-    citizen_address_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    citizen_address_id UUID PRIMARY KEY,
     citizen_id UUID NOT NULL,
     label VARCHAR(255) NOT NULL,
     address TEXT NOT NULL,
@@ -282,8 +278,6 @@ CREATE TABLE gotrash.daily_mission_progress (
     current_progress NUMERIC NOT NULL,
     is_reward_claimed BOOLEAN DEFAULT FALSE,
     active_date DATE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_citizen_daily_mission_citizen FOREIGN KEY (citizen_id)
         REFERENCES gotrash.citizens(user_id),
@@ -298,8 +292,6 @@ CREATE TABLE gotrash.group_mission_progress (
     group_id UUID NOT NULL,
     current_progress NUMERIC NOT NULL,
     is_reward_claimed BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_group_mission_progress_group FOREIGN KEY (group_id)
         REFERENCES gotrash.groups(group_id),
@@ -324,3 +316,4 @@ CREATE TABLE gotrash.group_member_mission_contributions (
 
     CONSTRAINT uq_user_group_mission UNIQUE (group_mission_progress_id, citizen_id)
 );
+

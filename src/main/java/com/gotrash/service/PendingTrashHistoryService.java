@@ -1,7 +1,6 @@
 package com.gotrash.service;
 
 
-import com.gotrash.api.v1.model.Citizen;
 import com.gotrash.api.v1.model.pendingtrashhistory.ClaimPendingTrashHistory;
 import com.gotrash.api.v1.model.pendingtrashhistory.PendingTrashHistory;
 import com.gotrash.api.v1.model.Trash;
@@ -9,12 +8,8 @@ import com.gotrash.api.v1.model.TrashBin;
 import com.gotrash.api.v1.transformer.pendingtrashhistory.PendingTrashHistoryTransformer;
 import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryTransformer;
 import com.gotrash.constant.PendingTrashHistoryStatus;
-import com.gotrash.entity.CitizenAddressEntity;
-import com.gotrash.entity.CitizenEntity;
 import com.gotrash.entity.PendingTrashHistoryEntity;
-import com.gotrash.repository.CitizenRepository;
 import com.gotrash.repository.PendingTrashHistoryRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,8 +27,6 @@ public class PendingTrashHistoryService {
   private final TrashService trashService;
   private final TrashBinService trashBinService;
   private final TrashHistoryService trashHistoryService;
-  private final CitizenService citizenService;
-  private final CitizenRepository citizenRepository;
 
   @Transactional
   public void save(PendingTrashHistory pendingTrashHistory) {

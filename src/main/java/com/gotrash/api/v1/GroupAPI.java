@@ -116,7 +116,7 @@ public class GroupAPI {
 
   @PostMapping("/groups")
   @Operation(summary = "API to create a new group")
-  public ApiResponse<GroupResponse> groupResponse(@RequestBody GroupRequest groupRequest) {
+  public ApiResponse<GroupResponse> save(@RequestBody GroupRequest groupRequest) {
     Group group = GroupTransformer.transformRequestToModel(groupRequest);
     group = groupService.save(group);
     GroupMissionProgress groupMissionProgress = groupMissionProgressService.getActiveGroupMissionProgressByGroupId(group.getGroupId());

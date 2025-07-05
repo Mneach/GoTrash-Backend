@@ -57,7 +57,7 @@ public class DailyMissionProgressAPI {
   @Operation(summary = "Get all active daily missions progress by citizen ID")
   public ApiResponse<List<DailyMissionResponse>> getActiveDailyMissionsByCitizen(
       @PathVariable("citizen_id") String citizenId) {
-    List<DailyMissionProgress> progresses = dailyMissionProgressService.getAllActiveDailyMissionProgressByCitizenId(citizenId);
+    List<DailyMissionProgress> progresses = dailyMissionProgressService.getActiveDailyMissionProgressByCitizenId(citizenId);
     List<DailyMissionResponse> responses = progresses.stream()
         .map(DailyMissionProgressTransformer::transformModelToResponse)
         .toList();
