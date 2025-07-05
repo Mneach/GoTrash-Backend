@@ -9,6 +9,7 @@ import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.api.v1.transformer.WasteBankTransformer;
 import com.gotrash.entity.UserEntity;
 import com.gotrash.entity.WasteBankEntity;
+import com.gotrash.exception.rest.BadRequestException;
 import com.gotrash.helper.FileUploadHelper;
 import com.gotrash.repository.UserRepository;
 import com.gotrash.repository.WasteBankRepository;
@@ -91,6 +92,13 @@ public class WasteBankService {
 
     UserEntity userEntity = userRepository.findById(UUID.fromString(wasteBank.getUserId()))
         .orElseThrow(() -> new EntityNotFoundException("User with ID " + wasteBank.getUserId() + " not found"));
+
+
+    if (wasteBank.getEmail() != null && !wasteBank.getEmail().equals(userEntity.getEmail())) {
+      if (userRepository.findByEmail(wasteBank.getEmail()).isPresent()) {
+        throw new BadRequestException("Email is already used");
+      }
+    }
 
     userEntity.setEmail(wasteBank.getEmail() != null ? wasteBank.getEmail() : userEntity.getEmail());
     userEntity.setRole(wasteBank.getRole() != null ? wasteBank.getRole() : userEntity.getRole());

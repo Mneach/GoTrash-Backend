@@ -41,6 +41,8 @@ public class TrashBinService {
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
             }
+        } else {
+            trashBin.setImageUrl("https://www.twtf.org.uk/wp-content/uploads/2024/01/dummy-image.jpg");
         }
 
         TrashBinEntity trashBinEntity = TrashBinTransformer.transformModelToEntity(trashBin);

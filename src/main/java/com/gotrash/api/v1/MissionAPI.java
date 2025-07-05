@@ -37,19 +37,33 @@ public class MissionAPI {
 
   @GetMapping("/missions")
   @Operation(summary = "API to get all mission data")
-  public ApiResponse<List<MissionResponse>> getAllMission(
-      @RequestParam(name = "goalType", required = false) String goalType,
-      @RequestParam(name = "type", required = false) String type) {
+  public ApiResponse<List<MissionResponse>> getAllMission() {
 
-    List<Mission> missions;
+    List<Mission> missions = missionService.getAllMission();
 
-    if (goalType != null) {
-      missions = missionService.getAllMissionFilterByMissionGoalType(goalType);
-    } else if (type != null) {
-      missions = missionService.getAllMissionFilterByMissionType(type);
-    } else {
-      missions = missionService.getAllMission();
-    }
+    List<MissionResponse> missionResponses = missions.stream()
+        .map(MissionTransformer::transformModelToResponse)
+        .toList();
+    return new ApiResponse<>(HttpStatus.OK.value(), missionResponses);
+  }
+
+  @GetMapping("/missions")
+  @Operation(summary = "API to get all mission data by goal type")
+  public ApiResponse<List<MissionResponse>> getAllMissionByGoalType(@RequestParam(name = "goalType", required = false) String goalType) {
+
+    List<Mission> missions = missionService.getAllMissionFilterByMissionGoalType(goalType);
+
+    List<MissionResponse> missionResponses = missions.stream()
+        .map(MissionTransformer::transformModelToResponse)
+        .toList();
+    return new ApiResponse<>(HttpStatus.OK.value(), missionResponses);
+  }
+
+  @GetMapping("/missions")
+  @Operation(summary = "API to get all mission data by type")
+  public ApiResponse<List<MissionResponse>> getAllMissionByType(@RequestParam(name = "type") String type) {
+
+    List<Mission> missions = missionService.getAllMissionFilterByMissionType(type);
 
     List<MissionResponse> missionResponses = missions.stream()
         .map(MissionTransformer::transformModelToResponse)

@@ -34,7 +34,7 @@ public class AdminAPI {
     return new ApiResponse<>(HttpStatus.OK.value(), userResponses);
   }
 
-  @GetMapping("admin/me")
+  @GetMapping("admins/me")
   @Operation(summary = "API to get current admin")
   public ApiResponse<UserResponse> getMe() {
     User user = adminService.getMe();

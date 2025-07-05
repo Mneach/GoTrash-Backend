@@ -3,6 +3,7 @@ package com.gotrash.service;
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.entity.UserEntity;
+import com.gotrash.exception.rest.BadRequestException;
 import com.gotrash.repository.UserRepository;
 import com.gotrash.util.AuthorityUtil;
 import jakarta.persistence.EntityNotFoundException;
@@ -46,13 +47,13 @@ public class AdminService {
 
 
   public User getAdminByUserId(String userId) {
-    Optional<UserEntity> trashBinEntityOptional = userRepository.findById(UUID.fromString(userId));
+    Optional<UserEntity> userEntityOptional = userRepository.findById(UUID.fromString(userId));
 
-    if (trashBinEntityOptional.isEmpty()) {
+    if (userEntityOptional.isEmpty()) {
       throw new EntityNotFoundException("Admin with User ID " + userId + " Not Found");
     }
 
-    return UserTransformer.transformEntityToModel(trashBinEntityOptional.get());
+    return UserTransformer.transformEntityToModel(userEntityOptional.get());
   }
 
   public User getMe() {
@@ -65,6 +66,12 @@ public class AdminService {
 
     UserEntity userEntity = userRepository.findById(UUID.fromString(User.getUserId()))
         .orElseThrow(() -> new EntityNotFoundException("User with ID " + User.getUserId() + " not found"));
+
+    if (User.getEmail() != null && !User.getEmail().equals(userEntity.getEmail())) {
+      if (userRepository.findByEmail(User.getEmail()).isPresent()) {
+        throw new BadRequestException("Email is already in use.");
+      }
+    }
 
     userEntity.setEmail(User.getEmail() != null ? User.getEmail() : userEntity.getEmail());
     userEntity.setRole(User.getRole() != null ? User.getRole() : userEntity.getRole());

@@ -63,9 +63,7 @@ public class AuthService {
   public AuthResponse registerCitizen(Citizen citizen, MultipartFile imageFile) {
 
     if (userService.isEmailAlreadyExists(citizen.getEmail())) {
-      throw new BadRequestException("Email is already in use.");
-    } else if (citizenService.isPhoneNumberAlreadyExists(citizen.getPhoneNumber())) {
-      throw new BadRequestException("Phone Number is already in use.");
+      throw new BadRequestException("Email is already used");
     }
 
     if (imageFile != null) {
@@ -98,7 +96,7 @@ public class AuthService {
   @Transactional
   public AuthResponse registerAdmin(User user) {
     if (userService.isEmailAlreadyExists(user.getEmail())) {
-      throw new BadRequestException("Email is already in use.");
+      throw new BadRequestException("Email is already used");
     }
 
     user = adminService.save(user);
@@ -114,7 +112,7 @@ public class AuthService {
   public AuthResponse registerWasteBank(WasteBank wasteBank, MultipartFile imageFile) {
 
     if (userService.isEmailAlreadyExists(wasteBank.getEmail())) {
-      throw new BadRequestException("Email is already in use.");
+      throw new BadRequestException("Email is already used");
     }
 
     if (imageFile != null) {

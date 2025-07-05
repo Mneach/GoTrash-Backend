@@ -12,6 +12,7 @@ import com.gotrash.api.v1.transformer.trashhistory.TrashHistoryTransformer;
 import com.gotrash.constant.PendingTrashHistoryStatus;
 import com.gotrash.entity.PendingTrashHistoryEntity;
 import com.gotrash.repository.PendingTrashHistoryRepository;
+import com.gotrash.util.CalculatorUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -71,9 +72,19 @@ public class PendingTrashHistoryService {
     BigInteger totalRating = BigInteger.valueOf(0);
 
     for (PendingTrashHistoryEntity pendingTrashHistoryEntity : pendingTrashHistoryEntities) {
-      totalCoin = totalCoin.add(pendingTrashHistoryEntity.getTrash().getCoin());
+      totalCoin = totalCoin.add(
+          CalculatorUtil.calculateCoin(
+              pendingTrashHistoryEntity.getWeight(),
+              pendingTrashHistoryEntity.getTrash().getCoin()
+          )
+      );
       totalWeight = totalWeight.add(pendingTrashHistoryEntity.getWeight());
-      totalRating = totalRating.add(pendingTrashHistoryEntity.getTrash().getRating());
+      totalRating = totalRating.add(
+          CalculatorUtil.calculateRating(
+              pendingTrashHistoryEntity.getWeight(),
+              pendingTrashHistoryEntity.getTrash().getRating()
+          )
+      );
 
       pendingTrashHistoryEntity.setStatus(PendingTrashHistoryStatus.CLAIMED);
 
@@ -93,7 +104,7 @@ public class PendingTrashHistoryService {
     Notification notification = Notification.builder()
         .user(User.builder().userId(citizenId).build())
         .title("Trash Reward Successfully Claimed")
-        .description("Your trash history has been claimed. You earned " + totalCoin + " coins, " + totalRating + " ratings, and contributed " + totalWeight + " gram of trash")
+        .description("Your trash history has been claimed. You earned " + totalCoin + " coins, " + totalRating + " ratings, and contributed " + totalWeight + " grams of trash")
         .build();
 
     notificationService.save(notification);
