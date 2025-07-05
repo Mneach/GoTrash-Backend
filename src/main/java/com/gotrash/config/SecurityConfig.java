@@ -54,7 +54,10 @@ public class SecurityConfig {
       "/images/*",
       "/images/**",
       "api/v1/trash-histories/iot",
-      "api/v1/pending-trash-histories"
+      "api/v1/pending-trash-histories",
+      "/api/v1/dashboards/waste-banks/*/total-trash",
+      "/api/v1/dashboards/waste-banks/total-trash",
+      "/api/v1/dashboards/waste-banks/*/total-trash-by-category",
   };
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;

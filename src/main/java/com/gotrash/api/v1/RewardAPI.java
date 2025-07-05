@@ -32,22 +32,26 @@ public class RewardAPI {
 
     @GetMapping("/rewards")
     @Operation(summary = "API to get all reward data")
-    public ApiResponse<List<RewardResponse>> getRewards(
-        @RequestParam(name = "wasteBankId", required = false) String wasteBankId
-    ) {
-        List<Reward> rewards;
-
-        if (wasteBankId == null) {
-            rewards = rewardService.getRewards();
-        } else {
-            rewards = rewardService.getAllRewardByWasteBankId(wasteBankId);
-        }
+    public ApiResponse<List<RewardResponse>> getRewards() {
+        List<Reward> rewards = rewardService.getRewards();
 
         List<RewardResponse> rewardResponses = rewards.stream()
             .map(RewardTransformer::transformModelToResponse)
             .toList();
         return new ApiResponse<>(HttpStatus.OK.value(), rewardResponses);
     }
+
+    @GetMapping("/rewards/wastebanks/{waste_bank_id}")
+    @Operation(summary = "API to get all reward by wastebank user id")
+    public ApiResponse<List<RewardResponse>> getRewardsByWasteBankId(@PathVariable("waste_bank_id") String wasteBankId) {
+        List<RewardResponse> rewardResponses = rewardService.getAllRewardByWasteBankId(wasteBankId)
+            .stream()
+            .map(RewardTransformer::transformModelToResponse)
+            .toList();
+
+        return new ApiResponse<>(HttpStatus.OK.value(), rewardResponses);
+    }
+
 
     @GetMapping("/rewards/{reward_id}")
     @Operation(summary = "API to get reward by reward id")

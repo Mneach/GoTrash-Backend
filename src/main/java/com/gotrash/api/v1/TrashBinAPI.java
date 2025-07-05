@@ -33,17 +33,18 @@ public class TrashBinAPI {
 
     @GetMapping("/trash-bins")
     @Operation(summary = "API to get all trash bin data")
-    public ApiResponse<List<TrashBinResponse>> getTrashBins(
-        @RequestParam(name = "wasteBankId", required = false) String wasteBankId
-    ) {
-        List<TrashBin> trashBins;
+    public ApiResponse<List<TrashBinResponse>> getTrashBins() {
+        List<TrashBin> trashBins = trashBinService.getTrashBins();
+        List<TrashBinResponse> trashBinResponses = trashBins.stream()
+            .map(TrashBinTransformer::transformModelToResponse)
+            .toList();
+        return new ApiResponse<>(HttpStatus.OK.value(), trashBinResponses);
+    }
 
-        if (wasteBankId != null) {
-            trashBins = trashBinService.getTrashBinFilterByWasteBankId(wasteBankId);
-        } else {
-            trashBins = trashBinService.getTrashBins();
-        }
-
+    @GetMapping("/trash-bins/wastebanks/{user_id}")
+    @Operation(summary = "API to get all wastebank trash bin data")
+    public ApiResponse<List<TrashBinResponse>> getTrashBinByWasteBankId(@PathVariable("user_id") String userId) {
+        List<TrashBin> trashBins = trashBinService.getTrashBinByWasteBankId(userId);
         List<TrashBinResponse> trashBinResponses = trashBins.stream()
             .map(TrashBinTransformer::transformModelToResponse)
             .toList();

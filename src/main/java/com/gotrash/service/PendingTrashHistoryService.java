@@ -42,11 +42,11 @@ public class PendingTrashHistoryService {
   }
 
   @Transactional
-  public List<PendingTrashHistory> getPendingTrashHistoryByTrashBinId(String trashBinId) {
+  public List<PendingTrashHistory> getAllPendingTrashHistory(String trashBinId, PendingTrashHistoryStatus status) {
 
     List<PendingTrashHistoryEntity> pendingTrashHistoryEntities = pendingTrashHistoryRepository.findAllByTrashBin_TrashBinIdAndStatus(
         UUID.fromString(trashBinId),
-        PendingTrashHistoryStatus.NOT_CLAIMED
+        status
     );
 
     return pendingTrashHistoryEntities

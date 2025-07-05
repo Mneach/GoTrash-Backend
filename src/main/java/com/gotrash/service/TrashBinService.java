@@ -69,7 +69,7 @@ public class TrashBinService {
         return TrashBinTransformer.transformEntityToModel(trashBinEntityOptional.get());
     }
 
-    public List<TrashBin> getTrashBinFilterByWasteBankId(String wasteBankId) {
+    public List<TrashBin> getTrashBinByWasteBankId(String wasteBankId) {
             List<TrashBinEntity> trashBinEntities = trashBinRepository.findAllByWasteBank_UserId(UUID.fromString(wasteBankId));
 
         return trashBinEntities.stream()

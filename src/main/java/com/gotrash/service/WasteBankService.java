@@ -2,6 +2,8 @@ package com.gotrash.service;
 
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.model.WasteBank;
+import com.gotrash.api.v1.model.dashboard.WasteBankTrashCategorySummary;
+import com.gotrash.api.v1.model.dashboard.WasteBankTrashSummary;
 import com.gotrash.api.v1.transformer.CitizenTransformer;
 import com.gotrash.api.v1.transformer.UserTransformer;
 import com.gotrash.api.v1.transformer.WasteBankTransformer;
@@ -129,5 +131,16 @@ public class WasteBankService {
 
     wasteBankRepository.deleteById(UUID.fromString(wasteBankId));
   }
-  
+
+  public WasteBankTrashSummary getTotalTrashByWasteBankId(String wasteBankId) {
+    return wasteBankRepository.sumTrashWeightByWasteBankId(UUID.fromString(wasteBankId));
+  }
+
+  public List<WasteBankTrashSummary> getTotalTrashGroupByWasteBank() {
+    return wasteBankRepository.sumTrashWeightByGroupByWasteBankId();
+  }
+
+  public List<WasteBankTrashCategorySummary> getTotalTrashByWasteBankIdGroupByTrashCategory(String wasteBankId) {
+    return wasteBankRepository.sumTrashWeightByWasteBankIdGroupedByCategory(UUID.fromString(wasteBankId));
+  }
 }

@@ -100,6 +100,14 @@ public class ShipmentService {
         .toList();
   }
 
+  public List<Shipment> getShipmentByWasteBankId(String userId) {
+    List<ShipmentEntity> shipmentEntities = shipmentRepository.findAllByReward_WasteBank_Id(UUID.fromString(userId));
+
+    return shipmentEntities.stream()
+        .map(ShipmentTransformer::transformEntityToModel)
+        .toList();
+  }
+
   @Transactional
   public Shipment markShipmentAsDelivered(String shipmentId) {
     Optional<ShipmentEntity> shipmentEntityOptional = shipmentRepository.findById(UUID.fromString(shipmentId));
