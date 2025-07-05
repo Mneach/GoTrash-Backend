@@ -47,7 +47,7 @@ public class MissionAPI {
     return new ApiResponse<>(HttpStatus.OK.value(), missionResponses);
   }
 
-  @GetMapping("/missions")
+  @GetMapping("/missions/by-goal-type")
   @Operation(summary = "API to get all mission data by goal type")
   public ApiResponse<List<MissionResponse>> getAllMissionByGoalType(@RequestParam(name = "goalType", required = false) String goalType) {
 
@@ -59,7 +59,7 @@ public class MissionAPI {
     return new ApiResponse<>(HttpStatus.OK.value(), missionResponses);
   }
 
-  @GetMapping("/missions")
+  @GetMapping("/missions/by-type")
   @Operation(summary = "API to get all mission data by type")
   public ApiResponse<List<MissionResponse>> getAllMissionByType(@RequestParam(name = "type") String type) {
 

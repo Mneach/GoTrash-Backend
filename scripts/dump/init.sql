@@ -155,7 +155,7 @@ CREATE TABLE gotrash.groups (
   group_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   owner_id UUID NOT NULL,
   name TEXT NOT NULL,
-  coin NUMERIC NOT NULL,
+  coin NUMERIC NOT NULL DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -163,14 +163,16 @@ CREATE TABLE gotrash.groups (
     REFERENCES gotrash.users(user_id)
 );
 
--- 11. USER_GROUPS TABLE
-CREATE TABLE gotrash.user_groups (
-  user_group_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_user_group_user FOREIGN KEY (user_id)
-    REFERENCES gotrash.users(user_id)
+-- 11. GROUP_MEMBERS TABLE
+CREATE TABLE gotrash.group_members (
+    group_member_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    citizen_id UUID NOT NULL,
+    group_id UUID NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_group_member_citizen FOREIGN KEY (citizen_id) REFERENCES gotrash.citizens (user_id),
+    CONSTRAINT fk_group_member_group FOREIGN KEY (group_id) REFERENCES gotrash.groups (group_id)
 );
 
 -- 12. CITIZEN ADDRESSES TABLE
@@ -258,6 +260,8 @@ CREATE TABLE gotrash.daily_mission_progress (
     current_progress NUMERIC NOT NULL,
     is_reward_claimed BOOLEAN DEFAULT FALSE,
     active_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_citizen_daily_mission_citizen FOREIGN KEY (citizen_id)
         REFERENCES gotrash.citizens(user_id),
@@ -272,6 +276,8 @@ CREATE TABLE gotrash.group_mission_progress (
     group_id UUID NOT NULL,
     current_progress NUMERIC NOT NULL,
     is_reward_claimed BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_group_mission_progress_group FOREIGN KEY (group_id)
         REFERENCES gotrash.groups(group_id),
