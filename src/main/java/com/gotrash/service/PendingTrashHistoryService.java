@@ -1,6 +1,8 @@
 package com.gotrash.service;
 
 
+import com.gotrash.api.v1.model.Notification;
+import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.model.pendingtrashhistory.ClaimPendingTrashHistory;
 import com.gotrash.api.v1.model.pendingtrashhistory.PendingTrashHistory;
 import com.gotrash.api.v1.model.Trash;
@@ -27,6 +29,7 @@ public class PendingTrashHistoryService {
   private final TrashService trashService;
   private final TrashBinService trashBinService;
   private final TrashHistoryService trashHistoryService;
+  private final NotificationService notificationService;
 
   @Transactional
   public void save(PendingTrashHistory pendingTrashHistory) {
@@ -85,6 +88,15 @@ public class PendingTrashHistoryService {
           )
       );
     }
+
+    // Send Notification
+    Notification notification = Notification.builder()
+        .user(User.builder().userId(citizenId).build())
+        .title("Trash Reward Successfully Claimed")
+        .description("Your trash history has been claimed. You earned " + totalCoin + " coins, " + totalRating + " ratings, and contributed " + totalWeight + " gram of trash")
+        .build();
+
+    notificationService.save(notification);
 
     pendingTrashHistoryRepository.saveAll(pendingTrashHistoryEntities);
 
