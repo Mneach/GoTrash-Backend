@@ -101,7 +101,7 @@ public class ShipmentService {
   }
 
   public List<Shipment> getShipmentByWasteBankId(String userId) {
-    List<ShipmentEntity> shipmentEntities = shipmentRepository.findAllByReward_WasteBank_Id(UUID.fromString(userId));
+    List<ShipmentEntity> shipmentEntities = shipmentRepository.findAllByReward_WasteBank_UserId(UUID.fromString(userId));
 
     return shipmentEntities.stream()
         .map(ShipmentTransformer::transformEntityToModel)

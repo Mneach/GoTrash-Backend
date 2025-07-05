@@ -58,7 +58,7 @@ public class AuthAPI {
     return new ApiResponse<>(HttpStatus.OK.value(), authResponse);
   }
 
-  @PostMapping(value = "auth/register/waste-bank")
+  @PostMapping(value = "auth/register/admin")
   @Operation(summary = "API for register a new waste bank")
   public ApiResponse<AuthResponse> registerAdmin(@ModelAttribute UserRequest userRequest) {
     User user = UserTransformer.transformRequestToModel(userRequest);
