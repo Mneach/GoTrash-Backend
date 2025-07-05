@@ -69,13 +69,13 @@ public class TrashHistoryService {
 
         dailyMissionProgressService.updateCitizenDailyMissionProgress(
             citizenEntity.getUserId().toString(),
-            trashEntity.getTrashCategory().getTrashCategoryId().toString(),
+            trashEntity.getTrashId().toString(),
             trashHistory.getWeight()
         );
 
         groupMissionProgressService.updateGroupMissionProgress(
             citizenEntity.getUserId().toString(),
-            trashEntity.getTrashCategory().getTrashCategoryId().toString(),
+            trashEntity.getTrashId().toString(),
             trashHistory.getWeight()
         );
 

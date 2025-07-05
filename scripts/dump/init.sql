@@ -240,14 +240,14 @@ CREATE TABLE gotrash.missions (
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     target_value NUMERIC NOT NULL,
-    trash_category_id UUID,
+    trash_id UUID,
     reward_coins NUMERIC NOT NULL,
     reward_ratings NUMERIC NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_daily_mission_category FOREIGN KEY (trash_category_id)
-        REFERENCES gotrash.trash_categories(trash_category_id)
+    CONSTRAINT fk_daily_mission_category FOREIGN KEY (trash_id)
+        REFERENCES gotrash.trashes(trash_id)
 );
 
 -- 17. DAILY_MISSION_PROGRESS TABLE

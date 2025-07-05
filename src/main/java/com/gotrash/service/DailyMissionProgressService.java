@@ -53,7 +53,7 @@ public class DailyMissionProgressService {
   }
 
   @Transactional
-  public void updateCitizenDailyMissionProgress(String citizenId, String trashCategoryId, BigDecimal trashWeight) {
+  public void updateCitizenDailyMissionProgress(String citizenId, String trashId, BigDecimal trashWeight) {
     LocalDate today = DateUtil.getCurrentDate();
 
     List<DailyMissionProgressEntity> dailyMissionProgressEntities = dailyMissionProgressRepository.findByCitizenIdAndActiveDate(
@@ -64,9 +64,9 @@ public class DailyMissionProgressService {
         dailyMissionProgressEntity -> {
           MissionEntity missionEntity = dailyMissionProgressEntity.getMission();
 
-          if (missionEntity.getTrashCategory() != null && missionEntity.getTrashCategory().getTrashCategoryId() != null) {
-            // Update based on the trash category
-            if (missionEntity.getTrashCategory().getTrashCategoryId().toString().equals(trashCategoryId)) {
+          if (missionEntity.getTrash() != null && missionEntity.getTrash().getTrashId() != null) {
+            // Update based on the trash
+            if (missionEntity.getTrash().getTrashId().toString().equals(trashId)) {
 
               if (missionEntity.getGoalType().toLowerCase().contains("weight")) {
                 handleWeightMission(dailyMissionProgressEntity, trashWeight);

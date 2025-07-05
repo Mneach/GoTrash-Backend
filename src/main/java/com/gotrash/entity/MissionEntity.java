@@ -51,8 +51,8 @@ public class MissionEntity {
     private BigDecimal targetValue;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "trash_category_id")
-    private TrashCategoryEntity trashCategory;
+    @JoinColumn(name = "trash_id")
+    private TrashEntity trash;
 
     @Column(nullable = false)
     private BigInteger rewardCoins;

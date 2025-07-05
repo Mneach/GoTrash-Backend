@@ -4,8 +4,10 @@ import com.gotrash.api.v1.model.Mission;
 import com.gotrash.api.v1.transformer.MissionTransformer;
 import com.gotrash.entity.MissionEntity;
 import com.gotrash.entity.TrashCategoryEntity;
+import com.gotrash.entity.TrashEntity;
 import com.gotrash.repository.MissionRepository;
 import com.gotrash.repository.TrashCategoryRepository;
+import com.gotrash.repository.TrashRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +22,14 @@ import java.util.UUID;
 public class MissionService {
 
   private final MissionRepository missionRepository;
-  private final TrashCategoryRepository trashCategoryRepository;
+  private final TrashRepository trashRepository;
 
   @Transactional
   public Mission save(Mission mission) {
-    TrashCategoryEntity trashCategoryEntity = null;
+    TrashEntity trashCategoryEntity = null;
 
-    if (mission.getTrashCategory() != null && mission.getTrashCategory().getTrashCategoryId() != null) {
-      Optional<TrashCategoryEntity> trashCategoryEntityOptional = trashCategoryRepository.findById(UUID.fromString(mission.getTrashCategory().getTrashCategoryId()));
+    if (mission.getTrash() != null && mission.getTrash().getTrashId() != null) {
+      Optional<TrashEntity> trashCategoryEntityOptional = trashRepository.findById(UUID.fromString(mission.getTrash().getTrashId()));
 
       if (trashCategoryEntityOptional.isPresent()) {
         trashCategoryEntity = trashCategoryEntityOptional.get();
@@ -35,7 +37,7 @@ public class MissionService {
     }
 
     MissionEntity missionEntity = MissionTransformer.transformModelToEntity(mission);
-    missionEntity.setTrashCategory(trashCategoryEntity);
+    missionEntity.setTrash(trashCategoryEntity);
 
     return MissionTransformer.transformEntityToModel(
         missionRepository.save(missionEntity)

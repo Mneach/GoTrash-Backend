@@ -18,7 +18,7 @@ public class MissionRequest {
   private String title;
   private String description;
   private BigDecimal targetValue;
-  private String trashCategoryId;
+  private String trashId;
   private BigInteger rewardCoins;
   private BigInteger rewardRatings;
 }
