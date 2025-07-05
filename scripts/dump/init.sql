@@ -19,12 +19,11 @@ CREATE SCHEMA IF NOT EXISTS "gotrash";
 -- 12. citizen_addresses
 -- 13. shipments
 -- 14. notifications
--- 15. waste_bank_warehouses
--- 16. pending_trash_histories
--- 17. mission
--- 18. daily_mission_progress
--- 19. group_mission_progress
--- 20. group_member_mission_contributions
+-- 15. pending_trash_histories
+-- 16. mission
+-- 17. daily_mission_progress
+-- 18. group_mission_progress
+-- 19. group_member_mission_contributions
 
 -- 1. USERS TABLE
 CREATE TABLE gotrash.users (
@@ -219,26 +218,7 @@ CREATE TABLE gotrash.notifications (
     REFERENCES gotrash.users(user_id)
 );
 
--- 15. WASTE BANK WAREHOUSE TABLE
-CREATE TABLE gotrash.waste_bank_warehouses (
-    waste_bank_id UUID NOT NULL,
-    trash_category_id UUID NOT NULL,
-    total_weight NUMERIC(19, 2) NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
-
-    PRIMARY KEY (waste_bank_id, trash_category_id),
-
-    CONSTRAINT fk_warehouse_wastebank
-        FOREIGN KEY (waste_bank_id)
-        REFERENCES gotrash.waste_banks(user_id),
-
-    CONSTRAINT fk_warehouse_trashcategory
-        FOREIGN KEY (trash_category_id)
-        REFERENCES gotrash.trash_categories(trash_category_id)
-);
-
--- 16. PENDING TRASH_HISTORIES TABLE
+-- 15. PENDING TRASH_HISTORIES TABLE
 CREATE TABLE gotrash.pending_trash_histories (
   pending_trash_history_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   trash_id UUID NOT NULL,
@@ -252,7 +232,7 @@ CREATE TABLE gotrash.pending_trash_histories (
     REFERENCES gotrash.trash_bins(trash_bin_id)
 );
 
--- 17. MISSIONS TABLE
+-- 16. MISSIONS TABLE
 CREATE TABLE gotrash.missions (
     mission_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     type TEXT NOT NULL,
@@ -270,7 +250,7 @@ CREATE TABLE gotrash.missions (
         REFERENCES gotrash.trash_categories(trash_category_id)
 );
 
--- 18. DAILY_MISSION_PROGRESS TABLE
+-- 17. DAILY_MISSION_PROGRESS TABLE
 CREATE TABLE gotrash.daily_mission_progress (
     daily_mission_progress_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     mission_id UUID NOT NULL,
@@ -285,7 +265,7 @@ CREATE TABLE gotrash.daily_mission_progress (
         REFERENCES gotrash.missions(mission_id)
 );
 
--- 19. GROUP_MISSION_PROGRESS TABLE
+-- 18. GROUP_MISSION_PROGRESS TABLE
 CREATE TABLE gotrash.group_mission_progress (
     group_mission_progress_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     mission_id UUID NOT NULL,
@@ -299,7 +279,7 @@ CREATE TABLE gotrash.group_mission_progress (
         REFERENCES gotrash.missions(mission_id)
 );
 
--- 20. GROUP MEMBER MISSION CONTRIBUTIONS TABLE
+-- 19. GROUP MEMBER MISSION CONTRIBUTIONS TABLE
 CREATE TABLE gotrash.group_member_mission_contributions (
     contribution_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     group_mission_progress_id UUID NOT NULL,
