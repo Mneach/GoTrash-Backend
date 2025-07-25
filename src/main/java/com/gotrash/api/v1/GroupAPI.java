@@ -204,4 +204,13 @@ public class GroupAPI {
     MessageResponse messageResponse = new MessageResponse(message);
     return new ApiResponse<>(HttpStatus.OK.value(), messageResponse);
   }
+
+  @DeleteMapping("/groups/{group_id}")
+  @Operation(summary = "API to remove group by group id")
+  public ApiResponse<MessageResponse> deleteGroup(@PathVariable("group_id") String groupId) {
+    groupService.delete(groupId);
+    String message = "Successfully Delete Group With Group ID " + groupId;
+    MessageResponse messageResponse = new MessageResponse(message);
+    return new ApiResponse<>(HttpStatus.OK.value(), messageResponse);
+  }
 }

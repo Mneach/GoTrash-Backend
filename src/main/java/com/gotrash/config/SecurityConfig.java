@@ -58,9 +58,7 @@ public class SecurityConfig {
       "api/v1/pending-trash-histories",
       "/api/v1/dashboards/waste-banks/*/total-trash",
       "/api/v1/dashboards/waste-banks/total-trash",
-      "/api/v1/dashboards/waste-banks/*/total-trash-by-category",
-      "/api/v1/trash-bins/wastebanks/*",
-      "/api/v1/waste-banks"
+      "/api/v1/dashboards/waste-banks/*/total-trash-by-category"
   };
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -87,6 +85,9 @@ public class SecurityConfig {
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(req -> req
             .requestMatchers(HttpMethod.GET, "/api/v1/waste-banks/*").permitAll() // specific only for get method, we are not allowed for POST and UPDATE method
+            .requestMatchers(HttpMethod.GET, "/api/v1/waste-banks").permitAll() // specific only for get method, we are not allowed for POST and UPDATE method
+            .requestMatchers(HttpMethod.GET, "/api/v1/trash-bins/*").permitAll() // specific only for get method, we are not allowed for POST and UPDATE method
+            .requestMatchers(HttpMethod.GET, "/api/v1/trash-bins").permitAll() // specific only for get method, we are not allowed for POST and UPDATE method
             .requestMatchers(WHITE_LIST_URL).permitAll()
             .anyRequest().authenticated()
         )
