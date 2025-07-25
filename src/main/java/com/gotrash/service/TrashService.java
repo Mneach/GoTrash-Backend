@@ -25,7 +25,7 @@ public class TrashService {
     @Transactional
     public Trash save(Trash trash) {
 
-        Optional<TrashEntity> trashEntityOptional = trashRepository.findByName(trash.getName());
+        Optional<TrashEntity> trashEntityOptional = trashRepository.findByNameIgnoreCase(trash.getName());
 
         if (trashEntityOptional.isPresent()) {
             throw new BadRequestException("Trash with name " + trash.getName() + " is already exists");
@@ -59,7 +59,7 @@ public class TrashService {
     }
 
     public Trash getTrashByTrashName(String trashName) {
-        Optional<TrashEntity> trashEntityOptional = trashRepository.findByName(trashName);
+        Optional<TrashEntity> trashEntityOptional = trashRepository.findByNameIgnoreCase(trashName);
 
         if (trashEntityOptional.isEmpty()) {
             throw new EntityNotFoundException("Trash with name " + trashName + " Not Found");
@@ -75,7 +75,7 @@ public class TrashService {
             throw new EntityNotFoundException("Trash with ID " + trash.getTrashId() + " Not Found");
         }
 
-        if (trashRepository.findByName(trash.getName()).isPresent()) {
+        if (trashRepository.findByNameIgnoreCase(trash.getName()).isPresent()) {
             throw new BadRequestException("Trash with name " + trash.getName() + " is already exists");
         }
 
