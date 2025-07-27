@@ -2,6 +2,7 @@ package com.gotrash.service;
 
 import com.gotrash.api.v1.model.User;
 import com.gotrash.api.v1.transformer.UserTransformer;
+import com.gotrash.constant.UserRole;
 import com.gotrash.entity.UserEntity;
 import com.gotrash.exception.rest.BadRequestException;
 import com.gotrash.repository.UserRepository;
@@ -38,7 +39,7 @@ public class AdminService {
   }
 
   public List<User> getAdmins() {
-    List<UserEntity> UserEntities = userRepository.findAll();
+    List<UserEntity> UserEntities = userRepository.findAllByRole(UserRole.ADMIN);
 
     return UserEntities.stream()
         .map(UserTransformer::transformEntityToModel)
@@ -47,7 +48,10 @@ public class AdminService {
 
 
   public User getAdminByUserId(String userId) {
-    Optional<UserEntity> userEntityOptional = userRepository.findById(UUID.fromString(userId));
+    Optional<UserEntity> userEntityOptional = userRepository.findByUserIdAndRole(
+        UUID.fromString(userId),
+        UserRole.ADMIN
+    );
 
     if (userEntityOptional.isEmpty()) {
       throw new EntityNotFoundException("Admin with User ID " + userId + " Not Found");

@@ -172,6 +172,7 @@ public class GroupService {
       throw new EntityNotFoundException("Group with ID " + groupId + " Not Found");
     }
 
+    // delete dependency first
     groupRepository.deleteById(UUID.fromString(groupId));
   }
 
